@@ -1,7 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-	<span>HomeView</span>
+	<h1>HomeView</h1>
 
-	<RouterLink to="/login">aboba</RouterLink>
+	<button class="border-2 px-2 py-1">
+		<RouterLink to="/login">aboba</RouterLink>
+	</button>
 </template>

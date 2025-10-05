@@ -12,9 +12,5 @@ console.log({
 </script>
 
 <template>
-	<div>LoginView</div>
-
-	<div>You are:</div>
-
-	<RouterLink to="/">aboba</RouterLink>
+	<h1 class="text-3xl font-bold">Вход</h1>
 </template>
