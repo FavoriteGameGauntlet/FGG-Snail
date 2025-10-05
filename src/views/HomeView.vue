@@ -1,8 +1,4 @@
-<script setup lang="ts">
-import { useAuthStore } from '../stores/authStore'
-
-const storeValue = useAuthStore
-</script>
+<script setup lang="ts"></script>
 
 <template>
 	<span>HomeView</span>

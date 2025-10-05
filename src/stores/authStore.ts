@@ -1,14 +1,37 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 
 export const useAuthStore = defineStore('counter', () => {
-	const count = ref(0)
-	const name = ref('Eduardo')
-	const doubleCount = computed(() => count.value * 2)
+	const userName = ref<null | string>(null)
+	const userId = ref<null | string>(null)
 
-	function increment() {
-		count.value++
+	const isLoggedIn = computed(() => userId.value !== null)
+
+	watchEffect(() => {
+		if (userName.value === null) {
+			localStorage.removeItem('userName')
+		} else {
+			localStorage.setItem('userName', userName.value)
+		}
+	})
+
+	watchEffect(() => {
+		if (userId.value === null) {
+			localStorage.removeItem('userId')
+		} else {
+			localStorage.setItem('userId', userId.value)
+		}
+	})
+
+	const logIn = (newUserName: string) => {
+		userName.value = newUserName
+		userId.value = 'default_user_id_123456789'
 	}
 
-	return { count, name, doubleCount, increment }
+	const logOut = () => {
+		userName.value = null
+		userId.value = null
+	}
+
+	return { userName, userId, isLoggedIn, logIn, logOut }
 })
