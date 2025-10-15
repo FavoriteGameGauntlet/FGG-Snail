@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref, watchEffect } from 'vue'
+import { persistentStorage, StoreKey } from '../services/persistentStorage'
 
 export const useAuthStore = defineStore('counter', () => {
 	const userName = ref<null | string>(null)
@@ -9,23 +10,28 @@ export const useAuthStore = defineStore('counter', () => {
 
 	watchEffect(() => {
 		if (userName.value === null) {
-			localStorage.removeItem('userName')
+			persistentStorage.delete(StoreKey.UserName)
 		} else {
-			localStorage.setItem('userName', userName.value)
+			persistentStorage.set(StoreKey.UserName, userName.value)
 		}
 
 		console.log(
-			'Updated localStorage.userName',
-			localStorage.getItem('userName'),
+			'Updated persistentStorage[userName]',
+			persistentStorage.get(StoreKey.UserName),
 		)
 	})
 
 	watchEffect(() => {
 		if (userId.value === null) {
-			localStorage.removeItem('userId')
+			persistentStorage.delete(StoreKey.UserId)
 		} else {
-			localStorage.setItem('userId', userId.value)
+			persistentStorage.set(StoreKey.UserId, userId.value)
 		}
+
+		console.log(
+			'Updated persistentStorage[userId]',
+			persistentStorage.get(StoreKey.UserId),
+		)
 	})
 
 	const logIn = async (newUserName: string) => {

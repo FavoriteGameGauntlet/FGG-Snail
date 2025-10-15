@@ -1,29 +1,47 @@
-import { load, Store } from '@tauri-apps/plugin-store'
-// when using `"withGlobalTauri": true`, you may use
-// const { load } = window.__TAURI__.store;
+import { load, type Store } from '@tauri-apps/plugin-store'
 
-// Create a new store or load the existing one,
-// note that the options will be ignored if a `Store` with that path has already been created
-const store = await load('store.json', { autoSave: true, defaults: {} })
+export enum StoreKey {
+	UserName = 'userName',
+	UserId = 'userId',
+}
 
-// Set a value.
-await store.set('some-key', { value: 5 })
+export type StoredData = {
+	[StoreKey.UserName]: string | null
+	[StoreKey.UserId]: string | null
+}
 
-// Get a value.
-const val = await store.get<{ value: number }>('some-key')
-console.log(val) // { value: 5 }
+const defaults: StoredData = {
+	[StoreKey.UserName]: null,
+	[StoreKey.UserId]: null,
+}
 
-// You can manually save the store after making changes.
-// Otherwise, it will save upon graceful exit
-// And if you set `autoSave` to a number or left empty,
-// it will save the changes to disk after a debounce delay, 100ms by default.
-await store.save()
+let store: Store | null = null
 
-export class PersistentStorage {
-	private loader = load('store.json', { autoSave: true, defaults: {} })
-	private store: Store | null = null
-
-	async init() {
-		this.store = await this.loader
+const getStore = async () => {
+	if (!store) {
+		store = await load('store.json', { autoSave: true, defaults })
 	}
+	return store
+}
+
+export const persistentStorage = {
+	async get<K extends keyof StoredData>(
+		key: K,
+	): Promise<StoredData[K] | undefined> {
+		const s = await getStore()
+		return s.get<StoredData[K]>(key)
+	},
+
+	async delete<K extends keyof StoredData>(key: K) {
+		const s = await getStore()
+		return s.delete(key)
+	},
+
+	async set<K extends keyof StoredData>(
+		key: K,
+		value: StoredData[K],
+	): Promise<void> {
+		const s = await getStore()
+		return s.set(key, value)
+	},
 }
