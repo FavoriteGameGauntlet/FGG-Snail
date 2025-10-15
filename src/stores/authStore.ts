@@ -13,6 +13,11 @@ export const useAuthStore = defineStore('counter', () => {
 		} else {
 			localStorage.setItem('userName', userName.value)
 		}
+
+		console.log(
+			'Updated localStorage.userName',
+			localStorage.getItem('userName'),
+		)
 	})
 
 	watchEffect(() => {
@@ -23,7 +28,7 @@ export const useAuthStore = defineStore('counter', () => {
 		}
 	})
 
-	const logIn = (newUserName: string) => {
+	const logIn = async (newUserName: string) => {
 		userName.value = newUserName
 		userId.value = 'default_user_id_123456789'
 	}
