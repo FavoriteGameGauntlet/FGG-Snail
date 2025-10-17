@@ -1,38 +1,13 @@
 import { defineStore } from 'pinia'
-import { computed, ref, watchEffect } from 'vue'
-import { persistentStorage, StoreKey } from '../services/persistentStorage'
+import { computed } from 'vue'
+import { usePersistentRef } from '../composables/usePersistentRef'
+import { StoreKey } from '../services/persistentStorage'
 
 export const useAuthStore = defineStore('counter', () => {
-	const userName = ref<null | string>(null)
-	const userId = ref<null | string>(null)
+	const userName = usePersistentRef(StoreKey.UserName)
+	const userId = usePersistentRef(StoreKey.UserId)
 
 	const isLoggedIn = computed(() => userId.value !== null)
-
-	watchEffect(() => {
-		if (userName.value === null) {
-			persistentStorage.delete(StoreKey.UserName)
-		} else {
-			persistentStorage.set(StoreKey.UserName, userName.value)
-		}
-
-		console.log(
-			'Updated persistentStorage[userName]',
-			persistentStorage.get(StoreKey.UserName),
-		)
-	})
-
-	watchEffect(() => {
-		if (userId.value === null) {
-			persistentStorage.delete(StoreKey.UserId)
-		} else {
-			persistentStorage.set(StoreKey.UserId, userId.value)
-		}
-
-		console.log(
-			'Updated persistentStorage[userId]',
-			persistentStorage.get(StoreKey.UserId),
-		)
-	})
 
 	const logIn = async (newUserName: string) => {
 		userName.value = newUserName
@@ -40,8 +15,8 @@ export const useAuthStore = defineStore('counter', () => {
 	}
 
 	const logOut = () => {
-		userName.value = null
-		userId.value = null
+		userName.value = undefined
+		userId.value = undefined
 	}
 
 	return { userName, userId, isLoggedIn, logIn, logOut }
