@@ -19,7 +19,7 @@ export function usePersistentRef<Key extends StoreKey>(
 		if (state.value === null) {
 			persistentStorage.delete(key)
 		} else {
-			persistentStorage.set(key, state.value)
+			// persistentStorage.set(key, state.value)
 		}
 	})
 

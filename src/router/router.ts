@@ -14,10 +14,13 @@ export const router = createRouter({
 	routes,
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
 	if (to.path === '/login') return true
 
 	const authStore = useAuthStore()
+	const isLoggedIn = await authStore.getIsLoggedIn()
 
-	return authStore.isLoggedIn || { path: '/login' }
+	console.log('Login guard', { isLoggedIn, userId: authStore.userId })
+
+	return isLoggedIn || { path: '/login' }
 })

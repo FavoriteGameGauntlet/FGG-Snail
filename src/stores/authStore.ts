@@ -1,13 +1,20 @@
 import { defineStore } from 'pinia'
-import { computed } from 'vue'
 import { usePersistentRef } from '../composables/usePersistentRef'
-import { StoreKey } from '../services/persistentStorage'
+import { persistentStorage, StoreKey } from '../services/persistentStorage'
+import { watchEffect } from 'vue'
+import { router } from '../router/router'
 
 export const useAuthStore = defineStore('counter', () => {
 	const userName = usePersistentRef(StoreKey.UserName)
 	const userId = usePersistentRef(StoreKey.UserId)
 
-	const isLoggedIn = computed(() => userId.value !== null)
+	watchEffect(() => console.log('store effect', { userId: userId.value }))
+
+	const getIsLoggedIn = async () => {
+		const userId = await persistentStorage.get(StoreKey.UserId)
+		console.log('store', { userId })
+		return userId !== null
+	}
 
 	const logIn = async (newUserName: string) => {
 		userName.value = newUserName
@@ -15,9 +22,11 @@ export const useAuthStore = defineStore('counter', () => {
 	}
 
 	const logOut = () => {
-		userName.value = undefined
-		userId.value = undefined
+		console.log('authStore: logOut')
+		userName.value = null
+		userId.value = null
+		router.push('/login')
 	}
 
-	return { userName, userId, isLoggedIn, logIn, logOut }
+	return { userName, userId, getIsLoggedIn, logIn, logOut }
 })
