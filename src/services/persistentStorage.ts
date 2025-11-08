@@ -6,8 +6,8 @@ export enum StoreKey {
 }
 
 export type StoredData = Partial<{
-	[StoreKey.UserName]: string | null
-	[StoreKey.UserId]: string | null
+	[StoreKey.UserName]: string
+	[StoreKey.UserId]: string
 }>
 
 const defaults: StoredData = {
@@ -49,5 +49,16 @@ export const persistentStorage = {
 	async has<K extends keyof StoredData>(key: K): Promise<boolean> {
 		const s = await getStore()
 		return s.has(key)
+	},
+
+	async getAll(): Promise<StoredData> {
+		const s = await getStore()
+		return (await s.entries<StoredData[keyof StoredData]>()).reduce<StoredData>(
+			(acc, [k, v]) => {
+				acc[k as keyof StoredData] = v
+				return acc
+			},
+			{},
+		)
 	},
 }

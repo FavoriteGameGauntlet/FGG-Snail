@@ -13,7 +13,10 @@ export default defineConfig([
 		languageOptions: { globals: globals.browser },
 	},
 	tseslint.configs.recommended,
-	pluginVue.configs['flat/essential'],
+	...pluginVue.configs['flat/essential'].map((config) => ({
+		...config,
+		files: ['**/*.vue'],
+	})),
 	{
 		files: ['**/*.vue'],
 		languageOptions: { parserOptions: { parser: tseslint.parser } },
@@ -23,5 +26,20 @@ export default defineConfig([
 		plugins: { css },
 		language: 'css/css',
 		extends: ['css/recommended'],
+		rules: {
+			unknownAtRules: ['off'],
+		},
+	},
+	{
+		files: ['**/*.{ts,mts,cts,vue}'],
+		rules: {
+			'@typescript-eslint/consistent-type-imports': [
+				'error',
+				{
+					prefer: 'type-imports',
+					fixStyle: 'inline-type-imports',
+				},
+			],
+		},
 	},
 ])

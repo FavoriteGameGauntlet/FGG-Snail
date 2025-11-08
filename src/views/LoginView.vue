@@ -11,9 +11,9 @@ const authStore = useAuthStore()
 const userName = ref('')
 const { userId } = storeToRefs(authStore)
 
-const onFormSubmit = async () => {
+const onFormSubmit = () => {
 	console.log('LoginView.onFormSubmit')
-	await authStore.logIn(userName.value)
+	authStore.logIn(userName.value)
 	router.push('/')
 }
 

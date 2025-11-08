@@ -9,7 +9,8 @@
 		"preview": "vite preview",
 		"tauri": "tauri",
 		"format": "prettier src/*{.vue,.ts} -w",
-		"lint": "eslint src/*{.ts,.vue}"
+		"lint": "eslint src/*",
+		"lint:fix": "eslint src/* --fix"
 	},
 	"dependencies": {
 		"@tailwindcss/vite": "^4.1.17",

@@ -5,26 +5,36 @@ import { watchEffect } from 'vue'
 import { router } from '../router/router'
 
 export const useAuthStore = defineStore('counter', () => {
-	const userName = usePersistentRef(StoreKey.UserName)
-	const userId = usePersistentRef(StoreKey.UserId)
+	const { state: userName, isReady: isUserNameReady } = usePersistentRef(
+		StoreKey.UserName,
+	)
+	const { state: userId, isReady: isUserIdReady } = usePersistentRef(
+		StoreKey.UserId,
+	)
 
+	watchEffect(() => console.log('store effect', { userName: userName.value }))
 	watchEffect(() => console.log('store effect', { userId: userId.value }))
 
 	const getIsLoggedIn = async () => {
 		const userId = await persistentStorage.get(StoreKey.UserId)
 		console.log('store', { userId })
-		return userId !== null
+		return userId !== undefined
 	}
 
-	const logIn = async (newUserName: string) => {
+	const logIn = (newUserName: string) => {
+		if (!isUserIdReady.value || !isUserNameReady)
+			throw new Error('Persistent storage is not yet initialized')
+
 		userName.value = newUserName
-		userId.value = 'default_user_id_123456789'
+		userId.value = 'user_' + newUserName
 	}
 
 	const logOut = () => {
-		console.log('authStore: logOut')
-		userName.value = null
-		userId.value = null
+		if (!isUserIdReady.value || !isUserNameReady)
+			throw new Error('Persistent storage is not yet initialized')
+
+		userName.value = undefined
+		userId.value = undefined
 		router.push('/login')
 	}
 

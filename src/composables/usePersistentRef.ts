@@ -1,4 +1,4 @@
-import { ref, watchEffect, type Ref } from 'vue'
+import { computed, type ComputedRef, ref, watchEffect, type Ref } from 'vue'
 import {
 	persistentStorage,
 	type StoreKey,
@@ -7,21 +7,31 @@ import {
 
 export function usePersistentRef<Key extends StoreKey>(
 	key: Key,
-	initialValue?: StoredData[Key],
-): Ref<StoredData[Key]> {
-	const state = ref<StoredData[Key]>(initialValue) as Ref<StoredData[Key]>
+): {
+	state: Ref<StoredData[Key]>
+	isLoading: ComputedRef<boolean>
+	isReady: ComputedRef<boolean>
+} {
+	const state = ref<StoredData[Key]>() as Ref<StoredData[Key]>
+
+	// I don't expose this one for type safety
+	const _isLoading = ref(true)
+
+	const isLoading = computed(() => _isLoading.value)
+	const isReady = computed(() => !isLoading.value)
 
 	persistentStorage.get(key).then((value) => {
 		state.value = value
+		_isLoading.value = false
+
+		watchEffect(() => {
+			if (state.value === undefined) {
+				persistentStorage.delete(key)
+			} else {
+				persistentStorage.set(key, state.value)
+			}
+		})
 	})
 
-	watchEffect(() => {
-		if (state.value === null) {
-			persistentStorage.delete(key)
-		} else {
-			// persistentStorage.set(key, state.value)
-		}
-	})
-
-	return state
+	return { state, isLoading, isReady }
 }

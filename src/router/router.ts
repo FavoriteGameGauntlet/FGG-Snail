@@ -1,12 +1,47 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import {
+	createMemoryHistory,
+	createRouter,
+	type RouteRecordRaw,
+} from 'vue-router'
 
+import GamesView from '../views/GamesView.vue'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import { useAuthStore } from '../stores/authStore'
+import RollsView from '../views/RollsView.vue'
+import TimerView from '../views/TimerView.vue'
+import { authGuard } from './authGuard'
+import RootView from '../views/RootView.vue'
 
-const routes = [
-	{ path: '/', component: HomeView },
-	{ path: '/login', component: LoginView },
+// todo: add named routes
+// https://router.vuejs.org/guide/essentials/named-routes.html
+
+const routes: RouteRecordRaw[] = [
+	{
+		path: '/',
+		component: RootView,
+		children: [
+			{
+				path: '',
+				component: HomeView,
+			},
+			{
+				path: 'games',
+				component: GamesView,
+			},
+			{
+				path: 'timer',
+				component: TimerView,
+			},
+			{
+				path: 'rolls',
+				component: RollsView,
+			},
+		],
+	},
+	{
+		path: '/login',
+		component: LoginView,
+	},
 ]
 
 export const router = createRouter({
@@ -14,13 +49,4 @@ export const router = createRouter({
 	routes,
 })
 
-router.beforeEach(async (to) => {
-	if (to.path === '/login') return true
-
-	const authStore = useAuthStore()
-	const isLoggedIn = await authStore.getIsLoggedIn()
-
-	console.log('Login guard', { isLoggedIn, userId: authStore.userId })
-
-	return isLoggedIn || { path: '/login' }
-})
+router.beforeEach(authGuard)
