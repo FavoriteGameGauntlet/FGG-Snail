@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import GameTimer from './GameTimer.vue'
+import { API_URL } from '../constants/apiUrl'
+
+console.log(API_URL)
 </script>
 
 <template>
