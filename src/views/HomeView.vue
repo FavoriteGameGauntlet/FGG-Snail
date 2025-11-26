@@ -10,6 +10,16 @@ const onDebugClick = async () => {
 }
 
 const onLogoutClick = () => authStore.logOut()
+
+// api
+// 	.test('welnyr')
+// 	.then(async (r) => {
+// 		const text = await r.text()
+// 		const status = r.status
+
+// 		return { text, status }
+// 	})
+// 	.then((result) => console.log({ result }))
 </script>
 
 <template>
