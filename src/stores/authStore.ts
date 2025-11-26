@@ -3,8 +3,9 @@ import { usePersistentRef } from '../composables/usePersistentRef'
 import { persistentStorage, StoreKey } from '../services/persistentStorage'
 import { watchEffect } from 'vue'
 import { router } from '../router/router'
+import { StoreName } from '../enums/storeName'
 
-export const useAuthStore = defineStore('counter', () => {
+export const useAuthStore = defineStore(StoreName.Auth, () => {
 	const { state: userName, isReady: isUserNameReady } = usePersistentRef(
 		StoreKey.UserName,
 	)
