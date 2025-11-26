@@ -11,6 +11,7 @@ import RollsView from '../views/RollsView.vue'
 import TimerView from '../views/TimerView.vue'
 import { authGuard } from './authGuard'
 import RootView from '../views/RootView.vue'
+import { initialPathGuard } from './initialPathGuard'
 
 // todo: add named routes
 // https://router.vuejs.org/guide/essentials/named-routes.html
@@ -49,4 +50,5 @@ export const router = createRouter({
 	routes,
 })
 
+router.beforeEach(initialPathGuard)
 router.beforeEach(authGuard)
