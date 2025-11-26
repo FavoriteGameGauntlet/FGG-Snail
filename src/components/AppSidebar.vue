@@ -39,6 +39,6 @@ console.log(API_URL)
 }
 
 .link {
-	@apply py-2 px-4 hover:bg-slate-200;
+	@apply py-2 px-4 hover:bg-slate-100;
 }
 </style>
