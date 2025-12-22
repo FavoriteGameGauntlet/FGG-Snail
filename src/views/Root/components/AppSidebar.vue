@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import GameTimer from './GameTimer.vue'
-import { API_URL } from '../constants/apiUrl'
+import { API_URL } from '../../../constants/apiUrl'
 
 console.log(API_URL)
 </script>
@@ -32,7 +32,7 @@ console.log(API_URL)
 </template>
 
 <style scoped>
-@reference '../style.css';
+@reference '../../../style.css';
 
 .section {
 	@apply py-3  not-last:border-b border-b-slate-500;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { type TempGame, useGameStore } from '../stores/gameStore'
+import { type TempGame, useGameStore } from '../../../stores/gameStore'
 import {
 	computed,
 	nextTick,
@@ -110,5 +110,5 @@ const onDeleteButtonClick = () => gameStore.deleteOne(gameId)
 </template>
 
 <style scoped>
-@reference '../style.css';
+@reference '../../../style.css';
 </style>

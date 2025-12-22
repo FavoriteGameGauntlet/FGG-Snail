@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { persistentStorage } from '../services/persistentStorage'
-import { useAuthStore } from '../stores/authStore'
+import { persistentStorage } from '../../services/persistentStorage'
+import { useAuthStore } from '../../stores/authStore'
 
 const authStore = useAuthStore()
 

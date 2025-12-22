@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import GameRow from '../components/GameRow.vue'
-import { useGameStore } from '../stores/gameStore'
+import GameRow from './components/GameRow.vue'
+import { useGameStore } from '../../stores/gameStore'
 
 const gameStore = useGameStore()
 
@@ -27,7 +27,7 @@ const { games } = storeToRefs(gameStore)
 </template>
 
 <style scoped>
-@reference '../style.css';
+@reference '../../style.css';
 
 .title-button {
 	@apply cursor-pointer px-4 py-2;
