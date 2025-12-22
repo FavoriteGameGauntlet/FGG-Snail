@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { toRefs } from 'vue'
+import { useAuthStore } from '../../../stores/authStore'
 import GameTimer from './GameTimer.vue'
-import { API_URL } from '../../../constants/apiUrl'
 
-console.log(API_URL)
+const userStore = useAuthStore()
+const { userName } = toRefs(userStore)
+
+const onLogoutButtonClick = () => userStore.logOut()
 </script>
 
 <template>
@@ -25,8 +29,14 @@ console.log(API_URL)
 			<RouterLink class="link" to="rolls">Роллы</RouterLink>
 		</nav>
 
-		<div class="section">
-			<h2>User profile</h2>
+		<div
+			class="section grid gap-y-1 gap-x-3 grid-cols-[auto_1fr] items-center px-4"
+		>
+			<div class="h-12 w-12 bg-slate-300 rounded-full row-span-2"></div>
+			<h2>{{ userName }}</h2>
+			<button class="bg-red-200 px-2 py-1" @click="onLogoutButtonClick">
+				Выйти
+			</button>
 		</div>
 	</div>
 </template>
