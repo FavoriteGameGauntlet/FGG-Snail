@@ -9,8 +9,7 @@
 		"store:default",
 		{
 			"identifier": "http:default",
-			"allow": [{ "url": "http://193.124.41.105:8080" }],
-			"deny": [{ "url": "https://private.tauri.app" }]
+			"allow": [{ "url": "http://fgg-challenge.com" }]
 		}
 	]
 }
