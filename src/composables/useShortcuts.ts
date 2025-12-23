@@ -1,9 +1,14 @@
 import { onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 export function useShortcuts() {
+	const router = useRouter()
+
 	const shortcuts: Record<string, () => void | undefined> = {
 		'ctrl+shift+r': () => window.location.reload(),
 		'ctrl+r': () => window.location.reload(),
+		'alt+arrowright': () => router.forward(),
+		'alt+arrowleft': () => router.back(),
 	}
 
 	const handleKeydown = (event: KeyboardEvent) => {
@@ -16,6 +21,8 @@ export function useShortcuts() {
 		]
 			.filter(Boolean)
 			.join('+')
+
+		// console.log('hotkey', key)
 
 		shortcuts[key]?.()
 	}
