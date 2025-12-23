@@ -45,7 +45,7 @@ const makeRequest = async (
 			body: responseBody,
 		})
 
-		if (response.status === 401) {
+		if (response.status === 401 && response.statusText !== 'WRONG_AUTH_DATA') {
 			router.push('/login')
 		}
 
