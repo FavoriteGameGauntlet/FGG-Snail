@@ -102,6 +102,7 @@ const onDeleteButtonClick = () => gameStore.deleteOne(gameId)
 
 		<button
 			class="trash-button hover:bg-red-200 size-8 cursor-pointer"
+			v-if="!isEditing"
 			@click="onDeleteButtonClick"
 		>
 			🗑
