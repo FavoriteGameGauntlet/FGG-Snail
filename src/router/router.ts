@@ -9,7 +9,7 @@ import HomeView from '../views/Home/HomeView.vue'
 import LoginView from '../views/Login/LoginView.vue'
 import RollsView from '../views/Rolls/RollsView.vue'
 import RootView from '../views/Root/RootView.vue'
-import SignupView from '../views/Signup/SignupView.vue'
+import SignUpView from '../views/SignUp/SignUpView.vue'
 import TimerView from '../views/Timer/TimerView.vue'
 import { authGuard } from './authGuard'
 import { initialPathGuard } from './initialPathGuard'
@@ -46,7 +46,7 @@ const routes: RouteRecordRaw[] = [
 	},
 	{
 		path: '/signup',
-		component: SignupView,
+		component: SignUpView,
 	},
 ]
 
