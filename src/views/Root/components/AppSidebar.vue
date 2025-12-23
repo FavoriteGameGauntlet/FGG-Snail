@@ -34,7 +34,10 @@ const onLogoutButtonClick = () => userStore.logOut()
 		>
 			<div class="h-12 w-12 bg-slate-300 rounded-full row-span-2"></div>
 			<h2>{{ userName }}</h2>
-			<button class="bg-red-200 px-2 py-1" @click="onLogoutButtonClick">
+			<button
+				class="text-cyan-700 text-sm cursor-pointer text-start"
+				@click="onLogoutButtonClick"
+			>
 				Выйти
 			</button>
 		</div>
