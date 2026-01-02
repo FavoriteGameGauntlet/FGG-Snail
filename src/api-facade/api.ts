@@ -1,9 +1,24 @@
-import { API_URL } from '../constants/apiUrl'
-import { fetch } from '@tauri-apps/plugin-http'
+import { http } from './http'
+import {
+	type PostLogIn,
+	type PostSignUp,
+	type GetCurrentTimer,
+	type PostPauseTimer,
+	type PostStartTimer,
+} from './requests'
 
 export const api = {
-	// users: {
-	// 	get: ({ name }: { name: string }) => axios.get(`/users/${name}`),
-	// },
-	test: (name: string) => fetch(API_URL + `/games/unplayed`, { method: 'GET' }),
+	logIn: (request: PostLogIn['request']) =>
+		http.post('/auth/login', { body: request.body }),
+
+	logoUt: () => http.post('/auth/logout'),
+
+	signUp: (request: PostSignUp['request']) =>
+		http.post('/auth/signup', { body: request.body }),
+
+	getCurrentTimer: () => http.get<GetCurrentTimer>('/timers/current'),
+
+	postStartTimer: () => http.post<PostStartTimer>('/timers/current/start'),
+
+	postPauseTimer: () => http.post<PostPauseTimer>('/timers/current/pause'),
 }

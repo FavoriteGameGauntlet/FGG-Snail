@@ -40,7 +40,6 @@ export enum TimerState {
 	Running = 'running',
 	Paused = 'paused',
 	Finished = 'finished',
-	Rolled = 'rolled',
 }
 
 export type Timer = {
@@ -50,14 +49,14 @@ export type Timer = {
 	timerActionDate?: string
 }
 
-export enum TimerActionAction {
+export enum TimerActionType {
 	Start = 'start',
 	Pause = 'pause',
 	Stop = 'stop',
 }
 
 export type TimerAction = {
-	action: TimerActionAction
+	action: TimerActionType
 	remainingTimeInS: number
 }
 

@@ -27,12 +27,13 @@ export const persistentStorage = {
 	async get<K extends keyof StoredData = keyof StoredData>(
 		key: K,
 	): Promise<StoredData[K]> {
-		console.log('persistentStorage.get', { key })
+		console.log('[STORAGE] get', { key })
 		const s = await getStore()
 		return s.get<StoredData[K]>(key)
 	},
 
 	async delete<K extends keyof StoredData>(key: K) {
+		console.log('[STORAGE] delete', { key })
 		const s = await getStore()
 		return s.delete(key)
 	},
@@ -41,7 +42,7 @@ export const persistentStorage = {
 		key: K,
 		value: StoredData[K],
 	): Promise<void> {
-		console.log('persistentStorage.set', { key, value })
+		console.log('[STORAGE] set', { key, value })
 		const s = await getStore()
 		return s.set(key, value)
 	},
@@ -63,6 +64,8 @@ export const persistentStorage = {
 	},
 
 	async clear(): Promise<void> {
+		console.log('[STORAGE] clear')
+
 		return await (await getStore()).clear()
 	},
 }

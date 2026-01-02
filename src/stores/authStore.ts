@@ -4,7 +4,7 @@ import { persistentStorage, StoreKey } from '../services/persistentStorage'
 import { watchEffect } from 'vue'
 import { router } from '../router/router'
 import { StoreName } from '../enums/storeName'
-import { http } from '../api-facade/http.tauri'
+import { api } from '../api-facade/api'
 
 export const useAuthStore = defineStore(StoreName.Auth, () => {
 	const { state: userName, isReady: isUserNameReady } = usePersistentRef(
@@ -31,12 +31,12 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
-		http
-			.post('/auth/signup', { body: { name, password, email } })
+		api
+			.signUp({ body: { name, password, email } })
 			.then(() => {
 				userName.value = name
 
-				return http.post('/auth/login', { body: { name, password } })
+				return api.logIn({ body: { name, password } })
 			})
 			.then(() => router.push('/'))
 			.catch((e) => console.log('login error', e))
@@ -46,8 +46,8 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
-		http
-			.post('/auth/login', { body: { name, password } })
+		api
+			.logIn({ body: { name, password } })
 			.then(() => {
 				userName.value = name
 				router.push('/')
@@ -59,7 +59,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
-		http.post('/auth/logout').then(() => {
+		api.logoUt().then(() => {
 			userName.value = undefined
 			router.push('/login')
 		})

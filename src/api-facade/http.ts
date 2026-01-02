@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_URL } from '../constants/apiUrl'
 import { type ClientOptions, fetch } from '@tauri-apps/plugin-http'
 import { router } from '../router/router'
@@ -12,10 +13,7 @@ export interface HttpErrorResponse {
 
 // const router = useRouter()
 
-const makeRequest = async (
-	url: string,
-	opts?: RequestInit & ClientOptions,
-): Promise<Omit<Response, 'body'> & { body?: object }> => {
+const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 	const fullUrl = API_URL + url
 	const method = opts?.method || 'GET'
 
@@ -70,23 +68,23 @@ const makeRequest = async (
 }
 
 export const http = {
-	get: (
+	get: <T extends { response: unknown }>(
 		url: string,
 		opts?: Omit<RequestInit & ClientOptions, 'method' | 'body'> & {
 			body: object
 		},
-	) =>
+	): Promise<T['response']> =>
 		makeRequest(url, {
 			...opts,
 			body: opts?.body ? JSON.stringify(opts.body) : undefined,
 			method: 'GET',
 		}),
-	post: (
+	post: <T extends { response: unknown }>(
 		url: string,
 		opts?: Omit<RequestInit & ClientOptions, 'method' | 'body'> & {
 			body: object
 		},
-	) =>
+	): Promise<T['response']> =>
 		makeRequest(url, {
 			...opts,
 			body: opts?.body ? JSON.stringify(opts.body) : undefined,
