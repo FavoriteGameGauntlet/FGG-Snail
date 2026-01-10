@@ -24,10 +24,8 @@ export type GameDto = {
 	link?: string
 }
 
-type DtoStringToDate<T extends object, U extends keyof T> = {
-	[P in Exclude<keyof T, U>]: T[P]
-} & {
-	[P in Extract<keyof T, U>]: T[P] extends string ? Date : undefined | Date
+type DtoStringToDate<Dto extends object, DateFields extends keyof Dto> = {
+	[K in keyof Dto]: K extends DateFields ? Date : Dto[K]
 }
 
 export type Game = DtoStringToDate<GameDto, 'finishDate' | 'optDate'>

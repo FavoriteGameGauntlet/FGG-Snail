@@ -68,7 +68,7 @@ const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 }
 
 export const http = {
-	get: <T extends { response: unknown }>(
+	get: <T extends { request?: unknown; response?: unknown }>(
 		url: string,
 		opts?: Omit<RequestInit & ClientOptions, 'method' | 'body'> & {
 			body: object
@@ -79,7 +79,7 @@ export const http = {
 			body: opts?.body ? JSON.stringify(opts.body) : undefined,
 			method: 'GET',
 		}),
-	post: <T extends { response: unknown }>(
+	post: <T extends { request?: unknown; response?: unknown }>(
 		url: string,
 		opts?: Omit<RequestInit & ClientOptions, 'method' | 'body'> & {
 			body: object

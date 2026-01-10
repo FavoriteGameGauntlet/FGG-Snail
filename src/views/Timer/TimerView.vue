@@ -14,29 +14,62 @@ const timerString = computed(() => formatDate(timer.value))
 const durationString = computed(() => formatDate(totalDuration.value))
 
 const onStartButtonClick = () => null
-const onPauseButtonClick = () => null
+// const onPauseButtonClick = () => null
 </script>
 
 <template>
-	<div class="grid place-content-center px-4 pt-4 pb-8 gap-8">
-		<div class="flex flex-col gap-1 font-mono">
-			<div class="text-xl place-self-center">В игре: 12:34:56</div>
-			<div class="text-6xl font-bold">{{ timerString }}</div>
-			<div class="text-xl w-fit place-self-end">/ 2:00:00</div>
+	<div class="flex flex-col gap-x-4 gap-9 w-min">
+		<div
+			class="text-4xl font-bold leading-[110%] max-w-fit w-fit overflow-auto"
+		>
+			Game name game name game name
 		</div>
 
-		<button
-			class="cursor-pointer border-2 px-11 py-1 w-fit justify-self-center text-2xl text-green-700 border-green-700"
-			@click="onStartButtonClick"
+		<div
+			class="text-massive font-bold font-mono leading-[78%] tracking-tighter w-fit shrink-0 min-w-fit"
 		>
-			Старт
-		</button>
+			{{ timerString }}
+		</div>
 
-		<button
-			class="cursor-pointer border-2 px-11 py-1 w-fit justify-self-center text-2xl text-orange-700 border-orange-700"
-			@click="onPauseButtonClick"
-		>
-			Стоп
-		</button>
+		<div class="grid grid-cols-2 grid-rows-2">
+			<button
+				class="row-span-2 cursor-pointer border-2 px-5 py-4 w-fit text-2xl border-black"
+				@click="onStartButtonClick"
+			>
+				Старт
+			</button>
+
+			<div
+				class="text-2xl w-fit place-self-end font-mono leading-[100%] self-start justify-self-end"
+			>
+				/ {{ durationString }}
+			</div>
+
+			<div class="text-2xl w-fit place-self-end font-mono leading-[100%]">
+				В игре: {{ durationString }}
+			</div>
+		</div>
+
+		<div class="flex w-full justify-between">
+			<button
+				class="cursor-pointer border-2 px-8 py-1 w-fit text-2xl text-green-700 border-green-700"
+				@click="onStartButtonClick"
+			>
+				Завершить
+			</button>
+
+			<button
+				class="cursor-pointer border-2 px-8 py-1 w-fit justify-self-end text-2xl text-red-700 border-red-700"
+				@click="onStartButtonClick"
+			>
+				Бросить
+			</button>
+		</div>
 	</div>
 </template>
+
+<style scoped>
+.text-massive {
+	font-size: 8rem;
+}
+</style>

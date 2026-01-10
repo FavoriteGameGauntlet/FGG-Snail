@@ -5,13 +5,15 @@ import { useGameStore } from '../../stores/gameStore'
 
 const gameStore = useGameStore()
 
-const { games } = storeToRefs(gameStore)
+const { unplayed } = storeToRefs(gameStore)
 </script>
 
 <template>
 	<div class="flex flex-col gap-8 px-12 py-8">
 		<div class="grid grid-cols-[1fr_auto_auto] gap-4 items-center ps-6">
 			<h1 class="text-4xl">Игры</h1>
+
+			<RouterLink to="/">home</RouterLink>
 
 			<!-- todo implement -->
 			<!-- <button class="title-button bg-cyan-200">Импорт</button> -->
@@ -20,14 +22,14 @@ const { games } = storeToRefs(gameStore)
 			<!-- <button class="title-button bg-purple-200">Экспорт</button> -->
 		</div>
 
-		<ul class="flex flex-col">
-			<GameRow :gameId="game.id" :key="game.id" v-for="game in games"></GameRow>
-		</ul>
+		<!-- <ul class="flex flex-col">
+			<GameRow :gameIndex="index" v-for="(game, index) in unplayed"></GameRow>
+		</ul> -->
 	</div>
 </template>
 
 <style scoped>
-@reference '../../style.css';
+@reference '@/style.css';
 
 .title-button {
 	@apply cursor-pointer px-4 py-2;

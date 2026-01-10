@@ -1,24 +1,65 @@
 import { http } from './http'
+import { type GameDto, type Game } from './models'
 import {
 	type PostLogIn,
 	type PostSignUp,
 	type GetCurrentTimer,
 	type PostPauseTimer,
 	type PostStartTimer,
+	type PostGamesAddUnplayed,
+	type GetGamesUnplayed,
+	type PostGamesRoll,
+	type GetCurrentGame,
+	type GetGamesHistory,
 } from './requests'
 
+const convertGameDto = (game: GameDto): Game => ({
+	...game,
+	finishDate:
+		game.finishDate !== undefined ? new Date(game.finishDate) : undefined,
+	optDate: new Date(game.optDate),
+})
+
 export const api = {
-	logIn: (request: PostLogIn['request']) =>
-		http.post('/auth/login', { body: request.body }),
+	auth: {
+		logIn: (request: PostLogIn['request']) =>
+			http.post('/auth/login', { body: request.body }),
 
-	logoUt: () => http.post('/auth/logout'),
+		logoUt: () => http.post('/auth/logout'),
 
-	signUp: (request: PostSignUp['request']) =>
-		http.post('/auth/signup', { body: request.body }),
+		signUp: (request: PostSignUp['request']) =>
+			http.post('/auth/signup', { body: request.body }),
+	},
 
-	getCurrentTimer: () => http.get<GetCurrentTimer>('/timers/current'),
+	timer: {
+		getCurrent: () => http.get<GetCurrentTimer>('/timers/current'),
 
-	postStartTimer: () => http.post<PostStartTimer>('/timers/current/start'),
+		postStart: () => http.post<PostStartTimer>('/timers/current/start'),
 
-	postPauseTimer: () => http.post<PostPauseTimer>('/timers/current/pause'),
+		postPause: () => http.post<PostPauseTimer>('/timers/current/pause'),
+	},
+
+	games: {
+		postAddUnplayed: (request: PostGamesAddUnplayed['request']) =>
+			http.post<PostGamesAddUnplayed>('/games/unplayed', {
+				body: request.body,
+			}),
+
+		getGamesUnplayed: () => http.post<GetGamesUnplayed>('/games/unplayed'),
+
+		postRoll: (): Promise<Game> =>
+			http.post<PostGamesRoll>('/games/roll').then(convertGameDto),
+
+		getCurrent: (): Promise<Game> =>
+			http.get<GetCurrentGame>('/games/roll').then(convertGameDto),
+
+		postFinishCurrent: () => http.post('/games/current/finish'),
+
+		postCancelCurrent: () => http.post('/games/current/cancel'),
+
+		getHistory: (): Promise<Game[]> =>
+			http
+				.get<GetGamesHistory>('/games/history')
+				.then((games) => games.map(convertGameDto)),
+	},
 }

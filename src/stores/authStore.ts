@@ -1,17 +1,14 @@
 import { defineStore } from 'pinia'
-import { usePersistentRef } from '../composables/usePersistentRef'
-import { persistentStorage, StoreKey } from '../services/persistentStorage'
-import { watchEffect } from 'vue'
-import { router } from '../router/router'
-import { StoreName } from '../enums/storeName'
 import { api } from '../api-facade/api'
+import { usePersistentRef } from '../composables/usePersistentRef'
+import { StoreName } from '../enums/storeName'
+import { router } from '../router/router'
+import { persistentStorage, StoreKey } from '../services/persistentStorage'
 
 export const useAuthStore = defineStore(StoreName.Auth, () => {
 	const { state: userName, isReady: isUserNameReady } = usePersistentRef(
 		StoreKey.UserName,
 	)
-
-	watchEffect(() => console.log('store effect', { userName: userName.value }))
 
 	const getIsLoggedIn = async () => {
 		const userName = await persistentStorage.get(StoreKey.UserName)
@@ -31,12 +28,12 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
-		api
+		api.auth
 			.signUp({ body: { name, password, email } })
 			.then(() => {
 				userName.value = name
 
-				return api.logIn({ body: { name, password } })
+				return api.auth.logIn({ body: { name, password } })
 			})
 			.then(() => router.push('/'))
 			.catch((e) => console.log('login error', e))
@@ -46,7 +43,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
-		api
+		api.auth
 			.logIn({ body: { name, password } })
 			.then(() => {
 				userName.value = name
@@ -59,7 +56,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
-		api.logoUt().then(() => {
+		api.auth.logoUt().finally(() => {
 			userName.value = undefined
 			router.push('/login')
 		})

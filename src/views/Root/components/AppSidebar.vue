@@ -45,7 +45,7 @@ const onLogoutButtonClick = () => userStore.logOut()
 </template>
 
 <style scoped>
-@reference '../../../style.css';
+@reference '@/style.css';
 
 .section {
 	@apply py-3  not-last:border-b border-b-slate-500;

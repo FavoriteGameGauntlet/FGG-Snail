@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { type TempGame, useGameStore } from '../../../stores/gameStore'
 import {
 	computed,
 	nextTick,
@@ -9,16 +8,18 @@ import {
 	watch,
 	watchEffect,
 } from 'vue'
+import { type UnplayedGame } from '../../../api-facade/models'
+import { useGameStore } from '../../../stores/gameStore'
 
 type Props = {
-	gameId: number
+	gameIndex: number
 }
 
-const { gameId } = defineProps<Props>()
+const { gameIndex } = defineProps<Props>()
 
 const gameStore = useGameStore()
 
-const { games } = storeToRefs(gameStore)
+const { unplayed: unplayedGames } = storeToRefs(gameStore)
 
 const isEditing = ref(false)
 const inputEl = useTemplateRef('rename-input')
@@ -111,5 +112,5 @@ const onDeleteButtonClick = () => gameStore.deleteOne(gameId)
 </template>
 
 <style scoped>
-@reference '../../../style.css';
+@reference '@/style.css';
 </style>
