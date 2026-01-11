@@ -43,6 +43,8 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
+		console.log('log in')
+
 		api.auth
 			.logIn({ body: { name, password } })
 			.then(() => {
@@ -56,7 +58,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
-		api.auth.logoUt().finally(() => {
+		api.auth.logOut().finally(() => {
 			userName.value = undefined
 			router.push('/login')
 		})

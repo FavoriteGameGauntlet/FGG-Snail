@@ -5,7 +5,7 @@ export type User = {
 
 export type UnplayedGame = {
 	name: string
-	link?: string
+	// link?: string
 }
 
 export type UnplayedGames = UnplayedGame[]
@@ -21,7 +21,8 @@ export type GameDto = {
 	state: GameState
 	finishDate?: string
 	optDate: string
-	link?: string
+	// maybe will add
+	// link?: string
 }
 
 type DtoStringToDate<Dto extends object, DateFields extends keyof Dto> = {

@@ -25,7 +25,7 @@ export const api = {
 		logIn: (request: PostLogIn['request']) =>
 			http.post('/auth/login', { body: request.body }),
 
-		logoUt: () => http.post('/auth/logout'),
+		logOut: () => http.post('/auth/logout'),
 
 		signUp: (request: PostSignUp['request']) =>
 			http.post('/auth/signup', { body: request.body }),
@@ -45,13 +45,13 @@ export const api = {
 				body: request.body,
 			}),
 
-		getGamesUnplayed: () => http.post<GetGamesUnplayed>('/games/unplayed'),
+		getGamesUnplayed: () => http.get<GetGamesUnplayed>('/games/unplayed'),
 
 		postRoll: (): Promise<Game> =>
 			http.post<PostGamesRoll>('/games/roll').then(convertGameDto),
 
 		getCurrent: (): Promise<Game> =>
-			http.get<GetCurrentGame>('/games/roll').then(convertGameDto),
+			http.get<GetCurrentGame>('/games/current').then(convertGameDto),
 
 		postFinishCurrent: () => http.post('/games/current/finish'),
 

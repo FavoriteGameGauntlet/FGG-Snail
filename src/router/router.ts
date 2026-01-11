@@ -5,7 +5,7 @@ import {
 } from 'vue-router'
 
 import GamesView from '../views/Games/GamesView.vue'
-// import HomeView from '../views/Home/HomeView.vue'
+import EffectsView from '../views/Effects/EffectsView.vue'
 import LoginView from '../views/Login/LoginView.vue'
 import RollsView from '../views/Rolls/RollsView.vue'
 import RootView from '../views/Root/RootView.vue'
@@ -21,22 +21,23 @@ const routes: RouteRecordRaw[] = [
 	{
 		path: '/',
 		component: RootView,
+		redirect: 'timer',
 		children: [
 			{
-				path: '',
+				path: 'timer',
 				component: TimerView,
 			},
 			{
 				path: 'games',
 				component: GamesView,
 			},
-			// {
-			// 	path: 'timer',
-			// 	component: TimerView,
-			// },
 			{
 				path: 'rolls',
 				component: RollsView,
+			},
+			{
+				path: 'effects',
+				component: EffectsView,
 			},
 		],
 	},

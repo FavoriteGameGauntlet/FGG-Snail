@@ -1,11 +1,18 @@
 <script setup lang="ts">
-// import AppSidebar from './components/AppSidebar.vue'
+import { useGameStore } from '../../stores/gameStore'
+import { useTimerStore } from '../../stores/timerStore'
+import AppNavbar from './components/AppNavbar.vue'
+
+useTimerStore().init()
+useGameStore().init()
 </script>
 
 <template>
-	<div class="grid h-full place-items-center">
-		<!-- <AppSidebar class="w-60 border-r border-r-slate-500 h-full" /> -->
+	<div class="grid h-full grid-rows-[auto_1fr]">
+		<AppNavbar class="h-16" />
 
-		<router-view />
+		<div class="h-full w-full">
+			<router-view />
+		</div>
 	</div>
 </template>

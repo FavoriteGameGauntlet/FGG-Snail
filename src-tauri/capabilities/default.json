@@ -9,7 +9,7 @@
 		"store:default",
 		{
 			"identifier": "http:default",
-			"allow": [{ "url": "http://fgg-challenge.com" }]
+			"allow": [{ "url": "http://147.45.98.219:8080" }]
 		}
 	]
 }

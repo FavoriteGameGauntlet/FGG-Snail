@@ -52,16 +52,16 @@ export const persistentStorage = {
 		return s.has(key)
 	},
 
-	async getAll(): Promise<StoredData> {
-		const s = await getStore()
-		return (await s.entries<StoredData[keyof StoredData]>()).reduce<StoredData>(
-			(acc, [k, v]) => {
-				acc[k as keyof StoredData] = v
-				return acc
-			},
-			{},
-		)
-	},
+	// async getAll(): Promise<StoredData> {
+	// 	const s = await getStore()
+	// 	return (await s.entries<StoredData[keyof StoredData]>()).reduce<StoredData>(
+	// 		(acc, [k, v]) => {
+	// 			acc[k as keyof StoredData] = v
+	// 			return acc
+	// 		},
+	// 		{},
+	// 	)
+	// },
 
 	async clear(): Promise<void> {
 		console.log('[STORAGE] clear')

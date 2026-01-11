@@ -22,8 +22,6 @@ export function useShortcuts() {
 			.filter(Boolean)
 			.join('+')
 
-		// console.log('hotkey', key)
-
 		shortcuts[key]?.()
 	}
 

@@ -36,15 +36,23 @@ const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 		const responseBody: object | undefined = await response
 			.text()
 			.then((body) => (body.length ? JSON.parse(body) : undefined))
-
-		console.log({ responseBody })
+			.catch((er) => console.log('whatafuk mazafaka', er))
 
 		console.log(`[HTTP] ${method} ${fullUrl} - ${response.status}`, {
 			body: responseBody,
 		})
 
-		if (response.status === 401 && response.statusText !== 'WRONG_AUTH_DATA') {
+		if (
+			(response.status === 401 && response.statusText !== 'WRONG_AUTH_DATA') ||
+			(responseBody &&
+				'code' in responseBody &&
+				responseBody.code === 'COOKIE_NOT_FOUND')
+		) {
+			console.log('to login')
+
 			router.push('/login')
+		} else {
+			console.log('all good')
 		}
 
 		if (!response.ok) {

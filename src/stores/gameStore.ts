@@ -8,31 +8,22 @@ export const useGameStore = defineStore(StoreName.Game, () => {
 	const unplayed = ref<UnplayedGame[]>([])
 	const current = ref<Game | null>(null)
 
-	const init = () => {
-		api.games.getCurrent().then((game) => {
-			current.value = game
+	const init = async () => {
+		return Promise.all([
+			api.games.getCurrent().then((game) => {
+				current.value = game
+			}),
+			api.games.getGamesUnplayed().then((unplayedGames) => {
+				unplayed.value = unplayedGames.body
+			}),
+		])
+	}
+
+	const addGames = async (games: UnplayedGame[]) => {
+		return api.games.postAddUnplayed({ body: games }).then(() => {
+			unplayed.value = [...unplayed.value, ...games]
 		})
 	}
 
-	const getUnplayed = () => {
-		api.games.getGamesUnplayed().then((unplayedGames) => {
-			unplayed.value = unplayedGames
-		})
-	}
-
-	// const editUnplayedOne = (game: UnplayedGame) => {
-	// 	setTimeout(() => {
-	// 		const index = unplayed.value.findIndex((g) => g.id === game.id)
-	// 		unplayed.value[index] = { ...game }
-	// 		// games.value = getGames()
-	// 	}, 200)
-	// }
-
-	// const deleteOne = (id: number) => {
-	// 	setTimeout(() => {
-	// 		unplayed.value = unplayed.value.filter(({ id: gameId }) => id !== gameId)
-	// 	}, 200)
-	// }
-
-	return { current, unplayed, init, getUnplayed }
+	return { current, unplayed, init, addGames }
 })
