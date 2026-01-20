@@ -13,13 +13,14 @@ const password = ref('')
 const email = ref('')
 
 const onFormSubmit = () => {
-	console.log('LoginView.onFormSubmit')
-	authStore.signUp({
-		name: userName.value,
-		password: password.value,
-		email: email.value,
-	})
-	router.push('/')
+	authStore
+		.signUp({
+			name: userName.value,
+			password: password.value,
+			email: email.value,
+		})
+		.then(() => router.push('/'))
+		.catch((e) => console.log(e))
 }
 </script>
 

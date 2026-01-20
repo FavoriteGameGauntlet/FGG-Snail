@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_URL } from '../constants/apiUrl'
 import { type ClientOptions, fetch } from '@tauri-apps/plugin-http'
 import { router } from '../router/router'
@@ -10,8 +9,6 @@ export interface HttpErrorResponse {
 	url: string
 	method: string
 }
-
-// const router = useRouter()
 
 const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 	const fullUrl = API_URL + url
@@ -48,13 +45,8 @@ const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 				'code' in responseBody &&
 				responseBody.code === 'COOKIE_NOT_FOUND')
 		) {
-			console.log('to login')
-
 			router.push('/login')
-		} else {
-			console.log('all good')
 		}
-
 		if (!response.ok) {
 			throw {
 				status: response.status,

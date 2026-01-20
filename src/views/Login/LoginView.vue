@@ -10,9 +10,10 @@ const userName = ref('')
 const password = ref('')
 
 const onFormSubmit = () => {
-	console.log('LoginView.onFormSubmit')
-	authStore.logIn(userName.value, password.value)
-	router.push('/')
+	authStore
+		.logIn(userName.value, password.value)
+		.then(() => router.push('/'))
+		.catch((e) => console.error(e))
 }
 </script>
 
