@@ -9,11 +9,17 @@ const authStore = useAuthStore()
 const userName = ref('')
 const password = ref('')
 
+const isAuthError = ref(false)
+
 const onFormSubmit = () => {
 	authStore
 		.logIn(userName.value, password.value)
 		.then(() => router.push('/'))
-		.catch((e) => console.error(e))
+		.catch((e) => {
+			if (e['body']['code'] === 'WRONG_AUTH_DATA') {
+				isAuthError.value = true
+			}
+		})
 }
 </script>
 
@@ -33,6 +39,10 @@ const onFormSubmit = () => {
 				placeholder="Пароль"
 				v-model="password"
 			/>
+
+			<div class="text-sm text-red-400" v-if="isAuthError">
+				Неправильный логин или пароль.
+			</div>
 
 			<button class="bg-emerald-200 py-0.5 rounded-md">Войти</button>
 
