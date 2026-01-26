@@ -1,23 +1,47 @@
 import { http } from './http'
-import { type GameDto, type Game } from './models'
 import {
-	type PostLogIn,
-	type PostSignUp,
-	type GetCurrentTimer,
-	type PostPauseTimer,
-	type PostStartTimer,
-	type PostGamesAddUnplayed,
-	type GetGamesUnplayed,
-	type PostGamesRoll,
+	type Game,
+	type GameDto,
+	type Timer,
+	type TimerAction,
+	type TimerActionDto,
+	type TimerDto,
+} from './models'
+import {
 	type GetCurrentGame,
+	type GetCurrentTimer,
 	type GetGamesHistory,
+	type GetGamesUnplayed,
+	type PostGamesAddUnplayed,
+	type PostGamesRoll,
+	type PostLogIn,
+	type PostPauseTimer,
+	type PostSignUp,
+	type PostStartTimer,
 } from './requests'
 
 const convertGameDto = (game: GameDto): Game => ({
 	...game,
 	finishDate:
-		game.finishDate !== undefined ? new Date(game.finishDate) : undefined,
-	optDate: new Date(game.optDate),
+		game.finishDate !== undefined
+			? Temporal.PlainDateTime.from(game.finishDate)
+			: undefined,
+	timeSpent: Temporal.Duration.from(game.timeSpent),
+})
+
+const convertTimerDto = (timer: TimerDto): Timer => ({
+	...timer,
+	duration: Temporal.Duration.from(timer.duration),
+	remainingTime: Temporal.Duration.from(timer.remainingTime),
+	timerActionDate:
+		timer.timerActionDate !== undefined
+			? Temporal.PlainDateTime.from(timer.timerActionDate)
+			: undefined,
+})
+
+const convertTimerActionDto = (action: TimerActionDto): TimerAction => ({
+	...action,
+	remainingTime: Temporal.Duration.from(action.remainingTime),
 })
 
 export const api = {
@@ -32,11 +56,18 @@ export const api = {
 	},
 
 	timer: {
-		getCurrent: () => http.get<GetCurrentTimer>('/timers/current'),
+		getCurrent: (): Promise<Timer> =>
+			http.get<GetCurrentTimer>('/timers/current').then(convertTimerDto),
 
-		postStart: () => http.post<PostStartTimer>('/timers/current/start'),
+		postStart: (): Promise<TimerAction> =>
+			http
+				.post<PostStartTimer>('/timers/current/start')
+				.then(convertTimerActionDto),
 
-		postPause: () => http.post<PostPauseTimer>('/timers/current/pause'),
+		postPause: (): Promise<TimerAction> =>
+			http
+				.post<PostPauseTimer>('/timers/current/pause')
+				.then(convertTimerActionDto),
 	},
 
 	games: {

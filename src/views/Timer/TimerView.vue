@@ -7,8 +7,8 @@ const timerStore = useTimerStore()
 
 const { totalDuration, timer } = storeToRefs(timerStore)
 
-const formatDate = (date: Date) =>
-	`${date.getUTCHours()}:${date.getUTCMinutes().toString().padStart(2, '0')}:${date.getUTCSeconds().toString().padStart(2, '0')}`
+const formatDate = (date: Temporal.PlainDateTime) =>
+	`${date.hour}:${date.minute.toString().padStart(2, '0')}:${date.second.toString().padStart(2, '0')}`
 
 const timerString = computed(() => formatDate(timer.value))
 const durationString = computed(() => formatDate(totalDuration.value))

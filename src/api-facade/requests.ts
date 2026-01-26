@@ -1,8 +1,9 @@
 import {
 	type GameDto,
 	type TimerActionType,
-	type TimerState,
+	type TimerDto,
 	type UnplayedGame,
+	type TimerActionDto,
 } from './models'
 
 export type PostSignUp = {
@@ -25,26 +26,15 @@ export type PostLogIn = {
 }
 
 export type GetCurrentTimer = {
-	response: {
-		durationInS: number
-		remainingTimeInS: number
-		state: TimerState
-		timerActionDate: string
-	}
+	response: TimerDto
 }
 
 export type PostStartTimer = {
-	response: {
-		remainingTimeInS: number
-		type: TimerActionType
-	}
+	response: TimerActionDto
 }
 
 export type PostPauseTimer = {
-	response: {
-		remainingTimeInS: number
-		type: TimerActionType
-	}
+	response: TimerActionDto
 }
 
 export type PostGamesAddUnplayed = {
@@ -66,9 +56,6 @@ export type PostGamesRoll = {
 export type GetCurrentGame = {
 	response: GameDto
 }
-
-// export type PostGamesFinishCurrent = {}
-// export type PostGamesCancelCurrent = {}
 
 export type GetGamesHistory = {
 	response: GameDto[]

@@ -5,7 +5,6 @@ export type User = {
 
 export type UnplayedGame = {
 	name: string
-	// link?: string
 }
 
 export type UnplayedGames = UnplayedGame[]
@@ -19,20 +18,26 @@ export enum GameState {
 export type GameDto = {
 	name: string
 	state: GameState
+	/** format: duration */
+	timeSpent: string
 	finishDate?: string
-	optDate: string
-	// maybe will add
-	// link?: string
 }
 
 type DtoStringToDate<Dto extends object, DateFields extends keyof Dto> = {
-	[K in keyof Dto]: K extends DateFields ? Date : Dto[K]
+	[K in keyof Dto]: K extends DateFields ? Temporal.PlainDateTime : Dto[K]
 }
 
-export type Game = DtoStringToDate<GameDto, 'finishDate' | 'optDate'>
+type DtoStringToDuration<
+	Dto extends object,
+	DurationFields extends keyof Dto,
+> = {
+	[K in keyof Dto]: K extends DurationFields ? Temporal.Duration : Dto[K]
+}
 
-export type GamesDto = GameDto[]
-export type Games = Game[]
+export type Game = DtoStringToDuration<
+	DtoStringToDate<GameDto, 'finishDate'>,
+	'timeSpent'
+>
 
 export enum TimerState {
 	Created = 'created',
@@ -41,12 +46,19 @@ export enum TimerState {
 	Finished = 'finished',
 }
 
-export type Timer = {
-	durationInS: number
-	remainingTimeInS: number
+export type TimerDto = {
+	/** format: Duration */
+	duration: string
+	/** format: Duration */
+	remainingTime: string
 	state: TimerState
 	timerActionDate?: string
 }
+
+export type Timer = DtoStringToDate<
+	DtoStringToDuration<TimerDto, 'duration' | 'remainingTime'>,
+	'timerActionDate'
+>
 
 export enum TimerActionType {
 	Start = 'start',
@@ -54,10 +66,12 @@ export enum TimerActionType {
 	Stop = 'stop',
 }
 
-export type TimerAction = {
+export type TimerActionDto = {
 	action: TimerActionType
-	remainingTimeInS: number
+	remainingTime: string
 }
+
+export type TimerAction = DtoStringToDuration<TimerActionDto, 'remainingTime'>
 
 export type EffectDto = {
 	createDate: string
