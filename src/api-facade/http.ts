@@ -45,8 +45,9 @@ const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 				'code' in responseBody &&
 				responseBody.code === 'COOKIE_NOT_FOUND')
 		) {
-			router.push('/login')
+			await router.push('/login')
 		}
+
 		if (!response.ok) {
 			throw {
 				status: response.status,
