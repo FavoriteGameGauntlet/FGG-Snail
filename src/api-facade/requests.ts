@@ -1,6 +1,5 @@
 import {
 	type GameDto,
-	type TimerActionType,
 	type TimerDto,
 	type UnplayedGame,
 	type TimerActionDto,

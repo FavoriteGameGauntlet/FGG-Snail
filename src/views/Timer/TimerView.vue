@@ -7,14 +7,13 @@ const timerStore = useTimerStore()
 
 const { totalDuration, timer } = storeToRefs(timerStore)
 
-const formatDate = (date: Temporal.PlainDateTime) =>
-	`${date.hour}:${date.minute.toString().padStart(2, '0')}:${date.second.toString().padStart(2, '0')}`
+const formatDuration = (duration: Temporal.Duration) =>
+	`${duration.hours}:${duration.minutes.toString().padStart(2, '0')}:${duration.seconds.toString().padStart(2, '0')}`
 
-const timerString = computed(() => formatDate(timer.value))
-const durationString = computed(() => formatDate(totalDuration.value))
+const timerString = computed(() => formatDuration(timer.value))
+const durationString = computed(() => formatDuration(totalDuration.value))
 
 const onStartButtonClick = () => null
-// const onPauseButtonClick = () => null
 </script>
 
 <template>
