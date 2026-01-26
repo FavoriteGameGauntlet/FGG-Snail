@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import { StoreName } from '../enums/storeName'
-import { api } from '../api-facade/api'
 import { ref } from 'vue'
+import { api } from '../api-facade/api'
 import { TimerState } from '../api-facade/models'
+import { StoreName } from '../enums/storeName'
 
 const TWO_HOURS_IN_S = 2 * 60 * 60
 const getDateFromSeconds = (seconds: number) => new Date(seconds * 1000)
@@ -10,7 +10,7 @@ const getDateFromSeconds = (seconds: number) => new Date(seconds * 1000)
 export const useTimerStore = defineStore(StoreName.Timer, () => {
 	const timer = ref<Date>(getDateFromSeconds(TWO_HOURS_IN_S))
 	const state = ref<TimerState | null>(TimerState.Created)
-	const totalDuration = ref<Date>(new Date(TWO_HOURS_IN_S))
+	const totalDuration = ref<Date>(getDateFromSeconds(TWO_HOURS_IN_S))
 
 	const init = () => {
 		console.log('[TIMER STORE] init')

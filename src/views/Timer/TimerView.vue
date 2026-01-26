@@ -5,7 +5,7 @@ import { computed } from 'vue'
 
 const timerStore = useTimerStore()
 
-const { state, totalDuration, timer } = storeToRefs(timerStore)
+const { totalDuration, timer } = storeToRefs(timerStore)
 
 const formatDate = (date: Date) =>
 	`${date.getUTCHours()}:${date.getUTCMinutes().toString().padStart(2, '0')}:${date.getUTCSeconds().toString().padStart(2, '0')}`
