@@ -59,6 +59,7 @@ export enum TimerActionType {
 
 export type TimerActionDto = {
 	action: TimerActionType
+	/** format: Duration */
 	remainingTime: string
 }
 
