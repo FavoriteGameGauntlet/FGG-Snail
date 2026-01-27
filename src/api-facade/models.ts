@@ -1,3 +1,5 @@
+import type { DtoStringToDate, DtoStringToDuration } from './dto-mappers'
+
 export type User = {
 	id: string
 	name: string
@@ -18,20 +20,8 @@ export enum GameState {
 export type GameDto = {
 	name: string
 	state: GameState
-	/** format: duration */
 	timeSpent: string
 	finishDate?: string
-}
-
-type DtoStringToDate<Dto extends object, DateFields extends keyof Dto> = {
-	[K in keyof Dto]: K extends DateFields ? Temporal.PlainDateTime : Dto[K]
-}
-
-type DtoStringToDuration<
-	Dto extends object,
-	DurationFields extends keyof Dto,
-> = {
-	[K in keyof Dto]: K extends DurationFields ? Temporal.Duration : Dto[K]
 }
 
 export type Game = DtoStringToDuration<
