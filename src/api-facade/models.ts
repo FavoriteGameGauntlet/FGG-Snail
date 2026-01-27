@@ -20,6 +20,7 @@ export enum GameState {
 export type GameDto = {
 	name: string
 	state: GameState
+	/** format: Duration */
 	timeSpent: string
 	finishDate?: string
 }
