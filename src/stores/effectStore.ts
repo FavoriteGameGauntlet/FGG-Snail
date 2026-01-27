@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { api } from '../api-facade/api'
-import { type Game, type UnplayedGame } from '../api-facade/models'
 import { StoreName } from '../enums/storeName'
+import { Effect } from '../api-facade/models'
+import { ref } from 'vue'
 
-export const useGameStore = defineStore(StoreName.Game, () => {
-	const unplayed = ref<UnplayedGame[]>([])
-	const current = ref<Game | null>(null)
+export const useGameStore = defineStore(StoreName.Effect, () => {
+	const unplayed = ref<Effect[]>([])
+	const current = ref<Effect>(null)
 
 	const init = async () => {
 		await Promise.all([

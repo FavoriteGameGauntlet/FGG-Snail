@@ -73,11 +73,7 @@ export type EffectDto = {
 	rollDate?: string
 }
 
-export type EffectsDto = EffectDto[]
-
 export type Effect = DtoStringToDate<EffectDto, 'createDate' | 'rollDate'>
-
-export type Effects = Effect[]
 
 export type ApiError = {
 	code: string

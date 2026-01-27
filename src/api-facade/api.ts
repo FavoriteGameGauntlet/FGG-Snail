@@ -4,6 +4,8 @@
  */
 import { http } from './http'
 import {
+	type EffectDto,
+	type Effect,
 	type Game,
 	type GameDto,
 	type Timer,
@@ -46,6 +48,14 @@ const convertTimerDto = (timer: TimerDto): Timer => ({
 const convertTimerActionDto = (action: TimerActionDto): TimerAction => ({
 	...action,
 	remainingTime: Temporal.Duration.from(action.remainingTime),
+})
+
+const convertEffectDto = (effect: EffectDto): Effect => ({
+	...effect,
+	createDate: Temporal.PlainDateTime.from(effect.createDate),
+	rollDate:
+			? Temporal
+			: undefined,
 })
 
 export const api = {
@@ -96,5 +106,9 @@ export const api = {
 			http
 				.get<GetGamesHistory>('/games/history')
 				.then((games) => games.map(convertGameDto)),
+	},
+
+	effects: {
+		getHistory: (): Promise<Effect[]> => http.get('/effects/history').then(),
 	},
 }

@@ -5,11 +5,7 @@ import { api } from '../api-facade/api'
 import { TimerState } from '../api-facade/models'
 import { StoreName } from '../enums/storeName'
 
-const twoHours = Temporal.Duration.from({
-	hours: 2,
-	minutes: 0,
-	seconds: 0,
-})
+const twoHours = Temporal.Duration.from({ hours: 2 })
 
 export const useTimerStore = defineStore(StoreName.Timer, () => {
 	const timer = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
