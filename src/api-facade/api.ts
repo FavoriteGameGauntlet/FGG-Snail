@@ -1,3 +1,7 @@
+/**
+ * @version 0.5.0
+ * Last updated: 2026.0.27
+ */
 import { http } from './http'
 import {
 	type Game,
