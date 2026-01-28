@@ -2,15 +2,22 @@ import { API_URL } from '../constants/apiUrl'
 import { type ClientOptions, fetch } from '@tauri-apps/plugin-http'
 import { router } from '../router/router'
 
-export interface HttpErrorResponse {
+export type HttpErrorResponse = {
 	status: number
 	statusText: string
-	body: string
+	body?: object
 	url: string
 	method: string
 }
 
-const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
+type HttpResponse<T> = Omit<Response, 'body'> & {
+	body: T
+}
+
+const makeRequest = async <T extends object | undefined = object | undefined>(
+	url: string,
+	opts?: RequestInit & ClientOptions,
+): Promise<HttpResponse<T>> => {
 	const fullUrl = API_URL + url
 	const method = opts?.method || 'GET'
 
@@ -30,7 +37,7 @@ const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 				...opts?.headers,
 			},
 		})
-		const responseBody: object | undefined = await response
+		const responseBody: T = await response
 			.text()
 			.then((body) => (body.length ? JSON.parse(body) : undefined))
 			.catch((er) => console.log('whatafuk mazafaka', er))
@@ -49,13 +56,15 @@ const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 		}
 
 		if (!response.ok) {
-			throw {
+			const e: HttpErrorResponse = {
 				status: response.status,
 				statusText: response.statusText,
 				body: responseBody,
 				url: fullUrl,
 				method,
 			}
+
+			throw e
 		}
 
 		return {
@@ -68,24 +77,38 @@ const makeRequest = async (url: string, opts?: RequestInit & ClientOptions) => {
 	}
 }
 
+type HttpRequestOptions = Omit<
+	RequestInit & ClientOptions,
+	'method' | 'body'
+> & {
+	body?: object
+}
+
 export const http = {
-	get: <T extends { request?: unknown; response?: unknown }>(
-		url: string,
-		opts?: Omit<RequestInit & ClientOptions, 'method' | 'body'> & {
-			body: object
+	get: <
+		T extends { request?: unknown; response?: unknown } = {
+			request: undefined
+			response: undefined
 		},
-	): Promise<T['response']> =>
+	>(
+		url: string,
+		opts?: HttpRequestOptions,
+	): Promise<HttpResponse<T['response']>> =>
 		makeRequest(url, {
 			...opts,
 			body: opts?.body ? JSON.stringify(opts.body) : undefined,
 			method: 'GET',
 		}),
-	post: <T extends { request?: unknown; response?: unknown }>(
-		url: string,
-		opts?: Omit<RequestInit & ClientOptions, 'method' | 'body'> & {
-			body: object
+
+	post: <
+		T extends { request?: unknown; response?: unknown } = {
+			request: undefined
+			response: undefined
 		},
-	): Promise<T['response']> =>
+	>(
+		url: string,
+		opts?: HttpRequestOptions,
+	): Promise<HttpResponse<T['response']>> =>
 		makeRequest(url, {
 			...opts,
 			body: opts?.body ? JSON.stringify(opts.body) : undefined,

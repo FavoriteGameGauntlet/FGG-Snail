@@ -4,24 +4,26 @@
  */
 import { http } from './http'
 import {
-	type RolledEffect,
-	type RolledEffectDto,
+	type Effect,
 	type Game,
 	type GameDto,
+	type RolledEffect,
+	type RolledEffectDto,
 	type Timer,
 	type TimerAction,
 	type TimerActionDto,
 	type TimerDto,
+	type UnplayedGame,
 } from './models'
 import {
+	type GetCurrentGame,
+	type GetCurrentTimer,
 	type GetEffectsAvailable,
 	type GetEffectsAvailableCount,
 	type GetEffectsHistory,
-	type PostEffectRoll,
-	type GetCurrentGame,
-	type GetCurrentTimer,
 	type GetGamesHistory,
 	type GetGamesUnplayed,
+	type PostEffectRoll,
 	type PostGamesAddUnplayed,
 	type PostGamesRoll,
 	type PostLogIn,
@@ -72,17 +74,19 @@ export const api = {
 
 	timer: {
 		getCurrent: (): Promise<Timer> =>
-			http.get<GetCurrentTimer>('/timers/current').then(convertTimerDto),
+			http
+				.get<GetCurrentTimer>('/timers/current')
+				.then(({ body }) => convertTimerDto(body)),
 
 		postStart: (): Promise<TimerAction> =>
 			http
 				.post<PostStartTimer>('/timers/current/start')
-				.then(convertTimerActionDto),
+				.then(({ body }) => convertTimerActionDto(body)),
 
 		postPause: (): Promise<TimerAction> =>
 			http
 				.post<PostPauseTimer>('/timers/current/pause')
-				.then(convertTimerActionDto),
+				.then(({ body }) => convertTimerActionDto(body)),
 	},
 
 	games: {
@@ -91,13 +95,18 @@ export const api = {
 				body: request.body,
 			}),
 
-		getGamesUnplayed: () => http.get<GetGamesUnplayed>('/games/unplayed'),
+		getGamesUnplayed: (): Promise<UnplayedGame[]> =>
+			http.get<GetGamesUnplayed>('/games/unplayed').then(({ body }) => body),
 
 		postRoll: (): Promise<Game> =>
-			http.post<PostGamesRoll>('/games/roll').then(convertGameDto),
+			http
+				.post<PostGamesRoll>('/games/roll')
+				.then(({ body }) => convertGameDto(body)),
 
 		getCurrent: (): Promise<Game> =>
-			http.get<GetCurrentGame>('/games/current').then(convertGameDto),
+			http
+				.get<GetCurrentGame>('/games/current')
+				.then(({ body }) => convertGameDto(body)),
 
 		postFinishCurrent: () => http.post('/games/current/finish'),
 
@@ -106,21 +115,28 @@ export const api = {
 		getHistory: (): Promise<Game[]> =>
 			http
 				.get<GetGamesHistory>('/games/history')
-				.then((games) => games.map(convertGameDto)),
+				.then(({ body: games }) => games.map(convertGameDto)),
 	},
 
 	effects: {
-		getHistory: () =>
+		getHistory: (): Promise<RolledEffect[]> =>
 			http
 				.get<GetEffectsHistory>('/effects/history')
-				.then((e) => e.map(convertRolledEffectDto)),
+				.then(({ body: effects }) => effects.map(convertRolledEffectDto)),
 
-		postRoll: () =>
-			http.post<PostEffectRoll>('/effects/roll').then(convertRolledEffectDto),
+		postRoll: (): Promise<RolledEffect> =>
+			http
+				.post<PostEffectRoll>('/effects/roll')
+				.then(({ body: effect }) => convertRolledEffectDto(effect)),
 
-		getAvailable: () => http.get<GetEffectsAvailable>('/effects/available'),
+		getAvailable: (): Promise<Effect[]> =>
+			http
+				.get<GetEffectsAvailable>('/effects/available')
+				.then(({ body }) => body),
 
-		getAvailableCount: () =>
-			http.get<GetEffectsAvailableCount>('/effects/available/count'),
+		getAvailableCount: (): Promise<number> =>
+			http
+				.get<GetEffectsAvailableCount>('/effects/available/count')
+				.then(({ body }) => body),
 	},
 }

@@ -14,7 +14,7 @@ export const useGameStore = defineStore(StoreName.Game, () => {
 				current.value = game
 			}),
 			api.games.getGamesUnplayed().then((unplayedGames) => {
-				unplayed.value = unplayedGames.body
+				unplayed.value = unplayedGames
 			}),
 		])
 	}

@@ -45,9 +45,7 @@ export type PostGamesAddUnplayed = {
 }
 
 export type GetGamesUnplayed = {
-	response: {
-		body: UnplayedGame[]
-	}
+	response: UnplayedGame[]
 }
 
 export type PostGamesRoll = {
