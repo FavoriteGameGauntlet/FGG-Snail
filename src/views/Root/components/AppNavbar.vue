@@ -2,8 +2,17 @@
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '../../../stores/authStore'
 import UserProfile from './UserProfile.vue'
+import { useEffectStore } from '../../../stores/effectStore'
+import { watchEffect } from 'vue'
 
 const authStore = useAuthStore()
+const effectStore = useEffectStore()
+
+const { availableCount } = storeToRefs(effectStore)
+
+watchEffect(() => {
+	console.log({ avcount: availableCount.value })
+})
 
 const { userName } = storeToRefs(authStore)
 </script>
@@ -17,8 +26,8 @@ const { userName } = storeToRefs(authStore)
 				>Таймер</RouterLink
 			>
 
-			<RouterLink class="hover:underline text-blue-500" to="/rolls"
-				>Роллы</RouterLink
+			<RouterLink class="hover:underline text-blue-500" to="/rolls">
+				Роллы {{ availableCount >= 0 ? '🔵' : '' }}</RouterLink
 			>
 
 			<RouterLink class="hover:underline text-blue-500" to="/games"

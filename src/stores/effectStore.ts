@@ -41,6 +41,7 @@ export const useEffectStore = defineStore(StoreName.Effect, () => {
 		history,
 		available,
 		availableCount,
+
 		init,
 		getAvailable,
 		getAvailableCount,
