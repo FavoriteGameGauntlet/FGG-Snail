@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+import { usePersistentRef } from '../../composables/usePersistentRef'
+import { StoreKey } from '../../services/persistentStorage'
+import { RollsViewMode as Mode } from './enums/rolls-view-mode'
 
 const visibleItems = 5
 
-const enum Mode {
-	Games,
-	Effects,
-}
-
-const mode = ref(Mode.Games)
+const { state: mode } = usePersistentRef(StoreKey.RollsViewMode)
 
 const modeButtonModeToTextMap: Record<Mode, string> = {
 	[Mode.Effects]: 'Эффекты',
 	[Mode.Games]: 'Игры',
 }
 
-const modeButtonText = computed(() => modeButtonModeToTextMap[mode.value])
+const modeButtonText = computed(
+	() => modeButtonModeToTextMap[mode.value ?? Mode.Games],
+)
 
 const onChangeModeButtonClick = () => {
 	mode.value = mode.value === Mode.Effects ? Mode.Games : Mode.Effects

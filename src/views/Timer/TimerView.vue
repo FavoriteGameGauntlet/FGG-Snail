@@ -53,17 +53,17 @@ const onStartButtonClick = () => null
 
 			<div class="flex w-full justify-between">
 				<button
-					class="cursor-pointer border-2 px-8 py-1 w-fit text-xl text-green-700 border-green-700"
+					class="cursor-pointer border-2 px-8 py-1.5 w-fit text-xl text-green-700 border-green-700"
 					@click="onStartButtonClick"
 				>
 					Завершить
 				</button>
 
 				<button
-					class="cursor-pointer border-2 px-8 py-1 w-fit justify-self-end text-xl text-red-700 border-red-700"
+					class="cursor-pointer border-2 px-8 py-1.5 w-fit justify-self-end text-xl text-red-700 border-red-700"
 					@click="onStartButtonClick"
 				>
-					Бросить
+					Забросить
 				</button>
 			</div>
 		</div>
