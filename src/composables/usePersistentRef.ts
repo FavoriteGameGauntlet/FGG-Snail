@@ -7,7 +7,8 @@ import {
 
 export function usePersistentRef<Key extends StoreKey>(
 	key: Key,
-	onReady: (state: StoredData[Key]) => void,
+	/** @deprecated remove in the future */
+	onReady?: (state: StoredData[Key]) => void,
 ): {
 	state: Ref<StoredData[Key]>
 	isLoading: ComputedRef<boolean>
