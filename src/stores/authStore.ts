@@ -4,11 +4,16 @@ import { usePersistentRef } from '../composables/usePersistentRef'
 import { StoreName } from '../enums/storeName'
 import { router } from '../router/router'
 import { persistentStorage, StoreKey } from '../services/persistentStorage'
+import { watchEffect } from 'vue'
 
 export const useAuthStore = defineStore(StoreName.Auth, () => {
 	const { state: userName, isReady: isUserNameReady } = usePersistentRef(
 		StoreKey.UserName,
 	)
+
+	watchEffect(() => {
+		console.log('[AUTH_STORE] userName:', userName.value)
+	})
 
 	const getIsLoggedIn = async () => {
 		const userName = await persistentStorage.get(StoreKey.UserName)

@@ -7,6 +7,7 @@ import {
 
 export function usePersistentRef<Key extends StoreKey>(
 	key: Key,
+	onReady: (state: StoredData[Key]) => void,
 ): {
 	state: Ref<StoredData[Key]>
 	isLoading: ComputedRef<boolean>
@@ -23,6 +24,8 @@ export function usePersistentRef<Key extends StoreKey>(
 	persistentStorage.get(key).then((value) => {
 		state.value = value
 		_isLoading.value = false
+
+		onReady?.(state.value)
 
 		watchEffect(() => {
 			if (state.value === undefined) {
