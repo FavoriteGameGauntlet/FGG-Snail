@@ -1,11 +1,11 @@
 /**
  * @version 0.5.0
- * Last updated: 2026.0.27
+ * Last updated: 2026.0.28
  */
 import { http } from './http'
 import {
-	type EffectDto,
-	type Effect,
+	type RolledEffect,
+	type RolledEffectDto,
 	type Game,
 	type GameDto,
 	type Timer,
@@ -14,6 +14,10 @@ import {
 	type TimerDto,
 } from './models'
 import {
+	type GetEffectsAvailable,
+	type GetEffectsAvailableCount,
+	type GetEffectsHistory,
+	type PostEffectRoll,
 	type GetCurrentGame,
 	type GetCurrentTimer,
 	type GetGamesHistory,
@@ -50,12 +54,9 @@ const convertTimerActionDto = (action: TimerActionDto): TimerAction => ({
 	remainingTime: Temporal.Duration.from(action.remainingTime),
 })
 
-const convertEffectDto = (effect: EffectDto): Effect => ({
+const convertRolledEffectDto = (effect: RolledEffectDto): RolledEffect => ({
 	...effect,
-	createDate: Temporal.PlainDateTime.from(effect.createDate),
-	rollDate:
-			? Temporal
-			: undefined,
+	rollDate: Temporal.PlainDateTime.from(effect.rollDate),
 })
 
 export const api = {
@@ -109,6 +110,17 @@ export const api = {
 	},
 
 	effects: {
-		getHistory: (): Promise<Effect[]> => http.get('/effects/history').then(),
+		getHistory: () =>
+			http
+				.get<GetEffectsHistory>('/effects/history')
+				.then((e) => e.map(convertRolledEffectDto)),
+
+		postRoll: () =>
+			http.post<PostEffectRoll>('/effects/roll').then(convertRolledEffectDto),
+
+		getAvailable: () => http.get<GetEffectsAvailable>('/effects/available'),
+
+		getAvailableCount: () =>
+			http.get<GetEffectsAvailableCount>('/effects/available/count'),
 	},
 }

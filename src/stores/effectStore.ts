@@ -1,28 +1,50 @@
 import { defineStore } from 'pinia'
 import { StoreName } from '../enums/storeName'
-import { Effect } from '../api-facade/models'
+import type { RolledEffect, Effect } from '../api-facade/models'
 import { ref } from 'vue'
+import { api } from '../api-facade/api'
 
-export const useGameStore = defineStore(StoreName.Effect, () => {
-	const unplayed = ref<Effect[]>([])
-	const current = ref<Effect>(null)
+export const useEffectStore = defineStore(StoreName.Effect, () => {
+	const available = ref<Effect[]>()
+	const history = ref<RolledEffect[]>()
+	const availableCount = ref(0)
 
-	const init = async () => {
-		await Promise.all([
-			api.games.getCurrent().then((game) => {
-				current.value = game
-			}),
-			api.games.getGamesUnplayed().then((unplayedGames) => {
-				unplayed.value = unplayedGames.body
-			}),
-		])
-	}
-
-	const addGames = async (games: UnplayedGame[]) => {
-		return api.games.postAddUnplayed({ body: games }).then(() => {
-			unplayed.value = [...unplayed.value, ...games]
+	const getAvailable = async () => {
+		return api.effects.getAvailable().then((effects) => {
+			available.value = effects
 		})
 	}
 
-	return { current, unplayed, init, addGames }
+	const getAvailableCount = async () => {
+		return api.effects.getAvailableCount().then((count) => {
+			availableCount.value = count
+		})
+	}
+
+	const getHistory = async () => {
+		return api.effects.getHistory().then((effects) => {
+			history.value = effects
+		})
+	}
+
+	const roll = async () => {
+		return api.effects.postRoll().then((effect) => {
+			history.value = history.value ? [...history.value, effect] : [effect]
+		})
+	}
+
+	const init = async () => {
+		await getAvailableCount()
+	}
+
+	return {
+		history,
+		available,
+		availableCount,
+		init,
+		getAvailable,
+		getAvailableCount,
+		getHistory,
+		roll,
+	}
 })

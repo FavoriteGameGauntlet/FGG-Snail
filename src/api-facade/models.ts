@@ -65,15 +65,16 @@ export type TimerActionDto = {
 
 export type TimerAction = DtoStringToDuration<TimerActionDto, 'remainingTime'>
 
-export type EffectDto = {
-	createDate: string
+export type Effect = {
+	name: string
 	description?: string
-	gameName?: string
-	name?: string
-	rollDate?: string
 }
 
-export type Effect = DtoStringToDate<EffectDto, 'createDate' | 'rollDate'>
+export type RolledEffectDto = Effect & {
+	rollDate: string
+}
+
+export type RolledEffect = DtoStringToDate<RolledEffectDto, 'rollDate'>
 
 export type ApiError = {
 	code: string

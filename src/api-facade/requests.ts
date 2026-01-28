@@ -3,6 +3,8 @@ import {
 	type TimerDto,
 	type UnplayedGame,
 	type TimerActionDto,
+	type RolledEffectDto,
+	type Effect,
 } from './models'
 
 export type PostSignUp = {
@@ -58,4 +60,20 @@ export type GetCurrentGame = {
 
 export type GetGamesHistory = {
 	response: GameDto[]
+}
+
+export type GetEffectsHistory = {
+	response: RolledEffectDto[]
+}
+
+export type PostEffectRoll = {
+	response: RolledEffectDto
+}
+
+export type GetEffectsAvailable = {
+	response: Effect[]
+}
+
+export type GetEffectsAvailableCount = {
+	response: number
 }
