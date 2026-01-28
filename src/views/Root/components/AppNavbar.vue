@@ -27,7 +27,7 @@ const { userName } = storeToRefs(authStore)
 			>
 
 			<RouterLink class="hover:underline text-blue-500" to="/rolls">
-				Роллы {{ availableCount >= 0 ? '🔵' : '' }}</RouterLink
+				Роллы {{ availableCount >= 1 ? '🔵' : '' }}</RouterLink
 			>
 
 			<RouterLink class="hover:underline text-blue-500" to="/games"
