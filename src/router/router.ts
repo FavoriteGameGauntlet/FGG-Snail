@@ -4,10 +4,11 @@ import {
 	type RouteRecordRaw,
 } from 'vue-router'
 
-import GamesView from '../views/Games/GamesView.vue'
+import EffectRollsView from '../views/EffectRolls/EffectRollsView.vue'
 import EffectsView from '../views/Effects/EffectsView.vue'
+import GameRollsView from '../views/GameRolls/GameRollsView.vue'
+import GamesView from '../views/Games/GamesView.vue'
 import LoginView from '../views/Login/LoginView.vue'
-import RollsView from '../views/Rolls/RollsView.vue'
 import RootView from '../views/Root/RootView.vue'
 import SignUpView from '../views/SignUp/SignUpView.vue'
 import TimerView from '../views/Timer/TimerView.vue'
@@ -33,7 +34,17 @@ const routes: RouteRecordRaw[] = [
 			},
 			{
 				path: 'rolls',
-				component: RollsView,
+				redirect: 'rolls/effects',
+				children: [
+					{
+						path: 'effects',
+						component: EffectRollsView,
+					},
+					{
+						path: 'games',
+						component: GameRollsView,
+					},
+				],
 			},
 			{
 				path: 'effects',

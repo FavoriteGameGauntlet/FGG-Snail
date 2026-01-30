@@ -13,7 +13,7 @@ const gameName = ref('')
 const onAddGameFormSubmit = () => {
 	isAddingGame.value = true
 	gameStore
-		.addGames([{ name: gameName.value }])
+		.addUnplayed([{ name: gameName.value }])
 		.then(() => (gameName.value = ''))
 		.finally(() => (isAddingGame.value = false))
 }

@@ -95,7 +95,7 @@ export const api = {
 				body: request.body,
 			}),
 
-		getGamesUnplayed: (): Promise<UnplayedGame[]> =>
+		getUnplayed: (): Promise<UnplayedGame[]> =>
 			http.get<GetGamesUnplayed>('/games/unplayed').then(({ body }) => body),
 
 		postRoll: (): Promise<Game> =>

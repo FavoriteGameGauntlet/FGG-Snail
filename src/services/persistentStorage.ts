@@ -1,16 +1,13 @@
 import { load, type Store } from '@tauri-apps/plugin-store'
-import { type RollsViewMode } from '../views/Rolls/enums/rolls-view-mode'
 
 export enum StoreKey {
 	InitialRoute = 'initialRoute',
 	UserName = 'userName',
-	RollsViewMode = 'rollsViewMode',
 }
 
 export type StoredData = Partial<{
 	[StoreKey.InitialRoute]: string
 	[StoreKey.UserName]: string
-	[StoreKey.RollsViewMode]: RollsViewMode
 }>
 
 const defaults: StoredData = {
