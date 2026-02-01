@@ -1,18 +1,50 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useGameStore } from '../../stores/gameStore'
+import { storeToRefs } from 'pinia'
+import { LoadingState } from '../../composables/useLoading'
 
-const rollStore = useGameStore()
+const gameStore = useGameStore()
 
-const rollText = ref('Крути барабан')
+const { enoughGamesInWishlist, current, canRoll } = storeToRefs(gameStore)
 
-const onRollButtonClick = () => {}
+const rollText = ref('Загрузка...')
+
+const showUnplayedCountHint = computed(
+	() =>
+		!enoughGamesInWishlist &&
+		gameStore.currentLoading.state === LoadingState.LOADED &&
+		gameStore.unplayedLoading.state === LoadingState.LOADED,
+)
+
+const onRollButtonClick = () => {
+	gameStore.roll()
+}
+
+gameStore.currentLoading.on([LoadingState.LOADED]).then(() => {
+	rollText.value = current.value?.name ?? 'Крути барабан'
+})
+
+onMounted(() => {
+	if (
+		[LoadingState.ERROR, LoadingState.INIT].includes(
+			gameStore.unplayedLoading.state,
+		)
+	) {
+		gameStore.getUnplayed()
+	}
+})
 </script>
 
 <template>
-	<div class="grid place-content-center h-full gap-12">
-		<RouterLink to="/rolls/effects">Эффекты</RouterLink>
+	<div class="grid place-content-center h-full gap-12 pb-20">
+		<RouterLink
+			class="place-self-center hover:underline text-blue-500"
+			to="/rolls/effects"
+		>
+			Эффекты
+		</RouterLink>
 
 		<h1 class="text-4xl font-semibold text-center">Роллы</h1>
 
@@ -22,8 +54,34 @@ const onRollButtonClick = () => {}
 			<div>{{ rollText }}</div>
 		</div>
 
+		<div class="px-8 py-4 bg-slate-200 rounded-md empty:hidden">
+			<p v-if="current">
+				Ты сейчас играешь в {{ current?.name }}.
+
+				<button class="border-2 border-green-500 text-green-500 px-4 py-2">
+					Закончить
+				</button>
+
+				<button class="border-2 border-red-500 text-red-500 px-4 py-2">
+					Бросить
+				</button>
+			</p>
+
+			<p v-else-if="showUnplayedCountHint" class="info-item">
+				Нужно хотя бы 6 игр в вишлисте, чтобы ролять новую.
+
+				<RouterLink
+					class="border-2 border-blue-500 text-blue-500 px-4 py-2 box-border hover:underline"
+					to="/games"
+				>
+					Добавить игры
+				</RouterLink>
+			</p>
+		</div>
+
 		<button
-			class="bg-slate-200 py-2 px-8 w-fit justify-self-center cursor-pointer hover:bg-slate-300"
+			class="py-2 px-8 w-fit justify-self-center cursor-pointer text-green-950 bg-green-100 hover:bg-green-200 disabled:bg-slate-100 disabled:hover:bg-slate-200 disabled:text-slate-400"
+			:disabled="!canRoll"
 			@click="onRollButtonClick"
 		>
 			Прокрутить
@@ -31,4 +89,10 @@ const onRollButtonClick = () => {}
 	</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@reference '@/style.css';
+
+.info-item {
+	@apply text-slate-950 flex flex-col items-center gap-3;
+}
+</style>

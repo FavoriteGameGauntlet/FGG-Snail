@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { watchEffect } from 'vue'
 import { useEffectStore } from '../../../stores/effectStore'
 import UserProfile from './UserProfile.vue'
 
 const effectStore = useEffectStore()
 
 const { availableCount } = storeToRefs(effectStore)
-
-watchEffect(() => {
-	console.log({ avcount: availableCount.value })
-})
 </script>
 
 <template>

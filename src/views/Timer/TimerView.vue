@@ -3,10 +3,17 @@ import { storeToRefs } from 'pinia'
 import { useTimerStore } from '../../stores/timerStore'
 import { computed } from 'vue'
 import type { Temporal } from 'temporal-polyfill'
+import { TimerState } from '../../api-facade/models'
 
 const timerStore = useTimerStore()
 
-const { totalDuration, timer } = storeToRefs(timerStore)
+const { totalDuration, timer, state } = storeToRefs(timerStore)
+
+const timerButtonSvg = computed(() =>
+	state.value === TimerState.Running
+		? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
+		: '<path d="M8 5v14l11-7z"/>',
+)
 
 const formatDuration = (duration: Temporal.Duration) =>
 	`${duration.hours}:${duration.minutes.toString().padStart(2, '0')}:${duration.seconds.toString().padStart(2, '0')}`
@@ -14,7 +21,9 @@ const formatDuration = (duration: Temporal.Duration) =>
 const timerString = computed(() => formatDuration(timer.value))
 const durationString = computed(() => formatDuration(totalDuration.value))
 
-const onStartButtonClick = () => null
+const onStartButtonClick = () => {
+	timerStore.toggle()
+}
 </script>
 
 <template>
@@ -37,7 +46,13 @@ const onStartButtonClick = () => null
 					class="row-span-2 cursor-pointer border-2 px-5 py-2.5 w-fit text-2xl border-black"
 					@click="onStartButtonClick"
 				>
-					Старт
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="currentColor"
+						v-html="timerButtonSvg"
+					></svg>
 				</button>
 
 				<div

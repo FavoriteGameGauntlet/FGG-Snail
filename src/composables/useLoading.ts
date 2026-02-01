@@ -1,16 +1,16 @@
 import { ref, watch } from 'vue'
 
-export const enum StoreState {
+export const enum LoadingState {
 	INIT,
 	LOADING,
 	LOADED,
 	ERROR,
 }
 
-export const useState = () => {
-	const state = ref(StoreState.INIT)
+export const useLoading = () => {
+	const state = ref(LoadingState.INIT)
 
-	const on = async (target: StoreState[]): Promise<void> => {
+	const on = async (target: LoadingState[]): Promise<void> => {
 		if (target.includes(state.value)) return
 
 		return new Promise<void>((resolve) => {

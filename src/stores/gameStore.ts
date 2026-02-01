@@ -1,16 +1,28 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { api } from '../api-facade/api'
 import { type Game, type UnplayedGame } from '../api-facade/models'
 import { StoreName } from '../enums/storeName'
-import { useState, StoreState } from '../composables/useState'
+import { useLoading, LoadingState } from '../composables/useLoading'
 import { type HttpErrorResponse } from '../api-facade/http'
 
 export const useGameStore = defineStore(StoreName.Game, () => {
 	const unplayed = ref<UnplayedGame[]>([])
-	const { state: unplayedState, on: onUnplayed } = useState()
+	const unplayedLoading = useLoading()
+
 	const current = ref<Game | null>(null)
-  const { state: currentState, on: onCurrent } = useState()
+	const currentLoading = useLoading()
+
+	const enoughGamesInWishlist = computed(() => unplayed.value.length >= 6)
+	const currentGameIsFinished = computed(() => current.value === null)
+
+	const canRoll = computed(
+		() =>
+			currentGameIsFinished.value &&
+			currentLoading.state.value === LoadingState.LOADED &&
+			enoughGamesInWishlist.value &&
+			unplayedLoading.state.value === LoadingState.LOADED,
+	)
 
 	const addUnplayed = async (games: UnplayedGame[]) => {
 		return api.games.postAddUnplayed({ body: games }).then(() => {
@@ -19,62 +31,81 @@ export const useGameStore = defineStore(StoreName.Game, () => {
 	}
 
 	const getUnplayed = async () => {
-		unplayedState.value = StoreState.LOADING
+		unplayedLoading.state.value = LoadingState.LOADING
 
 		return api.games
 			.getUnplayed()
 			.then((games) => {
 				unplayed.value = games
-				unplayedState.value = StoreState.LOADED
+				unplayedLoading.state.value = LoadingState.LOADED
+
+				return unplayed.value
 			})
 			.catch(() => {
-				unplayedState.value = StoreState.ERROR
+				unplayedLoading.state.value = LoadingState.ERROR
+
+				return unplayed.value
 			})
 	}
 
 	const getCurrent = async () => {
-		currentState.value = StoreState.LOADING
+		currentLoading.state.value = LoadingState.LOADING
 
 		return api.games
 			.getCurrent()
 			.then((game) => {
 				current.value = game
-				currentState.value = StoreState.LOADED
+				currentLoading.state.value = LoadingState.LOADED
 
 				return current.value
 			})
 			.catch((error: HttpErrorResponse) => {
-				currentState.value = StoreState.ERROR
-
-				// @todo check if this is 404
-				if (error.statusText === 'CURRENT_GAME_NOT_FOUND') {
+				// @todo check if backend returns status === 404
+				if (error.body?.code === 'CURRENT_GAME_NOT_FOUND') {
 					current.value = null
+					currentLoading.state.value = LoadingState.LOADED
+
+					return current.value
 				}
 
-				return current.value
+				console.log(error)
+
+				currentLoading.state.value = LoadingState.ERROR
+				return error
 			})
 	}
 
-	const rollNew = async () => {
-		if (currentState.value === StoreState.INIT) await getCurrent()
-		if (currentState.value === StoreState.)
-		if (unplayedState.value !== StoreState.LOADED) return
+	const roll = async () => {
+		if (!canRoll.value) return Promise.reject('Bitch you cannot roll games')
 
-		const finishFirstError = Promise.reject('Finish the current game first')
+		return api.games.postRoll().then((newGame) => {
+			current.value = newGame
+			unplayed.value = unplayed.value.filter((g) => g.name !== newGame.name)
 
-		if (current.value) return finishFirstError
-
-		return api.games
-			.postRoll()
-			.then((newGame) => (current.value = newGame))
-			.catch((error: HttpErrorResponse) => {
-				if (error.status === 409) return finishFirstError
-			})
+			return current.value
+		})
 	}
 
 	const init = async () => {
-		await Promise.all([getCurrent(), getUnplayed()])
+		await Promise.all([getCurrent()])
 	}
 
-	return { current, unplayed, init, addUnplayed, getUnplayed }
+	return {
+		current,
+		currentLoading,
+
+		unplayed,
+		unplayedLoading,
+
+		enoughGamesInWishlist,
+		currentGameIsFinished,
+		canRoll,
+
+		init,
+
+		getCurrent,
+		addUnplayed,
+		getUnplayed,
+		roll,
+	}
 })

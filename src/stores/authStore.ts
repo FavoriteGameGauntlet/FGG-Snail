@@ -5,11 +5,13 @@ import { StoreName } from '../enums/storeName'
 import { router } from '../router/router'
 import { persistentStorage, StoreKey } from '../services/persistentStorage'
 import { watchEffect } from 'vue'
+import { useLoading } from '../composables/useLoading'
 
 export const useAuthStore = defineStore(StoreName.Auth, () => {
 	const { state: userName, isReady: isUserNameReady } = usePersistentRef(
 		StoreKey.UserName,
 	)
+	const {} = useLoading()
 
 	watchEffect(() => {
 		console.log('[AUTH_STORE] userName:', userName.value)

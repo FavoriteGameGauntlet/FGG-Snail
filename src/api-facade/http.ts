@@ -5,7 +5,10 @@ import { router } from '../router/router'
 export type HttpErrorResponse = {
 	status: number
 	statusText: string
-	body?: object
+	body?: {
+		code: string
+		message: string
+	}
 	url: string
 	method: string
 }
@@ -40,7 +43,11 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 		const responseBody: T = await response
 			.text()
 			.then((body) => (body.length ? JSON.parse(body) : undefined))
-			.catch((er) => console.log('whatafuk mazafaka', er))
+			.catch((e: HttpErrorResponse | unknown) => {
+				console.log('whatafuk mazafaka', e)
+
+				return e
+			})
 
 		console.log(`[HTTP] ${method} ${fullUrl} - ${response.status}`, {
 			body: responseBody,
@@ -59,7 +66,7 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 			const e: HttpErrorResponse = {
 				status: response.status,
 				statusText: response.statusText,
-				body: responseBody,
+				body: responseBody as HttpErrorResponse['body'],
 				url: fullUrl,
 				method,
 			}

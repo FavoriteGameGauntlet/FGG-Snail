@@ -1,49 +1,87 @@
 import { defineStore } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { api } from '../api-facade/api'
 import { TimerState } from '../api-facade/models'
 import { StoreName } from '../enums/storeName'
+import { LoadingState, useLoading } from '../composables/useLoading'
 
 const twoHours = Temporal.Duration.from({ hours: 2 })
 
 export const useTimerStore = defineStore(StoreName.Timer, () => {
 	const timer = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
-	const state = ref<TimerState | null>(TimerState.Created)
-	const totalDuration = ref<Temporal.Duration>(twoHours)
+	const timerLoading = useLoading()
+	const state = ref<TimerState>(TimerState.Created)
+	const totalDuration = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
 
-	const init = () => {
-		console.log('[TIMER STORE] init')
-		api.timer
-			.getCurrent()
-			.then((v) => {
-				timer.value = v.remainingTime
-				totalDuration.value = v.duration
-				state.value = v.state
-			})
-			.catch(() => {
-				timer.value = Temporal.Duration.from(twoHours)
-				totalDuration.value = Temporal.Duration.from(twoHours)
-				state.value = null
-			})
-	}
+	const canStart = computed(
+		() =>
+			state.value &&
+			(state.value === TimerState.Created || state.value === TimerState.Paused),
+	)
 
-	// todo
-	const getTimer = () => {
-		api.timer.getCurrent().then((r) => {
-			state.value = r.state
+	const canPause = computed(
+		() => state.value && state.value === TimerState.Running,
+	)
+
+	const getCurrent = async () => {
+		return api.timer.getCurrent().then((v) => {
+			timer.value = v.remainingTime
+			totalDuration.value = v.duration
+			state.value = v.state
 		})
 	}
 
-	const startTimer = () => {
+	const start = async () => {
+		if (!canStart.value) return Promise.reject()
+
+		const prevState = state.value
 		state.value = TimerState.Running
-		api.timer.postStart().then(() => {})
+
+		await api.timer
+			.postStart()
+			.then((timerAction) => {
+				timer.value = Temporal.Duration.from(timerAction.remainingTime)
+			})
+			.catch(() => {
+				state.value = prevState
+			})
 	}
 
-	const pauseTimer = () => {
+	const pause = async () => {
+		if (!canPause.value) return Promise.reject()
+
 		state.value = TimerState.Paused
 		api.timer.postPause().then(() => {})
 	}
 
-	return { timer, state, totalDuration, init, getTimer, startTimer, pauseTimer }
+	const toggle = async () => {
+		switch (state.value) {
+			case TimerState.Created:
+			case TimerState.Paused:
+				return start()
+			case TimerState.Running:
+				return pause()
+		}
+	}
+
+	const init = async () => {
+		await getCurrent()
+	}
+
+	return {
+		timer,
+		state,
+		totalDuration,
+
+		canStart,
+		canPause,
+
+		init,
+
+		getCurrent,
+		start,
+		pause,
+		toggle,
+	}
 })

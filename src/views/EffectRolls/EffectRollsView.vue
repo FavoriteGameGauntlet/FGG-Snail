@@ -8,7 +8,11 @@ const onRollButtonClick = () => {}
 
 <template>
 	<div class="grid place-content-center h-full gap-12">
-		<RouterLink to="/rolls/games">Игры</RouterLink>
+		<RouterLink
+			class="place-self-center hover:underline text-blue-500"
+			to="/rolls/games"
+			>Игры</RouterLink
+		>
 
 		<h1 class="text-4xl font-semibold text-center">Роллы</h1>
 

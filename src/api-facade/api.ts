@@ -2,17 +2,19 @@
  * @version 0.5.0
  * Last updated: 2026.0.28
  */
+import {
+	convertTimerDto,
+	convertTimerActionDto,
+	convertGameDto,
+	convertRolledEffectDto,
+} from './dto'
 import { http } from './http'
 import {
 	type Effect,
 	type Game,
-	type GameDto,
 	type RolledEffect,
-	type RolledEffectDto,
 	type Timer,
 	type TimerAction,
-	type TimerActionDto,
-	type TimerDto,
 	type UnplayedGame,
 } from './models'
 import {
@@ -31,35 +33,6 @@ import {
 	type PostSignUp,
 	type PostStartTimer,
 } from './requests'
-
-const convertGameDto = (game: GameDto): Game => ({
-	...game,
-	finishDate:
-		game.finishDate !== undefined
-			? Temporal.PlainDateTime.from(game.finishDate)
-			: undefined,
-	timeSpent: Temporal.Duration.from(game.timeSpent),
-})
-
-const convertTimerDto = (timer: TimerDto): Timer => ({
-	...timer,
-	duration: Temporal.Duration.from(timer.duration),
-	remainingTime: Temporal.Duration.from(timer.remainingTime),
-	timerActionDate:
-		timer.timerActionDate !== undefined
-			? Temporal.PlainDateTime.from(timer.timerActionDate)
-			: undefined,
-})
-
-const convertTimerActionDto = (action: TimerActionDto): TimerAction => ({
-	...action,
-	remainingTime: Temporal.Duration.from(action.remainingTime),
-})
-
-const convertRolledEffectDto = (effect: RolledEffectDto): RolledEffect => ({
-	...effect,
-	rollDate: Temporal.PlainDateTime.from(effect.rollDate),
-})
 
 export const api = {
 	auth: {

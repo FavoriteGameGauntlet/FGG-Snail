@@ -1,4 +1,4 @@
-import type { DtoStringToDate, DtoStringToDuration } from './dto-mappers'
+import type { DtoStringToDate, DtoStringToDuration } from './dto'
 
 export type User = {
 	id: string
