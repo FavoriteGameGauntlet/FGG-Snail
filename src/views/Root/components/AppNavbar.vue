@@ -13,17 +13,21 @@ const { availableCount } = storeToRefs(effectStore)
 		<UserProfile />
 
 		<div class="flex gap-5 col-3">
-			<RouterLink class="hover:underline text-blue-500" to="/timer"
-				>Таймер</RouterLink
-			>
+			<RouterLink class="hover:underline text-blue-500" to="/timer">
+				Таймер
+			</RouterLink>
 
 			<RouterLink class="hover:underline text-blue-500" to="/rolls">
-				Роллы {{ availableCount >= 1 ? '🔵' : '' }}</RouterLink
-			>
+				Роллы {{ availableCount >= 1 ? '🔵' : '' }}
+			</RouterLink>
 
-			<RouterLink class="hover:underline text-blue-500" to="/games"
-				>Игры</RouterLink
-			>
+			<RouterLink class="hover:underline text-blue-500" to="/games">
+				Игры
+			</RouterLink>
+
+			<RouterLink class="hover:underline text-blue-500" to="/dev">
+				Dev
+			</RouterLink>
 		</div>
 	</div>
 </template>

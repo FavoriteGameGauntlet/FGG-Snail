@@ -14,6 +14,7 @@ import SignUpView from '../views/SignUp/SignUpView.vue'
 import TimerView from '../views/Timer/TimerView.vue'
 import { authGuard } from './authGuard'
 import { initialPathGuard } from './initialPathGuard'
+import DevView from '../views/Dev/DevView.vue'
 
 // todo: add named routes
 // https://router.vuejs.org/guide/essentials/named-routes.html
@@ -49,6 +50,10 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: 'effects',
 				component: EffectsView,
+			},
+			{
+				path: 'dev',
+				component: DevView,
 			},
 		],
 	},
