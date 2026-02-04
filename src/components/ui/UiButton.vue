@@ -20,28 +20,21 @@ const settings = useSettingsStore()
 
 const { roughnessModifier } = storeToRefs(settings)
 
-const svg = useTemplateRef('t')
+const svg = useTemplateRef('svg')
 const roughSvg = ref<RoughSVG>()
-
-const svgNodes: SVGElement[] = []
+const svgRect = ref<SVGElement>()
 
 watchEffect(() => {
 	if (svg.value) roughSvg.value = rough.svg(svg.value)
 })
 
-useResizeObserver(svg, (entries) => {
-	// should be just one
-	const entry = entries.at(0)
-	const rect = entry.target.getBoundingClientRect()
-
+useResizeObserver(svg, () => {
 	if (!roughSvg.value || !svg.value) return
 
-	svgNodes.map((node) => {
-		const newNode = makeRectangle(roughSvg.value!, svg.value!)
-		node.remove()
-		svg.value!.appendChild(newNode)
-		return newNode
-	})
+	const newNode = makeRectangle(roughSvg.value!, svg.value!)
+	svgRect.value?.remove()
+	svgRect.value = newNode
+	svg.value!.appendChild(newNode)
 })
 
 const makeRectangle = (
@@ -51,10 +44,10 @@ const makeRectangle = (
 	const { clientHeight, clientWidth } = svgElement
 
 	return roughSvg.rectangle(5, 5, clientWidth - 10, clientHeight - 10, {
-		fill: `var(--color-${fillColor}-300)`,
+		fill: `var(--color-blue-300)`,
 		fillStyle,
 		roughness: roughnessModifier.value,
-		strokeWidth: 3,
+		strokeWidth: 2.5,
 		bowing: 1,
 		seed,
 	})
@@ -63,18 +56,18 @@ const makeRectangle = (
 watch([svg, roughSvg, roughnessModifier], () => {
 	if (!svg.value || !roughSvg.value) return
 
-	svgNodes.forEach((n) => n.remove())
+	svgRect.value?.remove()
 
 	const rect = makeRectangle(roughSvg.value, svg.value)
 
-	svgNodes.push(rect)
+	svgRect.value = rect
 	svg.value.appendChild(rect)
 })
 </script>
 
 <template>
 	<button class="button">
-		<svg class="svg" ref="t"></svg>
+		<svg class="svg" ref="svg"></svg>
 		<div class="slot"><slot /></div>
 	</button>
 </template>

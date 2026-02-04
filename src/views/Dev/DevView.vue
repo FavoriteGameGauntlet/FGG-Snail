@@ -44,10 +44,6 @@ watch([roughnessValue], () => {
 			<code>width</code>
 
 			<input type="range" v-model="buttonWidth" min="100" max="400" />
-
-			<!-- <code>height</code>
-
-			<input type="range" v-model="buttonHeight" min="40" max="200" /> -->
 		</div>
 	</div>
 </template>
@@ -55,5 +51,6 @@ watch([roughnessValue], () => {
 <style scoped>
 .button {
 	flex-basis: var(--basis);
+	height: 48px;
 }
 </style>
