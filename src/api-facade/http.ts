@@ -33,6 +33,7 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 	})
 
 	try {
+		throw new Error('fuck you')
 		const response = await fetch(fullUrl, {
 			...opts,
 			headers: {

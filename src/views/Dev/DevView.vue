@@ -1,23 +1,59 @@
 <script setup lang="ts">
-import { useTemplateRef, watchEffect } from 'vue'
-import rough from 'roughjs'
+import { storeToRefs } from 'pinia'
+import UiButton from '../../components/ui/UiButton.vue'
+import { ref, useTemplateRef, watch, watchEffect } from 'vue'
+import { useSettingsStore } from '../../stores/settingsStore'
 
-const svgTest = useTemplateRef('t')
+const button = useTemplateRef('button')
 
-const stop = watchEffect(() => {
-	if (!svgTest.value) return
+const settings = useSettingsStore()
+const { roughnessModifier } = storeToRefs(settings)
 
-	const roughSvg = rough.svg(svgTest.value)
-	const rect = roughSvg.rectangle(10, 10, 200, 200, { fill: '#ffffff' })
-	svgTest.value.appendChild(rect) // <- here
-	stop()
+const roughnessValue = ref(roughnessModifier.value.toString())
+
+const buttonWidth = ref('200')
+// const buttonHeight = ref('50')
+
+watchEffect(() => {
+	if (!button.value) return
+
+	button.value.style.setProperty('--basis', buttonWidth.value + 'px')
+})
+
+watch([roughnessValue], () => {
+	roughnessModifier.value = Number.isNaN(+roughnessValue.value)
+		? 1
+		: +roughnessValue.value
 })
 </script>
 
 <template>
 	<div class="w-full flex flex-col">
-		<div class="w-180">
-			<svg ref="t" class="w-70 h-70"></svg>
+		<div class="w-240 flex flex-col">
+			<div
+				ref="button"
+				class="border-4 border-black/20 border-dashed overflow-visible flex flex-row flex-wrap w-full"
+			>
+				<UiButton class="button" :key="i" v-for="i in 100"> Test </UiButton>
+			</div>
+
+			<code>roughness</code>
+
+			<input v-model="roughnessValue" />
+
+			<code>width</code>
+
+			<input type="range" v-model="buttonWidth" min="100" max="400" />
+
+			<!-- <code>height</code>
+
+			<input type="range" v-model="buttonHeight" min="40" max="200" /> -->
 		</div>
 	</div>
 </template>
+
+<style scoped>
+.button {
+	flex-basis: var(--basis);
+}
+</style>

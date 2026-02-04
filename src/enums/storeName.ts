@@ -1,6 +1,7 @@
 export const enum StoreName {
 	Auth = 'auth',
-	Game = 'game',
-	Timer = 'timer',
 	Effect = 'effect',
+	Game = 'game',
+	Settings = 'settings',
+	Timer = 'timer',
 }
