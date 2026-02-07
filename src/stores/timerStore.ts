@@ -4,13 +4,12 @@ import { computed, ref } from 'vue'
 import { api } from '../api-facade/api'
 import { TimerState } from '../api-facade/models'
 import { StoreName } from '../enums/storeName'
-import { LoadingState, useLoading } from '../composables/useLoading'
 
 const twoHours = Temporal.Duration.from({ hours: 2 })
 
 export const useTimerStore = defineStore(StoreName.Timer, () => {
 	const timer = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
-	const timerLoading = useLoading()
+	// const timerLoading = useLoading()
 	const state = ref<TimerState>(TimerState.Created)
 	const totalDuration = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
 

@@ -23,64 +23,29 @@ export type DtoStringToDuration<
 	[K in keyof Dto]: K extends DurationFields ? Temporal.Duration : Dto[K]
 }
 
-export const convertGameDto = (game: GameDto): Game => {
-	const isInvalidFormat = game.timeSpent && !game.timeSpent?.startsWith('PT')
-	const prefix = isInvalidFormat ? 'PT' : ''
+export const convertGameDto = (game: GameDto): Game => ({
+	...game,
+	finishDate:
+		game.finishDate !== undefined
+			? Temporal.PlainDateTime.from(game.finishDate)
+			: undefined,
+	timeSpent: Temporal.Duration.from(game.timeSpent),
+})
 
-	if (!isInvalidFormat) {
-		console.warn(
-			'API started sending valid Duration format. Remove the custom logic',
-		)
-	}
+export const convertTimerDto = (timer: TimerDto): Timer => ({
+	...timer,
+	duration: Temporal.Duration.from(timer.duration),
+	remainingTime: Temporal.Duration.from(timer.remainingTime),
+	timerActionDate:
+		timer.timerActionDate !== undefined
+			? Temporal.PlainDateTime.from(timer.timerActionDate)
+			: undefined,
+})
 
-	return {
-		...game,
-		finishDate:
-			game.finishDate !== undefined
-				? Temporal.PlainDateTime.from(game.finishDate)
-				: undefined,
-		timeSpent: Temporal.Duration.from(prefix + game.timeSpent),
-	}
-}
-
-export const convertTimerDto = (timer: TimerDto): Timer => {
-	const isInvalidFormat =
-		timer.remainingTime && !timer.remainingTime?.startsWith('PT')
-	const prefix = isInvalidFormat ? 'PT' : ''
-
-	if (!isInvalidFormat) {
-		console.warn(
-			'API started sending valid Duration format. Remove the custom logic',
-		)
-	}
-
-	return {
-		...timer,
-		duration: Temporal.Duration.from(prefix + timer.duration),
-		remainingTime: Temporal.Duration.from(prefix + timer.remainingTime),
-		timerActionDate:
-			timer.timerActionDate !== undefined
-				? Temporal.PlainDateTime.from(timer.timerActionDate)
-				: undefined,
-	}
-}
-
-export const convertTimerActionDto = (action: TimerActionDto): TimerAction => {
-	const isInvalidFormat =
-		action.remainingTime && !action.remainingTime?.startsWith('PT')
-	const prefix = isInvalidFormat ? 'PT' : ''
-
-	if (!isInvalidFormat) {
-		console.warn(
-			'API started sending valid Duration format. Remove the custom logic',
-		)
-	}
-
-	return {
-		...action,
-		remainingTime: Temporal.Duration.from(prefix + action.remainingTime),
-	}
-}
+export const convertTimerActionDto = (action: TimerActionDto): TimerAction => ({
+	...action,
+	remainingTime: Temporal.Duration.from(action.remainingTime),
+})
 
 export const convertRolledEffectDto = (
 	effect: RolledEffectDto,

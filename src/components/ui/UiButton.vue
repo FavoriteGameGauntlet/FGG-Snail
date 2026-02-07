@@ -12,7 +12,7 @@ type Props = {
 	fillColor?: string
 }
 
-const { fillStyle = 'solid', fillColor = 'blue' } = defineProps<Props>()
+const { fillStyle = 'solid' } = defineProps<Props>()
 
 const seed = Math.floor(Math.random() * Math.pow(2, 31)) + 1
 
