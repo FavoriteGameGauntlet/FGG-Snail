@@ -67,8 +67,6 @@ onMounted(() => {
 		<div class="flex flex-col w-180 gap-8">
 			<h1 class="text-4xl">Игры</h1>
 
-			<button @click="gameStore.getCurrent">aboba</button>
-
 			<form class="flex gap-4" @submit.prevent="onAddGameFormSubmit">
 				<input
 					class="border border-slate-300 bg-slate-100 rounded-md px-3 py-1 w-80"

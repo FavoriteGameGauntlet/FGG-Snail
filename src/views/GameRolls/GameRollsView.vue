@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useGameStore } from '../../stores/gameStore'
 import { storeToRefs } from 'pinia'
@@ -22,8 +22,22 @@ const onRollButtonClick = () => {
 	gameStore.roll()
 }
 
+const onCancelGameButtonClick = () => {
+	gameStore.cancel()
+}
+
+const onFinishGameButtonClick = () => {
+	gameStore.finish()
+}
+
 gameStore.currentLoading.on([LoadingState.LOADED]).then(() => {
-	rollText.value = current.value?.name ?? 'Крути барабан'
+	watch(
+		current,
+		() => {
+			rollText.value = current.value?.name ?? 'Крути барабан'
+		},
+		{ immediate: true },
+	)
 })
 
 onMounted(() => {
@@ -58,11 +72,17 @@ onMounted(() => {
 			<p v-if="current">
 				Ты сейчас играешь в {{ current?.name }}.
 
-				<button class="border-2 border-green-500 text-green-500 px-4 py-2">
+				<button
+					class="border-2 border-green-500 text-green-500 px-4 py-2 cursor-pointer"
+					@click="onCancelGameButtonClick"
+				>
 					Закончить
 				</button>
 
-				<button class="border-2 border-red-500 text-red-500 px-4 py-2">
+				<button
+					class="border-2 border-red-500 text-red-500 px-4 py-2 cursor-pointer"
+					@click="onCancelGameButtonClick"
+				>
 					Бросить
 				</button>
 			</p>

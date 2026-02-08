@@ -86,6 +86,18 @@ export const useGameStore = defineStore(StoreName.Game, () => {
 		})
 	}
 
+	const cancel = async () => {
+		return api.games.postCancelCurrent().then(() => {
+			current.value = null
+		})
+	}
+
+	const finish = async () => {
+		return api.games.postFinishCurrent().then(() => {
+			current.value = null
+		})
+	}
+
 	const init = async () => {
 		await Promise.all([getCurrent()])
 	}
@@ -107,5 +119,7 @@ export const useGameStore = defineStore(StoreName.Game, () => {
 		addUnplayed,
 		getUnplayed,
 		roll,
+		cancel,
+		finish,
 	}
 })

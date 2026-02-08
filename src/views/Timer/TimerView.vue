@@ -4,10 +4,13 @@ import { useTimerStore } from '../../stores/timerStore'
 import { computed } from 'vue'
 import type { Temporal } from 'temporal-polyfill'
 import { TimerState } from '../../api-facade/models'
+import { useGameStore } from '../../stores/gameStore'
 
 const timerStore = useTimerStore()
+const gameStore = useGameStore()
 
 const { totalDuration, timer, state } = storeToRefs(timerStore)
+const { current: currentGame } = storeToRefs(gameStore)
 
 const timerButtonSvg = computed(() =>
 	state.value === TimerState.Running
@@ -24,6 +27,14 @@ const durationString = computed(() => formatDuration(totalDuration.value))
 const onStartButtonClick = () => {
 	timerStore.toggle()
 }
+
+const onFinishButtonClick = () => {
+	gameStore.finish()
+}
+
+const onCancelButtonClick = () => {
+	gameStore.cancel()
+}
 </script>
 
 <template>
@@ -32,7 +43,7 @@ const onStartButtonClick = () => {
 			<div
 				class="text-3xl font-bold leading-[110%] max-w-fit w-fit overflow-auto"
 			>
-				Game name game name game name
+				{{ currentGame?.name ?? 'Игра не выбрана' }}
 			</div>
 
 			<div
@@ -69,14 +80,14 @@ const onStartButtonClick = () => {
 			<div class="flex w-full justify-between">
 				<button
 					class="cursor-pointer border-2 px-8 py-1.5 w-fit text-xl text-green-700 border-green-700"
-					@click="onStartButtonClick"
+					@click="onFinishButtonClick"
 				>
 					Завершить
 				</button>
 
 				<button
 					class="cursor-pointer border-2 px-8 py-1.5 w-fit justify-self-end text-xl text-red-700 border-red-700"
-					@click="onStartButtonClick"
+					@click="onCancelButtonClick"
 				>
 					Забросить
 				</button>
