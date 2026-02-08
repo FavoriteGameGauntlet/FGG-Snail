@@ -2,6 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { useEffectStore } from '../../../stores/effectStore'
 import UserProfile from './UserProfile.vue'
+import { RouteName } from '../../../router/routeNames'
 
 const effectStore = useEffectStore()
 
@@ -13,19 +14,31 @@ const { availableCount } = storeToRefs(effectStore)
 		<UserProfile />
 
 		<div class="flex gap-5 col-3">
-			<RouterLink class="hover:underline text-blue-500" to="/timer">
+			<RouterLink
+				class="hover:underline text-blue-500"
+				:to="{ name: RouteName.Timer }"
+			>
 				Таймер
 			</RouterLink>
 
-			<RouterLink class="hover:underline text-blue-500" to="/rolls">
+			<RouterLink
+				class="hover:underline text-blue-500"
+				:to="{ name: RouteName.RollEffects }"
+			>
 				Роллы {{ availableCount >= 1 ? '🔵' : '' }}
 			</RouterLink>
 
-			<RouterLink class="hover:underline text-blue-500" to="/games">
+			<RouterLink
+				class="hover:underline text-blue-500"
+				:to="{ name: RouteName.Games }"
+			>
 				Игры
 			</RouterLink>
 
-			<RouterLink class="hover:underline text-blue-500" to="/dev">
+			<RouterLink
+				class="hover:underline text-blue-500"
+				:to="{ name: RouteName.Dev }"
+			>
 				Dev
 			</RouterLink>
 		</div>
