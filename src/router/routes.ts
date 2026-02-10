@@ -9,6 +9,7 @@ import TimerView from '../views/Timer/TimerView.vue'
 import DevView from '../views/Dev/DevView.vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { RouteName } from './routeNames'
+import PlayersView from '../views/Players/PlayersView.vue'
 
 export const routes: RouteRecordRaw[] = [
 	{
@@ -16,17 +17,26 @@ export const routes: RouteRecordRaw[] = [
 		component: RootView,
 		name: RouteName.Root,
 		redirect: 'timer',
+
 		children: [
 			{
 				path: 'timer',
 				component: TimerView,
 				name: RouteName.Timer,
 			},
+
+			{
+				path: 'players',
+				component: PlayersView,
+				name: RouteName.Players,
+			},
+
 			{
 				path: 'games',
 				component: GamesView,
 				name: RouteName.Games,
 			},
+
 			{
 				path: 'rolls',
 				redirect: 'rolls/effects',
@@ -36,6 +46,7 @@ export const routes: RouteRecordRaw[] = [
 						component: EffectRollsView,
 						name: RouteName.RollEffects,
 					},
+
 					{
 						path: 'games',
 						component: GameRollsView,
@@ -43,11 +54,13 @@ export const routes: RouteRecordRaw[] = [
 					},
 				],
 			},
+
 			{
 				path: 'effects',
 				component: EffectsView,
 				name: RouteName.Effects,
 			},
+
 			{
 				path: 'dev',
 				component: DevView,
@@ -60,11 +73,13 @@ export const routes: RouteRecordRaw[] = [
 		component: LoginView,
 		name: RouteName.Login,
 	},
+
 	{
 		path: '/signup',
 		component: SignUpView,
 		name: RouteName.Signup,
 	},
+
 	{
 		path: '/:pathMatch(.*)*',
 		redirect: { name: RouteName.Timer },

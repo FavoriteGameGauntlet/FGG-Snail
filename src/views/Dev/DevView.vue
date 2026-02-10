@@ -12,7 +12,6 @@ const { roughnessModifier } = storeToRefs(settings)
 const roughnessValue = ref(roughnessModifier.value.toString())
 
 const buttonWidth = ref('200')
-// const buttonHeight = ref('50')
 
 watchEffect(() => {
 	if (!button.value) return

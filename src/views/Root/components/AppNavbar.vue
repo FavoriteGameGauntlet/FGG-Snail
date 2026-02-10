@@ -23,6 +23,13 @@ const { availableCount } = storeToRefs(effectStore)
 
 			<RouterLink
 				class="hover:underline text-blue-500"
+				:to="{ name: RouteName.Players }"
+			>
+				Игроки
+			</RouterLink>
+
+			<RouterLink
+				class="hover:underline text-blue-500"
 				:to="{ name: RouteName.RollEffects }"
 			>
 				Роллы {{ availableCount >= 1 ? '🔵' : '' }}
