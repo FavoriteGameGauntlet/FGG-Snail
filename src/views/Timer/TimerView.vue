@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useTimerStore } from '../../stores/timerStore'
 import { computed } from 'vue'
-import type { Temporal } from 'temporal-polyfill'
 import { TimerState } from '../../api-facade/models'
+import UiTimer from '../../components/ui/UiTimer.vue'
 import { useGameStore } from '../../stores/gameStore'
+import { useTimerStore } from '../../stores/timerStore'
 
 const timerStore = useTimerStore()
 const gameStore = useGameStore()
@@ -17,12 +17,6 @@ const timerButtonSvg = computed(() =>
 		? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
 		: '<path d="M8 5v14l11-7z"/>',
 )
-
-const formatDuration = (duration: Temporal.Duration) =>
-	`${duration.hours}:${duration.minutes.toString().padStart(2, '0')}:${duration.seconds.toString().padStart(2, '0')}`
-
-const timerString = computed(() => formatDuration(timer.value))
-const durationString = computed(() => formatDuration(totalDuration.value))
 
 const onStartButtonClick = () => {
 	timerStore.toggle()
@@ -38,23 +32,23 @@ const onCancelButtonClick = () => {
 </script>
 
 <template>
-	<div class="flex flex-col items-center justify-center size-full">
-		<div class="flex flex-col gap-x-4 gap-6 w-min mb-17">
+	<div class="flex size-full flex-col items-center justify-center">
+		<div class="mb-17 flex w-min flex-col gap-4 gap-x-4">
 			<div
-				class="text-3xl font-bold leading-[110%] max-w-fit w-fit overflow-auto"
+				class="w-fit max-w-fit overflow-auto text-3xl leading-[110%] font-bold"
 			>
+				<!-- @todo fix text on load -->
 				{{ currentGame?.name ?? 'Игра не выбрана' }}
 			</div>
 
-			<div
-				class="text-massive font-bold font-mono leading-[80%] tracking-tighter w-fit shrink-0 min-w-fit"
-			>
-				{{ timerString }}
-			</div>
+			<UiTimer
+				class="text-massive w-fit min-w-fit shrink-0 font-bold"
+				:time="timer"
+			/>
 
 			<div class="grid grid-cols-2 grid-rows-2">
 				<button
-					class="row-span-2 cursor-pointer border-2 px-5 py-2.5 w-fit text-2xl border-black"
+					class="row-span-2 w-fit cursor-pointer border-2 border-black px-5 py-3 text-2xl"
 					@click="onStartButtonClick"
 				>
 					<svg
@@ -67,26 +61,26 @@ const onCancelButtonClick = () => {
 				</button>
 
 				<div
-					class="text-xl w-fit place-self-end font-mono leading-[100%] self-start justify-self-end"
+					class="w-fit place-self-end self-start justify-self-end font-mono text-xl"
 				>
-					/ {{ durationString }}
+					/ <UiTimer class="inline" :time="totalDuration" />
 				</div>
 
-				<div class="text-xl w-fit place-self-end font-mono leading-[100%]">
-					В игре: {{ durationString }}
+				<div class="w-fit place-self-end text-xl">
+					В игре: <UiTimer class="inline" :time="totalDuration" />
 				</div>
 			</div>
 
 			<div class="flex w-full justify-between">
 				<button
-					class="cursor-pointer border-2 px-8 py-1.5 w-fit text-xl text-green-700 border-green-700"
+					class="w-fit cursor-pointer border-2 border-green-700 px-8 py-1.5 text-xl text-green-700"
 					@click="onFinishButtonClick"
 				>
 					Завершить
 				</button>
 
 				<button
-					class="cursor-pointer border-2 px-8 py-1.5 w-fit justify-self-end text-xl text-red-700 border-red-700"
+					class="w-fit cursor-pointer justify-self-end border-2 border-red-700 px-8 py-1.5 text-xl text-red-700"
 					@click="onCancelButtonClick"
 				>
 					Забросить

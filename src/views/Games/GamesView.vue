@@ -63,13 +63,13 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="flex flex-col items-center px-12 py-8 w-full">
-		<div class="flex flex-col w-180 gap-8">
+	<div class="flex w-full flex-col items-center px-12 py-8">
+		<div class="flex w-180 flex-col gap-8">
 			<h1 class="text-4xl">Игры</h1>
 
 			<form class="flex gap-4" @submit.prevent="onAddGameFormSubmit">
 				<input
-					class="border border-slate-300 bg-slate-100 rounded-md px-3 py-1 w-80"
+					class="w-80 rounded-md border border-slate-300 bg-slate-100 px-3 py-1"
 					ref="add-game-input"
 					placeholder="Название игры..."
 					:disabled="isLoading"
@@ -77,14 +77,14 @@ onMounted(() => {
 				/>
 
 				<button
-					class="bg-slate-100 hover:bg-slate-200 cursor-pointer disabled:text-slate-500 px-4 py-1"
+					class="cursor-pointer bg-slate-100 px-4 py-1 hover:bg-slate-200 disabled:text-slate-500"
 					:disabled="isLoading"
 				>
 					Добавить
 				</button>
 			</form>
 
-			<p class="px-5 py-2 bg-slate-100 rounded-md w-fit" v-if="showCountHint">
+			<p class="w-fit rounded-md bg-slate-100 px-5 py-2" v-if="showCountHint">
 				Чтобы крутить следующую игру, надо 6 игр, нужно ещё
 				{{ 6 - unplayed.length }}.
 			</p>

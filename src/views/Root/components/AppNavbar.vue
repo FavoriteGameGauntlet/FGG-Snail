@@ -10,40 +10,40 @@ const { availableCount } = storeToRefs(effectStore)
 </script>
 
 <template>
-	<div class="flex justify-between items-center px-7">
+	<div class="flex items-center justify-between px-7">
 		<UserProfile />
 
-		<div class="flex gap-5 col-3">
+		<div class="col-3 flex gap-5">
 			<RouterLink
-				class="hover:underline text-blue-500"
+				class="text-blue-500 hover:underline"
 				:to="{ name: RouteName.Timer }"
 			>
 				Таймер
 			</RouterLink>
 
 			<RouterLink
-				class="hover:underline text-blue-500"
+				class="text-blue-500 hover:underline"
 				:to="{ name: RouteName.Players }"
 			>
 				Игроки
 			</RouterLink>
 
 			<RouterLink
-				class="hover:underline text-blue-500"
+				class="text-blue-500 hover:underline"
 				:to="{ name: RouteName.RollEffects }"
 			>
 				Роллы {{ availableCount >= 1 ? '🔵' : '' }}
 			</RouterLink>
 
 			<RouterLink
-				class="hover:underline text-blue-500"
+				class="text-blue-500 hover:underline"
 				:to="{ name: RouteName.Games }"
 			>
 				Игры
 			</RouterLink>
 
 			<RouterLink
-				class="hover:underline text-blue-500"
+				class="text-blue-500 hover:underline"
 				:to="{ name: RouteName.Dev }"
 			>
 				Dev

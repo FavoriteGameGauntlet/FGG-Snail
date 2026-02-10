@@ -12,7 +12,7 @@
 		"build": "vue-tsc --noEmit && vite build",
 		"preview": "vite preview",
 		"tauri": "tauri",
-		"format": "prettier src/*{.vue,.ts} -w",
+		"format": "prettier src/**/*{.vue,.ts} -w",
 		"lint": "eslint src/*",
 		"lint:fix": "eslint src/* --fix"
 	},
@@ -39,7 +39,8 @@
 		"eslint-plugin-vue": "^10.6.2",
 		"globals": "^16.5.0",
 		"jiti": "^2.6.1",
-		"prettier": "^3.7.4",
+		"prettier": "^3.8.1",
+		"prettier-plugin-tailwindcss": "^0.7.2",
 		"typescript": "~5.9.3",
 		"typescript-eslint": "^8.50.0",
 		"vite": "^7.3.0",

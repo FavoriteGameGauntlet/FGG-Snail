@@ -27,11 +27,11 @@ watch([roughnessValue], () => {
 </script>
 
 <template>
-	<div class="w-full flex flex-col">
-		<div class="w-240 flex flex-col">
+	<div class="flex w-full flex-col">
+		<div class="flex w-240 flex-col">
 			<div
 				ref="button"
-				class="border-4 border-black/20 border-dashed overflow-visible flex flex-row flex-wrap w-full"
+				class="flex w-full flex-row flex-wrap overflow-visible border-4 border-dashed border-black/20"
 			>
 				<UiButton class="button" :key="i" v-for="i in 100"> Test </UiButton>
 			</div>

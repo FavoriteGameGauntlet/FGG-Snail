@@ -25,33 +25,33 @@ const onFormSubmit = () => {
 </script>
 
 <template>
-	<div class="grid place-content-center h-full w-full gap-4">
-		<h1 class="text-3xl font-bold w-60">Регистрация</h1>
+	<div class="grid h-full w-full place-content-center gap-4">
+		<h1 class="w-60 text-3xl font-bold">Регистрация</h1>
 
-		<form class="flex flex-col gap-2 w-full" @submit.prevent="onFormSubmit">
+		<form class="flex w-full flex-col gap-2" @submit.prevent="onFormSubmit">
 			<input
-				class="border border-slate-400 px-2 py-0.5 rounded-md"
+				class="rounded-md border border-slate-400 px-2 py-0.5"
 				placeholder="Логин"
 				v-model.trim="userName"
 			/>
 			<input
-				class="border border-slate-400 px-2 py-0.5 rounded-md"
+				class="rounded-md border border-slate-400 px-2 py-0.5"
 				type="email"
 				placeholder="Эл. почта"
 				v-model.trim="email"
 			/>
 			<input
-				class="border border-slate-400 px-2 py-0.5 rounded-md"
+				class="rounded-md border border-slate-400 px-2 py-0.5"
 				type="password"
 				placeholder="Пароль"
 				v-model="password"
 			/>
 
-			<button class="bg-emerald-200 py-0.5 rounded-md">
+			<button class="rounded-md bg-emerald-200 py-0.5">
 				Зарегистрироваться
 			</button>
 
-			<RouterLink to="login" class="text-cyan-700 text-sm place-self-center">
+			<RouterLink to="login" class="place-self-center text-sm text-cyan-700">
 				Вход
 			</RouterLink>
 		</form>

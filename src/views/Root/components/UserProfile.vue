@@ -11,10 +11,10 @@ const onLogOutButtonClick = () => {
 </script>
 
 <template>
-	<div class="flex flex-col gap-2 leading-[110%] text-sm" v-show="userName">
+	<div class="flex flex-col gap-2 text-sm leading-[110%]" v-show="userName">
 		<span>{{ userName }}</span>
 		<button
-			class="hover:underline hover:cursor-pointer"
+			class="hover:cursor-pointer hover:underline"
 			@click="onLogOutButtonClick"
 		>
 			Выход
