@@ -1,6 +1,6 @@
 /**
- * @version 0.5.0
- * Last updated: 2026.0.28
+ * @version 0.7.4
+ * Last updated: 2026.02.11
  */
 import {
 	convertTimerDto,
@@ -45,23 +45,6 @@ export const api = {
 			http.post('/auth/signup', { body: request.body }),
 	},
 
-	timer: {
-		getCurrent: (): Promise<Timer> =>
-			http
-				.get<GetCurrentTimer>('/timers/current')
-				.then(({ body }) => convertTimerDto(body)),
-
-		postStart: (): Promise<TimerAction> =>
-			http
-				.post<PostStartTimer>('/timers/current/start')
-				.then(({ body }) => convertTimerActionDto(body)),
-
-		postPause: (): Promise<TimerAction> =>
-			http
-				.post<PostPauseTimer>('/timers/current/pause')
-				.then(({ body }) => convertTimerActionDto(body)),
-	},
-
 	games: {
 		postAddUnplayed: (request: PostGamesAddUnplayed['request']) =>
 			http.post<PostGamesAddUnplayed>('/games/unplayed', {
@@ -89,6 +72,23 @@ export const api = {
 			http
 				.get<GetGamesHistory>('/games/history')
 				.then(({ body: games }) => games.map(convertGameDto)),
+	},
+
+	timer: {
+		getCurrent: (): Promise<Timer> =>
+			http
+				.get<GetCurrentTimer>('/timers/current')
+				.then(({ body }) => convertTimerDto(body)),
+
+		postStart: (): Promise<TimerAction> =>
+			http
+				.post<PostStartTimer>('/timers/current/start')
+				.then(({ body }) => convertTimerActionDto(body)),
+
+		postPause: (): Promise<TimerAction> =>
+			http
+				.post<PostPauseTimer>('/timers/current/pause')
+				.then(({ body }) => convertTimerActionDto(body)),
 	},
 
 	effects: {

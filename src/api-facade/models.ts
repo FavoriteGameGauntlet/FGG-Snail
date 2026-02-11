@@ -9,8 +9,6 @@ export type UnplayedGame = {
 	name: string
 }
 
-export type UnplayedGames = UnplayedGame[]
-
 export enum GameState {
 	Started = 'started',
 	Finished = 'finished',
@@ -58,7 +56,7 @@ export enum TimerActionType {
 }
 
 export type TimerActionDto = {
-	action: TimerActionType
+	type: TimerActionType
 	/** format: Duration */
 	remainingTime: string
 }
