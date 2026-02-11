@@ -6,22 +6,20 @@ import { TimerState } from '../api-facade/models'
 import { StoreName } from '../enums/storeName'
 import { useTimeSync } from '../composables/useTimeSync'
 
-const twoHours = Temporal.Duration.from({ hours: 2 })
+const twoHours = Temporal.Duration.from({ hours: 2, minutes: 0, seconds: 0 })
 
 export const useTimerStore = defineStore(StoreName.Timer, () => {
-	const timer = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
 	// const timerLoading = useLoading()
 	const state = ref<TimerState>(TimerState.Created)
-	const totalDuration = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
+	const durationTotal = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
 
 	const lastActionDate = ref<Temporal.ZonedDateTime>()
 	const endDate = computed(() =>
 		state.value === TimerState.Running
-			? lastActionDate.value?.add(totalDuration.value)
+			? lastActionDate.value?.add(durationTotal.value)
 			: undefined,
 	)
-	const now = ref<Temporal.ZonedDateTime>(Temporal.Now.zonedDateTimeISO())
-	const durationLeft = computed<Temporal.Duration>(() => /** calc */)
+	const durationLeft = ref<Temporal.Duration>()
 
 	const canStart = computed(
 		() =>
@@ -35,8 +33,8 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 
 	const getCurrent = async () => {
 		return api.timer.getCurrent().then((v) => {
-			timer.value = v.remainingTime
-			totalDuration.value = v.duration
+			durationLeft.value = v.remainingTime
+			durationTotal.value = v.duration
 			state.value = v.state
 			lastActionDate.value = v.timerActionDate?.toZonedDateTime(
 				Temporal.Now.timeZoneId(),
@@ -55,7 +53,7 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 		await api.timer
 			.postStart()
 			.then((timerAction) => {
-				timer.value = Temporal.Duration.from(timerAction.remainingTime)
+				durationLeft.value = Temporal.Duration.from(timerAction.remainingTime)
 			})
 			.catch(() => {
 				state.value = prevState
@@ -80,15 +78,19 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 	}
 
 	const init = async () => {
-		useTimeSync((v) => (now.value = v))
+		useTimeSync((now) => {
+			durationLeft.value = endDate.value?.since(now)
+			console.log('sync that timer', endDate.value, durationLeft.value)
+		})
 
 		await getCurrent()
 	}
 
 	return {
-		timer,
 		state,
-		totalDuration,
+		endDate,
+		durationTotal,
+		durationLeft,
 
 		/** Time zone is required for calculations */
 		lastActionDate,

@@ -12,10 +12,19 @@ export const useTimeSync = (
 		const now = Temporal.Now
 		callback(now.zonedDateTimeISO())
 
-		timeoutId = setTimeout(tick, 1000 - now.instant().epochMilliseconds)
+		timeoutId = setTimeout(
+			tick,
+			1000 - (now.instant().epochMilliseconds % 1000),
+		)
 	}
 
-	timeoutId = setTimeout(tick, 1000 - now.epochMilliseconds)
+	timeoutId = setTimeout(tick, 1000 - (now.epochMilliseconds % 1000))
 
-	onScopeDispose(() => timeoutId && clearTimeout(timeoutId))
+	console.log(`timer ${timeoutId} started`)
+
+	onScopeDispose(() => {
+		console.log(`timer ${timeoutId} cleared`)
+
+		return timeoutId && clearTimeout(timeoutId)
+	})
 }
