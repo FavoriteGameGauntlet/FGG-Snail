@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 import { api } from '../api-facade/api'
 import { TimerState } from '../api-facade/models'
 import { StoreName } from '../enums/storeName'
+import { useTimeSync } from '../composables/useTimeSync'
 
 const twoHours = Temporal.Duration.from({ hours: 2 })
 
@@ -12,6 +13,15 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 	// const timerLoading = useLoading()
 	const state = ref<TimerState>(TimerState.Created)
 	const totalDuration = ref<Temporal.Duration>(Temporal.Duration.from(twoHours))
+
+	const lastActionDate = ref<Temporal.ZonedDateTime>()
+	const endDate = computed(() =>
+		state.value === TimerState.Running
+			? lastActionDate.value?.add(totalDuration.value)
+			: undefined,
+	)
+	const now = ref<Temporal.ZonedDateTime>(Temporal.Now.zonedDateTimeISO())
+	const durationLeft = computed<Temporal.Duration>(() => /** calc */)
 
 	const canStart = computed(
 		() =>
@@ -28,6 +38,11 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 			timer.value = v.remainingTime
 			totalDuration.value = v.duration
 			state.value = v.state
+			lastActionDate.value = v.timerActionDate?.toZonedDateTime(
+				Temporal.Now.timeZoneId(),
+			)
+
+			console.log({ lastAction: lastActionDate.value })
 		})
 	}
 
@@ -65,6 +80,8 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 	}
 
 	const init = async () => {
+		useTimeSync((v) => (now.value = v))
+
 		await getCurrent()
 	}
 
@@ -72,6 +89,9 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 		timer,
 		state,
 		totalDuration,
+
+		/** Time zone is required for calculations */
+		lastActionDate,
 
 		canStart,
 		canPause,

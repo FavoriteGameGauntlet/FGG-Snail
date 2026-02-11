@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { TimerState } from '../../api-facade/models'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'
+import UiTimer from '../../components/ui/UiTimer.vue'
 import { useGameStore } from '../../stores/gameStore'
 import { useTimerStore } from '../../stores/timerStore'
 
@@ -41,10 +42,17 @@ const onCancelButtonClick = () => {
 				{{ currentGame?.name ?? 'Игра не выбрана' }}
 			</div>
 
-			<UiTimestamp
+			<UiTimer
+				class="text-massive w-fit min-w-fit shrink-0 font-bold"
+				:duration="timerStore.totalDuration"
+				:timeFrom="timerStore.lastActionDate"
+				:pause="timerStore.state !== TimerState.Running"
+			/>
+
+			<!-- <UiTimestamp
 				class="text-massive w-fit min-w-fit shrink-0 font-bold"
 				:time="timer"
-			/>
+			/> -->
 
 			<div class="grid grid-cols-2 grid-rows-2">
 				<button
