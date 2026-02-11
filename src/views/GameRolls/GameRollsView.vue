@@ -74,7 +74,7 @@ onMounted(() => {
 
 				<button
 					class="cursor-pointer border-2 border-green-500 px-4 py-2 text-green-500"
-					@click="onCancelGameButtonClick"
+					@click="onFinishGameButtonClick"
 				>
 					Закончить
 				</button>
