@@ -1,36 +1,31 @@
-import { onScopeDispose } from 'vue'
+import { getCurrentScope, onScopeDispose } from 'vue'
 
 /** Executes callback precisely after every second */
-export const useTimeSync = (
-	callback: (time: Temporal.ZonedDateTime) => void,
-) => {
+export const useTimeSync = (callback: (time: Temporal.Instant) => void) => {
 	const now = Temporal.Now.instant()
+	let stopped = false
 
 	let timeoutId: NodeJS.Timeout | undefined = undefined
 
-	function stop() {
+	const stop = () => {
+		stopped = true
 		clearTimeout(timeoutId)
 	}
 
 	function tick() {
-		const now = Temporal.Now
-		callback(now.zonedDateTimeISO())
+		if (stopped) return
 
-		timeoutId = setTimeout(
-			tick,
-			1000 - (now.instant().epochMilliseconds % 1000),
-		)
+		const now = Temporal.Now.instant()
+		callback(now)
+
+		timeoutId = setTimeout(tick, 1000 - (now.epochMilliseconds % 1000))
 	}
 
 	timeoutId = setTimeout(tick, 1000 - (now.epochMilliseconds % 1000))
 
-	console.log(`timer ${timeoutId} started`)
-
-	onScopeDispose(() => {
-		console.log(`timer ${timeoutId} cleared`)
-
-		return stop()
-	})
+	if (getCurrentScope()) {
+		onScopeDispose(() => stop())
+	}
 
 	return stop
 }

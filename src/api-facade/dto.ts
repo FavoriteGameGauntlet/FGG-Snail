@@ -13,7 +13,7 @@ export type DtoStringToDate<
 	Dto extends object,
 	DateFields extends keyof Dto,
 > = {
-	[K in keyof Dto]: K extends DateFields ? Temporal.PlainDateTime : Dto[K]
+	[K in keyof Dto]: K extends DateFields ? Temporal.Instant : Dto[K]
 }
 
 export type DtoStringToDuration<
@@ -27,7 +27,7 @@ export const convertGameDto = (game: GameDto): Game => ({
 	...game,
 	finishDate:
 		game.finishDate !== undefined
-			? Temporal.PlainDateTime.from(game.finishDate)
+			? Temporal.Instant.from(game.finishDate)
 			: undefined,
 	timeSpent: Temporal.Duration.from(game.timeSpent),
 })
@@ -38,7 +38,7 @@ export const convertTimerDto = (timer: TimerDto): Timer => ({
 	remainingTime: Temporal.Duration.from(timer.remainingTime),
 	timerActionDate:
 		timer.timerActionDate !== undefined
-			? Temporal.PlainDateTime.from(timer.timerActionDate)
+			? Temporal.Instant.from(timer.timerActionDate)
 			: undefined,
 })
 
@@ -51,5 +51,5 @@ export const convertRolledEffectDto = (
 	effect: RolledEffectDto,
 ): RolledEffect => ({
 	...effect,
-	rollDate: Temporal.PlainDateTime.from(effect.rollDate),
+	rollDate: Temporal.Instant.from(effect.rollDate),
 })

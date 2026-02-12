@@ -24,13 +24,13 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 	const fullUrl = API_URL + url
 	const method = opts?.method || 'GET'
 
-	// console.log(`[HTTP] ${method} ${fullUrl}`, {
-	// 	body: opts?.body,
-	// 	headers: {
-	// 		'Content-Type': 'application/json',
-	// 		...opts?.headers,
-	// 	},
-	// })
+	console.log(`[HTTP] ${method} ${fullUrl}`, {
+		body: opts?.body,
+		headers: {
+			'Content-Type': 'application/json',
+			...opts?.headers,
+		},
+	})
 
 	try {
 		const response = await fetch(fullUrl, {
@@ -44,10 +44,11 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 			.text()
 			.then((body) => (body.length ? JSON.parse(body) : undefined))
 
-		const t = Temporal.Now.zonedDateTimeISO()
+		const time = Temporal.Now.zonedDateTimeISO()
+		const timestamp = `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}:${time.second.toString().padStart(2, '0')}`
 
 		console.log(
-			`[HTTP] ${method} ${fullUrl} - ${response.status} | ${t.hour.toString().padStart(2, '0')}:${t.minute.toString().padStart(2, '0')}:${t.second.toString().padStart(2, '0')}`,
+			`[HTTP] ${method} ${fullUrl} - ${response.status} | ${timestamp}`,
 			{
 				body: responseBody,
 			},

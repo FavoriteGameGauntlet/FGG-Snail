@@ -1,28 +1,26 @@
 import { defineStore } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
-import { computed, ref } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { api } from '../api-facade/api'
 import { TimerState } from '../api-facade/models'
 import { useTimeSync } from '../composables/useTimeSync'
 import { StoreName } from '../enums/storeName'
 
-const twoHours = Temporal.Duration.from({ hours: 2, minutes: 0, seconds: 0 })
+const defaultDuration = Temporal.Duration.from({
+	hours: 2,
+	minutes: 0,
+	seconds: 0,
+})
 
 export const useTimerStore = defineStore(StoreName.Timer, () => {
-	// const timerLoading = useLoading()
 	const state = ref(TimerState.Created)
-	const durationTotal = ref(Temporal.Duration.from(twoHours))
+	const durationTotal = ref(Temporal.Duration.from(defaultDuration))
 
-	const lastActionDate = ref(Temporal.Now.zonedDateTimeISO())
-	const durationLeft = ref(Temporal.Duration.from(twoHours))
+	const lastActionDate = ref(Temporal.Now.instant())
+	const durationLeft = ref(Temporal.Duration.from(defaultDuration))
+	const dynamicDurationLeft = ref(durationLeft.value)
 
 	let stopTimeSync: (() => void) | undefined = undefined
-
-	const endDate = computed(() => {
-		if (state.value === TimerState.Finished) return lastActionDate.value
-
-		return lastActionDate.value?.add(durationLeft.value)
-	})
 
 	const canStart = computed(
 		() =>
@@ -34,20 +32,50 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 		() => state.value && state.value === TimerState.Running,
 	)
 
-	const updateDurationLeft = (now: Temporal.ZonedDateTime) => {
-		const newDuration =
-			endDate.value?.since(now) ?? Temporal.Duration.from(twoHours)
+	const calcEndDate = () => {
+		if (state.value === TimerState.Finished) return lastActionDate.value
 
-		durationLeft.value =
+		return lastActionDate.value?.add(durationLeft.value)
+	}
+
+	const endDate = ref(calcEndDate())
+
+	const updateEndDate = () => {
+		endDate.value = calcEndDate()
+	}
+
+	watch(durationLeft, () => {
+		dynamicDurationLeft.value = durationLeft.value
+	})
+
+	watchEffect(() => {
+		console.log({ durationLeft: durationLeft.value.toString() })
+	})
+
+	watchEffect(() => {
+		console.log({ dynamicDuration: dynamicDurationLeft.value.toString() })
+	})
+
+	watchEffect(() => {
+		console.log({ endDate: endDate.value.toString() })
+	})
+
+	watchEffect(() => {
+		console.log({ durationTotal: durationTotal.value.toString() })
+	})
+
+	const updateDurationLeft = (now: Temporal.Instant) => {
+		const newDuration =
+			endDate.value?.since(now) ?? Temporal.Duration.from(defaultDuration)
+
+		dynamicDurationLeft.value =
 			newDuration.sign === 1
 				? newDuration
 				: Temporal.Duration.from({ seconds: 0 })
-
-		// console.log('sync that timer', endDate.value, durationLeft.value)
 	}
 
 	const stopUpdater = () => {
-		updateDurationLeft(Temporal.Now.zonedDateTimeISO())
+		updateDurationLeft(Temporal.Now.instant())
 		stopTimeSync?.()
 	}
 
@@ -61,12 +89,11 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 
 	const getCurrent = async () => {
 		return api.timer.getCurrent().then((v) => {
-			durationLeft.value = v.remainingTime
 			durationTotal.value = v.duration
+			durationLeft.value = v.remainingTime
 			state.value = v.state
-			lastActionDate.value =
-				v.timerActionDate?.toZonedDateTime(Temporal.Now.timeZoneId()) ??
-				Temporal.Now.zonedDateTimeISO()
+			lastActionDate.value = v.timerActionDate ?? Temporal.Now.instant()
+			updateEndDate()
 
 			if (state.value === TimerState.Running) {
 				startUpdater()
@@ -78,37 +105,54 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 		if (!canStart.value) return Promise.reject()
 
 		const prevState = state.value
-		state.value = TimerState.Running
-		lastActionDate.value = Temporal.Now.zonedDateTimeISO()
+		const prevLastActionDate = lastActionDate.value
 
+		state.value = TimerState.Running
+		lastActionDate.value = Temporal.Now.instant()
+
+		updateEndDate()
 		startUpdater()
 
 		await api.timer
 			.postStart()
 			.then((timerAction) => {
 				durationLeft.value = Temporal.Duration.from(timerAction.remainingTime)
-				lastActionDate.value = Temporal.Now.zonedDateTimeISO()
+				lastActionDate.value = Temporal.Now.instant()
+
+				updateEndDate()
 			})
 			.catch(() => {
 				state.value = prevState
+				lastActionDate.value = prevLastActionDate
+				updateEndDate()
 				stopUpdater()
 			})
 	}
 
 	const pause = async () => {
 		if (!canPause.value) return Promise.reject()
-		lastActionDate.value = Temporal.Now.zonedDateTimeISO()
-		stopUpdater()
 
+		const prevLastActionDate = lastActionDate.value
 		const prevState = state.value
+
+		lastActionDate.value = Temporal.Now.instant()
 		state.value = TimerState.Paused
+
+		stopUpdater()
+		updateEndDate()
+
 		api.timer
 			.postPause()
 			.then(() => {
-				lastActionDate.value = Temporal.Now.zonedDateTimeISO()
+				updateEndDate()
+				stopUpdater()
+				lastActionDate.value = Temporal.Now.instant()
 			})
 			.catch(() => {
 				state.value = prevState
+				lastActionDate.value = prevLastActionDate
+
+				updateEndDate()
 				if (prevState === TimerState.Running) startUpdater()
 			})
 	}
@@ -131,7 +175,7 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 		state,
 		endDate,
 		durationTotal,
-		durationLeft,
+		durationLeft: dynamicDurationLeft,
 
 		/** Time zone is required for calculations */
 		lastActionDate,

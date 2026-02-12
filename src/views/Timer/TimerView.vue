@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { Temporal } from 'temporal-polyfill'
 import { computed } from 'vue'
 import { TimerState } from '../../api-facade/models'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'
-import UiTimer from '../../components/ui/UiTimer.vue'
 import { useGameStore } from '../../stores/gameStore'
 import { useTimerStore } from '../../stores/timerStore'
-import { Temporal } from 'temporal-polyfill'
-import { api } from '../../api-facade/api'
 
 const timerStore = useTimerStore()
 const gameStore = useGameStore()
 
-const { durationTotal, timer, state } = storeToRefs(timerStore)
+const { durationTotal, state } = storeToRefs(timerStore)
 const { current: currentGame } = storeToRefs(gameStore)
 
 const timerButtonSvg = computed(() =>
@@ -41,8 +39,6 @@ const onCancelButtonClick = () => {
 <template>
 	<div class="flex size-full flex-col items-center justify-center">
 		<div class="mb-17 flex w-min flex-col gap-4 gap-x-4">
-			<button @click="api.timer.getCurrent()">temp</button>
-
 			<div
 				class="w-fit max-w-fit overflow-auto text-3xl leading-[110%] font-bold"
 			>
