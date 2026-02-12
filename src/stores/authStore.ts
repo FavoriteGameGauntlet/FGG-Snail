@@ -35,14 +35,11 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		if (!isUserNameReady)
 			throw new Error('Persistent storage is not yet initialized')
 
-		return api.auth
-			.signUp({ body: { name, password, email } })
-			.then(() => {
-				userName.value = name
+		return api.auth.signUp({ body: { name, password, email } }).then(() => {
+			userName.value = name
 
-				return api.auth.logIn({ body: { name, password } })
-			})
-			.catch((e) => console.log('login error', e))
+			return api.auth.logIn({ body: { name, password } })
+		})
 	}
 
 	const logIn = async (name: string, password: string) => {
