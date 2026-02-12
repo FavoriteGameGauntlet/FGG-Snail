@@ -24,13 +24,13 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 	const fullUrl = API_URL + url
 	const method = opts?.method || 'GET'
 
-	console.log(`[HTTP] ${method} ${fullUrl}`, {
-		body: opts?.body,
-		headers: {
-			'Content-Type': 'application/json',
-			...opts?.headers,
-		},
-	})
+	// console.log(`[HTTP] ${method} ${fullUrl}`, {
+	// 	body: opts?.body,
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 		...opts?.headers,
+	// 	},
+	// })
 
 	try {
 		const response = await fetch(fullUrl, {
@@ -43,15 +43,15 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 		const responseBody: T = await response
 			.text()
 			.then((body) => (body.length ? JSON.parse(body) : undefined))
-			.catch((e: HttpErrorResponse | unknown) => {
-				console.log('whatafuk mazafaka', e)
 
-				return e
-			})
+		const t = Temporal.Now.zonedDateTimeISO()
 
-		console.log(`[HTTP] ${method} ${fullUrl} - ${response.status}`, {
-			body: responseBody,
-		})
+		console.log(
+			`[HTTP] ${method} ${fullUrl} - ${response.status} | ${t.hour.toString().padStart(2, '0')}:${t.minute.toString().padStart(2, '0')}:${t.second.toString().padStart(2, '0')}`,
+			{
+				body: responseBody,
+			},
+		)
 
 		if (
 			(response.status === 401 && response.statusText !== 'WRONG_AUTH_DATA') ||

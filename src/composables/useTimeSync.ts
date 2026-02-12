@@ -6,7 +6,11 @@ export const useTimeSync = (
 ) => {
 	const now = Temporal.Now.instant()
 
-	let timeoutId: NodeJS.Timeout | null = null
+	let timeoutId: NodeJS.Timeout | undefined = undefined
+
+	function stop() {
+		clearTimeout(timeoutId)
+	}
 
 	function tick() {
 		const now = Temporal.Now
@@ -25,6 +29,8 @@ export const useTimeSync = (
 	onScopeDispose(() => {
 		console.log(`timer ${timeoutId} cleared`)
 
-		return timeoutId && clearTimeout(timeoutId)
+		return stop()
 	})
+
+	return stop
 }

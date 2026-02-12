@@ -7,6 +7,7 @@ import UiTimer from '../../components/ui/UiTimer.vue'
 import { useGameStore } from '../../stores/gameStore'
 import { useTimerStore } from '../../stores/timerStore'
 import { Temporal } from 'temporal-polyfill'
+import { api } from '../../api-facade/api'
 
 const timerStore = useTimerStore()
 const gameStore = useGameStore()
@@ -40,19 +41,14 @@ const onCancelButtonClick = () => {
 <template>
 	<div class="flex size-full flex-col items-center justify-center">
 		<div class="mb-17 flex w-min flex-col gap-4 gap-x-4">
+			<button @click="api.timer.getCurrent()">temp</button>
+
 			<div
 				class="w-fit max-w-fit overflow-auto text-3xl leading-[110%] font-bold"
 			>
 				<!-- @todo fix text on load -->
 				{{ currentGame?.name ?? 'Игра не выбрана' }}
 			</div>
-
-			<!-- <UiTimer
-				class="text-massive w-fit min-w-fit shrink-0 font-bold"
-				:duration="timerStore.durationTotal"
-				:timeFrom="timerStore.lastActionDate"
-				:pause="timerStore.state !== TimerState.Running"
-			/> -->
 
 			<UiTimestamp
 				class="text-massive w-fit min-w-fit shrink-0 font-bold"
@@ -80,7 +76,14 @@ const onCancelButtonClick = () => {
 				</div>
 
 				<div class="w-fit place-self-end text-xl">
-					В игре: <UiTimestamp class="inline" :time="durationTotal" />
+					В игре:
+					<UiTimestamp
+						class="inline"
+						:time="
+							gameStore.current?.timeSpent ??
+							Temporal.PlainDateTime.from({ year: 0, month: 1, day: 1 })
+						"
+					/>
 				</div>
 			</div>
 
