@@ -13,13 +13,8 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 	)
 	const {} = useLoading()
 
-	watchEffect(() => {
-		console.log('[AUTH_STORE] userName:', userName.value)
-	})
-
 	const getIsLoggedIn = async () => {
 		const userName = await persistentStorage.get(StoreKey.UserName)
-		console.log('store', { userName })
 		return userName !== undefined
 	}
 
