@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import { type HttpErrorResponse } from '../../api-facade/http'
 import { useAuthStore } from '../../stores/authStore'
 
 const router = useRouter()
@@ -15,6 +16,8 @@ const isPasswordDirty = ref(false)
 const isEmailDirty = ref(false)
 
 const errors = ref<Partial<Record<'name' | 'password' | 'email', string>>>({})
+
+const serverError = ref<string>()
 
 // yes, i know this is not optimal and ugly as hell. I don't care. It works.
 
@@ -93,13 +96,9 @@ watch(
 			return
 		}
 
-		if (
-			!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./=:;<>?@[\]\\^_|{}~]).+$/g.test(
-				password,
-			)
-		) {
+		if (!/^[a-zA-Z\d !"#$%&'()*+,-./=:;<>?@[\]\\^_|{}~]+$/.test(password)) {
 			errors.value.password =
-				'В пароле должны быть: одна прописная буква, одна заглавная, одна цифра, один специальный символ'
+				'Допускаются только латинские буквы и специальные символы'
 			return
 		}
 
@@ -113,7 +112,7 @@ const onFormSubmit = () => {
 	isEmailDirty.value = true
 	isPasswordDirty.value = true
 
-	if (Object.values(errors).filter(Boolean)) {
+	if (Object.values(errors.value).filter(Boolean).length) {
 		return
 	}
 
@@ -124,6 +123,9 @@ const onFormSubmit = () => {
 			email: email.value,
 		})
 		.then(() => router.push('/'))
+		.catch((e: HttpErrorResponse) => {
+			serverError.value = e.body?.message
+		})
 }
 </script>
 
@@ -167,13 +169,19 @@ const onFormSubmit = () => {
 				{{ errors.password }}
 			</div>
 
+			<div class="error" v-if="serverError">
+				{{ serverError }}
+			</div>
+
 			<button class="cursor-pointer rounded-md bg-emerald-200 py-0.5">
 				Зарегистрироваться
 			</button>
 
-			<RouterLink to="login" class="place-self-center text-sm text-cyan-700">
-				Вход
-			</RouterLink>
+			<div class="place-self-center text-center text-sm">
+				Уже есть аккаунт?
+
+				<RouterLink to="login" class="text-cyan-700"> Вход </RouterLink>
+			</div>
 		</form>
 	</div>
 </template>
@@ -186,6 +194,6 @@ const onFormSubmit = () => {
 }
 
 .error {
-	@apply flex flex-col gap-1 bg-red-50 px-2 py-1 leading-5 text-red-950;
+	@apply flex flex-col gap-1 rounded-md bg-red-50 px-2 py-1 text-sm leading-5 text-red-950;
 }
 </style>

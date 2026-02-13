@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import { type HttpErrorResponse } from '../../api-facade/http'
 import { usePersistentRef } from '../../composables/usePersistentRef'
 import { StoreKey } from '../../services/persistentStorage.web'
 import { useAuthStore } from '../../stores/authStore'
@@ -17,6 +18,8 @@ const isPasswordDirty = ref(false)
 const errors = ref<Partial<Record<'name' | 'password', string>>>({})
 
 const isAuthError = ref(false)
+
+const serverError = ref<string>()
 
 const loginInput = useTemplateRef('loginInput')
 const passwordInput = useTemplateRef('passwordInput')
@@ -70,13 +73,9 @@ watch(
 			return
 		}
 
-		if (
-			!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[ !"#$%&'()*+,-./=:;<>?@[\]\\^_|{}~]).+$/g.test(
-				password,
-			)
-		) {
+		if (!/^[a-zA-Z\d !"#$%&'()*+,-./=:;<>?@[\]\\^_|{}~]+$/.test(password)) {
 			errors.value.password =
-				'В пароле должны быть: одна прописная буква, одна заглавная, одна цифра, один специальный символ'
+				'Допускаются только латинские буквы и специальные символы'
 			return
 		}
 
@@ -89,15 +88,13 @@ const onFormSubmit = () => {
 	isUserNameDirty.value = true
 	isPasswordDirty.value = true
 
-	if (Object.values(errors).filter(Boolean)) {
-		return
-	}
+	if (Object.values(errors.value).filter(Boolean).length) return
 
 	authStore
 		.logIn(userName.value, password.value)
 		.then(() => router.push('/'))
-		.catch((e) => {
-			if (e['body']['code'] === 'WRONG_AUTH_DATA') {
+		.catch((e: HttpErrorResponse) => {
+			if (e.body?.code === 'WRONG_AUTH_DATA') {
 				isAuthError.value = true
 			}
 		})
@@ -121,7 +118,7 @@ onMounted(async () => {
 	<div class="grid h-full w-full place-content-center gap-4">
 		<h1 class="w-60 text-3xl font-bold">Вход</h1>
 
-		<form class="flex w-full flex-col gap-2" @submit.prevent="onFormSubmit">
+		<form class="flex w-80 flex-col gap-2" @submit.prevent="onFormSubmit">
 			<input
 				class="rounded-md border border-slate-400 px-2 py-0.5"
 				placeholder="Логин"
@@ -129,6 +126,11 @@ onMounted(async () => {
 				v-model.trim="userName"
 				@blur="isUserNameDirty = true"
 			/>
+
+			<div class="error" v-if="errors.name && isUserNameDirty">
+				{{ errors.name }}
+			</div>
+
 			<input
 				class="rounded-md border border-slate-400 px-2 py-0.5"
 				type="password"
@@ -138,15 +140,37 @@ onMounted(async () => {
 				@blur="isPasswordDirty = true"
 			/>
 
-			<div class="text-sm text-red-400" v-if="isAuthError">
-				Неправильный логин или пароль.
+			<div class="error" v-if="errors.password && isPasswordDirty">
+				{{ errors.password }}
 			</div>
+
+			<div class="error" v-if="serverError">
+				{{ serverError }}
+			</div>
+
+			<div class="error" v-if="isAuthError">Неправильный логин или пароль.</div>
 
 			<button class="rounded-md bg-emerald-200 py-0.5">Войти</button>
 
-			<RouterLink to="signup" class="place-self-center text-sm text-cyan-700">
-				Зарегистрироваться
-			</RouterLink>
+			<div class="place-self-center text-center text-sm">
+				Ещё не участвуешь в ивенте?
+
+				<RouterLink to="signup" class="text-cyan-700">
+					Зарегистрироваться
+				</RouterLink>
+			</div>
 		</form>
 	</div>
 </template>
+
+<style scoped>
+@reference "@/style.css";
+
+.field {
+	@apply rounded-md border border-slate-400 px-2 py-0.5;
+}
+
+.error {
+	@apply flex flex-col gap-1 rounded-md bg-red-50 px-2 py-1 text-sm leading-5 text-red-950;
+}
+</style>
