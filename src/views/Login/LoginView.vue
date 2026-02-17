@@ -44,7 +44,7 @@ watch(
 			return
 		}
 
-		if (!/^[a-zA-Z_]+$/.test(name)) {
+		if (!/^[0-9a-zA-Z_]+$/.test(name)) {
 			errors.value.name =
 				'Допускаются только латинские буквы, цифры и нижние подчёркивания'
 			return

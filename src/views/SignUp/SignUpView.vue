@@ -24,6 +24,8 @@ const serverError = ref<string>()
 watch(
 	userName,
 	(name) => {
+		console.log(name, /^[a-zA-Z0-9_]+$/.test(name))
+
 		if (!name) {
 			errors.value.name = 'Обязательное поле'
 			return
@@ -39,7 +41,7 @@ watch(
 			return
 		}
 
-		if (!/^[a-zA-Z_]+$/.test(name)) {
+		if (!/^[0-9a-zA-Z_]+$/.test(name)) {
 			errors.value.name =
 				'Допускаются только латинские буквы, цифры и нижние подчёркивания'
 			return
