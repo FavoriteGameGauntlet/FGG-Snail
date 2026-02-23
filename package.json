@@ -17,32 +17,32 @@
 		"lint:fix": "eslint src/* --fix"
 	},
 	"dependencies": {
-		"@tailwindcss/vite": "^4.1.18",
+		"@tailwindcss/vite": "^4.2.1",
 		"@tauri-apps/api": "^2.10.1",
 		"@tauri-apps/plugin-http": "^2.5.6",
 		"@tauri-apps/plugin-opener": "^2.5.2",
 		"@tauri-apps/plugin-store": "^2.4.1",
 		"pinia": "^3.0.4",
 		"roughjs": "^4.6.6",
-		"tailwindcss": "^4.1.18",
+		"tailwindcss": "^4.2.1",
 		"temporal-polyfill": "^0.3.0",
-		"vue": "^3.5.26",
-		"vue-router": "^4.6.4"
+		"vue": "^3.5.28",
+		"vue-router": "^5.0.3"
 	},
 	"devDependencies": {
 		"@eslint/css": "^0.14.1",
-		"@eslint/js": "^9.39.2",
+		"@eslint/js": "^10.0.1",
 		"@tauri-apps/cli": "^2.10.0",
-		"@types/node": "^25.0.5",
+		"@types/node": "24.1.0",
 		"@vitejs/plugin-vue": "^6.0.3",
-		"eslint": "^9.39.2",
+		"eslint": "^10.0.1",
 		"eslint-plugin-vue": "^10.6.2",
-		"globals": "^16.5.0",
+		"globals": "^17.3.0",
 		"jiti": "^2.6.1",
 		"prettier": "^3.8.1",
 		"prettier-plugin-tailwindcss": "^0.7.2",
 		"typescript": "~5.9.3",
-		"typescript-eslint": "^8.50.0",
+		"typescript-eslint": "^8.56.1",
 		"vite": "^7.3.0",
 		"vue-tsc": "^3.2.1"
 	}
