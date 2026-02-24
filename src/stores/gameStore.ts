@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { api } from '../api-facade/api'
-import { type Game, type UnplayedGame } from '../api-facade/models'
+import { type CurrentGame, type WishlistedGame } from '../api-facade/models'
 import { StoreName } from '../enums/storeName'
 import { useLoading, LoadingState } from '../composables/useLoading'
 import { type HttpErrorResponse } from '../api-facade/http'
 
 export const useGameStore = defineStore(StoreName.Game, () => {
-	const unplayed = ref<UnplayedGame[]>([])
+	const unplayed = ref<WishlistedGame[]>([])
 	const unplayedLoading = useLoading()
 
-	const current = ref<Game | null>(null)
+	const current = ref<CurrentGame | null>(null)
 	const currentLoading = useLoading()
 
 	const enoughGamesInWishlist = computed(() => unplayed.value.length >= 6)
@@ -24,7 +24,7 @@ export const useGameStore = defineStore(StoreName.Game, () => {
 			unplayedLoading.state.value === LoadingState.LOADED,
 	)
 
-	const addUnplayed = async (games: UnplayedGame[]) => {
+	const addUnplayed = async (games: WishlistedGame[]) => {
 		return api.games.postAddUnplayed({ body: games }).then(() => {
 			unplayed.value = [...unplayed.value, ...games]
 		})

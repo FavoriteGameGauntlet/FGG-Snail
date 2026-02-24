@@ -92,7 +92,7 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 			durationTotal.value = v.duration
 			durationLeft.value = v.remainingTime
 			state.value = v.state
-			lastActionDate.value = v.timerActionDate ?? Temporal.Now.instant()
+			lastActionDate.value = v.lastActionDate ?? Temporal.Now.instant()
 			updateEndDate()
 
 			if (state.value === TimerState.Running) {

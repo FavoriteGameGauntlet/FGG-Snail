@@ -1,12 +1,16 @@
 import type {
-	Game,
-	GameDto,
-	RolledEffect,
-	RolledEffectDto,
+	CurrentGame,
+	CurrentGameDto,
+	RolledWheelEffect,
+	RolledWheelEffectDto,
 	Timer,
-	TimerAction,
-	TimerActionDto,
 	TimerDto,
+	PointChangeResult,
+	PointChangeResultDto,
+	TerritoryPointChangeResultDto,
+	TerritoryPointChangeResult,
+	FreePointChangeResultDto,
+	FreePointChangeResult,
 } from './models'
 
 export type DtoStringToDate<
@@ -23,7 +27,7 @@ export type DtoStringToDuration<
 	[K in keyof Dto]: K extends DurationFields ? Temporal.Duration : Dto[K]
 }
 
-export const convertGameDto = (game: GameDto): Game => ({
+export const convertGameDto = (game: CurrentGameDto): CurrentGame => ({
 	...game,
 	finishDate:
 		game.finishDate !== undefined
@@ -36,20 +40,34 @@ export const convertTimerDto = (timer: TimerDto): Timer => ({
 	...timer,
 	duration: Temporal.Duration.from(timer.duration),
 	remainingTime: Temporal.Duration.from(timer.remainingTime),
-	timerActionDate:
-		timer.timerActionDate !== undefined
-			? Temporal.Instant.from(timer.timerActionDate)
+	lastActionDate:
+		timer.lastActionDate !== undefined
+			? Temporal.Instant.from(timer.lastActionDate)
 			: undefined,
 })
 
-export const convertTimerActionDto = (action: TimerActionDto): TimerAction => ({
-	...action,
-	remainingTime: Temporal.Duration.from(action.remainingTime),
-})
-
-export const convertRolledEffectDto = (
-	effect: RolledEffectDto,
-): RolledEffect => ({
+export const convertRolledWheelEffectDto = (
+	effect: RolledWheelEffectDto,
+): RolledWheelEffect => ({
 	...effect,
 	rollDate: Temporal.Instant.from(effect.rollDate),
 })
+
+const _convertPointChangeResult = <T extends PointChangeResultDto>(result: T) =>
+	({
+		...result,
+		changeDate: Temporal.Instant.from(result.changeDate),
+	}) satisfies PointChangeResult
+
+export const convertPointChangeResult: (
+	result: PointChangeResultDto,
+) => PointChangeResult = _convertPointChangeResult<PointChangeResultDto>
+
+export const convertTerritoryPointChangeResult: (
+	result: TerritoryPointChangeResultDto,
+) => TerritoryPointChangeResult =
+	_convertPointChangeResult<TerritoryPointChangeResultDto>
+
+export const convertFreePointChangeResult: (
+	result: FreePointChangeResultDto,
+) => FreePointChangeResult = _convertPointChangeResult<FreePointChangeResultDto>

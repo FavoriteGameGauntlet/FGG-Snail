@@ -1,115 +1,97 @@
 /**
- * @version 0.7.4
- * Last updated: 2026.02.11
+ * @version 0.9.0
+ * Last updated: 2026.02.24
+ * State:
+ * - Models: complete
+ * - DTO: complete
+ * - Requests: x
+ * - API: x
  */
-import {
-	convertTimerDto,
-	convertTimerActionDto,
-	convertGameDto,
-	convertRolledEffectDto,
-} from './dto'
-import { http } from './http'
-import {
-	type Effect,
-	type Game,
-	type RolledEffect,
-	type Timer,
-	type TimerAction,
-	type UnplayedGame,
-} from './models'
-import {
-	type GetCurrentGame,
-	type GetCurrentTimer,
-	type GetEffectsAvailable,
-	type GetEffectsAvailableCount,
-	type GetEffectsHistory,
-	type GetGamesHistory,
-	type GetGamesUnplayed,
-	type PostEffectRoll,
-	type PostGamesAddUnplayed,
-	type PostGamesRoll,
-	type PostLogIn,
-	type PostPauseTimer,
-	type PostSignUp,
-	type PostStartTimer,
-} from './requests'
+import { apiAuth } from './api/api-auth'
+import { apiGames } from './api/api-games'
+import { apiPoints } from './api/api-points'
+import { apiTimers } from './api/api-timers'
+import { apiUsers } from './api/api-users'
+import { apiWheelEffects } from './api/api-wheel-effects'
 
 export const api = {
-	auth: {
-		logIn: (request: PostLogIn['request']) =>
-			http.post('/auth/login', { body: request.body }),
+	auth: apiAuth,
+	games: apiGames,
+	points: apiPoints,
+	timers: apiTimers,
+	users: apiUsers,
+	wheelEffects: apiWheelEffects,
 
-		logOut: () => http.post('/auth/logout'),
+	// games: {
+	// 	postAddUnplayed: ({
+	// 		body,
+	// 		path: { login },
+	// 	}: PostGamesWishlist['request']) =>
+	// 		http.post<PostGamesWishlist>(`/games/${login}/wishlist`, { body }),
 
-		signUp: (request: PostSignUp['request']) =>
-			http.post('/auth/signup', { body: request.body }),
-	},
+	// 	getUnplayed: ({
+	// 		path: { login },
+	// 	}: GetGamesWishlist['request']): Promise<WishlistedGame[]> =>
+	// 		http
+	// 			.get<GetGamesWishlist>(`/games/${login}/wishlist`)
+	// 			.then(({ body }) => body),
 
-	games: {
-		postAddUnplayed: (request: PostGamesAddUnplayed['request']) =>
-			http.post<PostGamesAddUnplayed>('/games/unplayed', {
-				body: request.body,
-			}),
+	// 	postRoll: (): Promise<CurrentGame> =>
+	// 		http
+	// 			.post<PostGamesRoll>('/games/roll')
+	// 			.then(({ body }) => convertGameDto(body)),
 
-		getUnplayed: (): Promise<UnplayedGame[]> =>
-			http.get<GetGamesUnplayed>('/games/unplayed').then(({ body }) => body),
+	// 	getCurrent: (): Promise<CurrentGame> =>
+	// 		http
+	// 			.get<GetCurrentGame>('/games/current')
+	// 			.then(({ body }) => convertGameDto(body)),
 
-		postRoll: (): Promise<Game> =>
-			http
-				.post<PostGamesRoll>('/games/roll')
-				.then(({ body }) => convertGameDto(body)),
+	// 	postFinishCurrent: () => http.post('/games/current/finish'),
 
-		getCurrent: (): Promise<Game> =>
-			http
-				.get<GetCurrentGame>('/games/current')
-				.then(({ body }) => convertGameDto(body)),
+	// 	postCancelCurrent: () => http.post('/games/current/cancel'),
 
-		postFinishCurrent: () => http.post('/games/current/finish'),
+	// 	getHistory: (): Promise<CurrentGame[]> =>
+	// 		http
+	// 			.get<GetGamesHistory>('/games/history')
+	// 			.then(({ body: games }) => games.map(convertGameDto)),
+	// },
 
-		postCancelCurrent: () => http.post('/games/current/cancel'),
+	// timer: {
+	// 	getCurrent: (): Promise<Timer> =>
+	// 		http
+	// 			.get<GetCurrentTimer>('/timers/current')
+	// 			.then(({ body }) => convertTimerDto(body)),
 
-		getHistory: (): Promise<Game[]> =>
-			http
-				.get<GetGamesHistory>('/games/history')
-				.then(({ body: games }) => games.map(convertGameDto)),
-	},
+	// 	postStart: (): Promise<TimerAction> =>
+	// 		http
+	// 			.post<PostStartTimer>('/timers/current/start')
+	// 			.then(({ body }) => convertTimerActionDto(body)),
 
-	timer: {
-		getCurrent: (): Promise<Timer> =>
-			http
-				.get<GetCurrentTimer>('/timers/current')
-				.then(({ body }) => convertTimerDto(body)),
+	// 	postPause: (): Promise<TimerAction> =>
+	// 		http
+	// 			.post<PostPauseTimer>('/timers/current/pause')
+	// 			.then(({ body }) => convertTimerActionDto(body)),
+	// },
 
-		postStart: (): Promise<TimerAction> =>
-			http
-				.post<PostStartTimer>('/timers/current/start')
-				.then(({ body }) => convertTimerActionDto(body)),
+	// effects: {
+	// 	getHistory: (): Promise<RolledEffect[]> =>
+	// 		http
+	// 			.get<GetEffectsHistory>('/effects/history')
+	// 			.then(({ body: effects }) => effects.map(convertRolledEffectDto)),
 
-		postPause: (): Promise<TimerAction> =>
-			http
-				.post<PostPauseTimer>('/timers/current/pause')
-				.then(({ body }) => convertTimerActionDto(body)),
-	},
+	// 	postRoll: (): Promise<RolledEffect> =>
+	// 		http
+	// 			.post<PostEffectRoll>('/effects/roll')
+	// 			.then(({ body: effect }) => convertRolledEffectDto(effect)),
 
-	effects: {
-		getHistory: (): Promise<RolledEffect[]> =>
-			http
-				.get<GetEffectsHistory>('/effects/history')
-				.then(({ body: effects }) => effects.map(convertRolledEffectDto)),
+	// 	getAvailable: (): Promise<Effect[]> =>
+	// 		http
+	// 			.get<GetEffectsAvailable>('/effects/available')
+	// 			.then(({ body }) => body),
 
-		postRoll: (): Promise<RolledEffect> =>
-			http
-				.post<PostEffectRoll>('/effects/roll')
-				.then(({ body: effect }) => convertRolledEffectDto(effect)),
-
-		getAvailable: (): Promise<Effect[]> =>
-			http
-				.get<GetEffectsAvailable>('/effects/available')
-				.then(({ body }) => body),
-
-		getAvailableCount: (): Promise<number> =>
-			http
-				.get<GetEffectsAvailableCount>('/effects/available/count')
-				.then(({ body }) => body),
-	},
+	// 	getAvailableCount: (): Promise<number> =>
+	// 		http
+	// 			.get<GetEffectsAvailableCount>('/effects/available/count')
+	// 			.then(({ body }) => body),
+	// },
 }
