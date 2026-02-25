@@ -89,7 +89,7 @@ type HttpRequestOptions = Omit<
 	RequestInit & ClientOptions,
 	'method' | 'body'
 > & {
-	body?: object
+	body?: {}
 }
 
 export const http = {

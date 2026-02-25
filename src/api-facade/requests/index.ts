@@ -1,10 +1,3 @@
-import {
-	type CurrentGameDto,
-	type WishlistedGame,
-	type RolledWheelEffectDto,
-	type WheelEffect,
-} from '../models'
-
 export type { PostLogIn, PostSignUp } from './auth-requests'
 
 export type {
@@ -13,48 +6,25 @@ export type {
 	PostStartTimer,
 } from './timers-requests'
 
-export type PostGamesWishlist = {
-	request: {
-		path: {
-			login: string
-		}
-		body: WishlistedGame[]
-	}
-}
+export type {
+	GetGamesAllCurrent,
+	GetGamesCurrent,
+	GetGamesHistory,
+	GetGamesWishlist,
+	PostGamesRoll,
+	PostGamesWishlist,
+} from './games-requests'
 
-export type GetGamesWishlist = {
-	request: {
-		path: {
-			login: string
-		}
-	}
-	response: WishlistedGame[]
-}
+export type {
+	GetAllUserNames,
+	GetDisplayName,
+	PostDisplayName,
+} from './users-requests'
 
-export type PostGamesRoll = {
-	response: CurrentGameDto
-}
-
-export type GetCurrentGame = {
-	response: CurrentGameDto
-}
-
-export type GetGamesHistory = {
-	response: CurrentGameDto[]
-}
-
-export type GetEffectsHistory = {
-	response: RolledWheelEffectDto[]
-}
-
-export type PostEffectRoll = {
-	response: RolledWheelEffectDto
-}
-
-export type GetEffectsAvailable = {
-	response: WheelEffect[]
-}
-
-export type GetEffectsAvailableCount = {
-	response: number
-}
+export type {
+	GetAvailableWheelEffectCount,
+	GetWheelEffectsAvailable,
+	GetWheelEffectsHistory,
+	PostApplyWheelEffectRoll,
+	PostRollWheelEffect,
+} from './wheel-effects-requests'

@@ -88,7 +88,7 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 	}
 
 	const getCurrent = async () => {
-		return api.timer.getCurrent().then((v) => {
+		return api.timers.getCurrent().then((v) => {
 			durationTotal.value = v.duration
 			durationLeft.value = v.remainingTime
 			state.value = v.state
@@ -113,7 +113,7 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 		updateEndDate()
 		startUpdater()
 
-		await api.timer
+		await api.timers
 			.postStart()
 			.then((timerAction) => {
 				durationLeft.value = Temporal.Duration.from(timerAction.remainingTime)
@@ -141,7 +141,7 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 		stopUpdater()
 		updateEndDate()
 
-		api.timer
+		api.timers
 			.postPause()
 			.then(() => {
 				updateEndDate()

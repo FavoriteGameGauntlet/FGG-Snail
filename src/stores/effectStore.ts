@@ -10,25 +10,25 @@ export const useEffectStore = defineStore(StoreName.Effect, () => {
 	const availableCount = ref(0)
 
 	const getAvailable = async () => {
-		return api.effects.getAvailable().then((effects) => {
+		return api.wheelEffects.getAvailable().then((effects) => {
 			available.value = effects
 		})
 	}
 
 	const getAvailableCount = async () => {
-		return api.effects.getAvailableCount().then((count) => {
+		return api.wheelEffects.getAvailableCount().then((count) => {
 			availableCount.value = count
 		})
 	}
 
 	const getHistory = async () => {
-		return api.effects.getHistory().then((effects) => {
+		return api.wheelEffects.getHistory().then((effects) => {
 			history.value = effects
 		})
 	}
 
 	const roll = async () => {
-		return api.effects.postRoll().then((effect) => {
+		return api.wheelEffects.postRoll().then((effect) => {
 			history.value = history.value ? [...history.value, effect] : [effect]
 		})
 	}

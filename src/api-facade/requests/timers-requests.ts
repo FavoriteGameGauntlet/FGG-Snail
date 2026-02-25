@@ -1,4 +1,4 @@
-import { TimerDto } from '../models'
+import type { TimerDto } from '../models'
 
 export type GetCurrentTimer = {
 	response: TimerDto

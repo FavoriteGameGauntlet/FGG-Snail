@@ -120,7 +120,7 @@ const onFormSubmit = () => {
 
 	authStore
 		.signUp({
-			name: userName.value,
+			login: userName.value,
 			password: password.value,
 			email: email.value,
 		})

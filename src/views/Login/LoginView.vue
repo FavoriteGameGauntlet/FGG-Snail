@@ -91,7 +91,7 @@ const onFormSubmit = () => {
 	if (Object.values(errors.value).filter(Boolean).length) return
 
 	authStore
-		.logIn(userName.value, password.value)
+		.logIn({ login: userName.value, password: password.value })
 		.then(() => router.push('/'))
 		.catch((e: HttpErrorResponse) => {
 			if (e.body?.code === 'WRONG_AUTH_DATA') {

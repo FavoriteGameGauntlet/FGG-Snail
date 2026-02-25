@@ -1,29 +1,29 @@
 export type { User } from './auth-models'
 
-export type {
-	CurrentGame,
-	CurrentGameDto,
+export {
+	type CurrentGame,
+	type CurrentGameDto,
 	GameState,
-	WishlistedGame,
+	type WishlistedGame,
 } from './games-models'
 
-export type {
-	FreePointChangeResult,
-	FreePointChangeResultDto,
+export {
+	type FreePointChangeResult,
+	type FreePointChangeResultDto,
 	FreePointChangeSource,
-	PointChange,
-	PointChangeResult,
-	PointChangeResultDto,
-	PointInfo,
-	Points,
+	type PointChange,
+	type PointChangeResult,
+	type PointChangeResultDto,
+	type PointInfo,
+	type Points,
 	TerritoryChangeSource,
-	TerritoryPointChangeResult,
-	TerritoryPointChangeResultDto,
+	type TerritoryPointChangeResult,
+	type TerritoryPointChangeResultDto,
 } from './points-models'
 
-export type { Timer, TimerDto, TimerState } from './timers-models'
+export { type Timer, type TimerDto, TimerState } from './timers-models'
 
-export type { UserName } from './users-models'
+export { type UserName } from './users-models'
 
 export type {
 	WheelEffect,

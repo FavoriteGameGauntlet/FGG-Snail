@@ -12,8 +12,7 @@ export type PointInfo = {
 
 export type PointChange = {
 	changeSource?: string
-	/** @todo will be renamed to desiredChangeValue */
-	changeValue?: number
+	desiredChangeValue?: number
 }
 
 export type PointChangeResultDto = {
