@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Temporal } from 'temporal-polyfill'
+import { Temporal } from '@js-temporal/polyfill'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { api } from '../api-facade/api'
 import { TimerState } from '../api-facade/models'

@@ -17,6 +17,7 @@
 		"lint:fix": "eslint src/* --fix"
 	},
 	"dependencies": {
+		"@js-temporal/polyfill": "^0.5.1",
 		"@tailwindcss/vite": "^4.2.1",
 		"@tauri-apps/api": "^2.10.1",
 		"@tauri-apps/plugin-http": "^2.5.6",
@@ -25,7 +26,6 @@
 		"pinia": "^3.0.4",
 		"roughjs": "^4.6.6",
 		"tailwindcss": "^4.2.1",
-		"temporal-polyfill": "^0.3.0",
 		"vue": "^3.5.28",
 		"vue-router": "^5.0.3"
 	},

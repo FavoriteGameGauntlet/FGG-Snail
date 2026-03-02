@@ -1,3 +1,4 @@
+import { Temporal } from '@js-temporal/polyfill'
 import { getCurrentScope, onScopeDispose } from 'vue'
 
 /** Executes callback precisely after every second */

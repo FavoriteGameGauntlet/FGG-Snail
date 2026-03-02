@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { Temporal } from 'temporal-polyfill'
+import { Temporal } from '@js-temporal/polyfill'
 import { computed } from 'vue'
 import { TimerState } from '../../api-facade/models'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'

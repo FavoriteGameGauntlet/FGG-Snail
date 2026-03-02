@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Temporal } from 'temporal-polyfill'
+import type { Temporal } from '@js-temporal/polyfill'
 import { computed } from 'vue'
 
 type Props = {
