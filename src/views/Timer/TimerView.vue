@@ -4,7 +4,7 @@ import { Temporal } from '@js-temporal/polyfill'
 import { computed } from 'vue'
 import { TimerState } from '../../api-facade/models'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'
-import { useGameStore } from '../../stores/gameStore'
+import { useGameStore } from '../../stores/apiGameStore'
 import { useTimerStore } from '../../stores/timerStore'
 
 const timerStore = useTimerStore()

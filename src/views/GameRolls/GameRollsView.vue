@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useGameStore } from '../../stores/gameStore'
+import { useGameStore } from '../../stores/apiGameStore'
 import { storeToRefs } from 'pinia'
 import { LoadingState } from '../../composables/useLoading'
 

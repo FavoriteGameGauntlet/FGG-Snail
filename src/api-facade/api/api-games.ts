@@ -15,10 +15,14 @@ export const apiGames = {
 		http.post<PostGamesWishlist>(`/games/${login}/wishlist`, { body }),
 
 	getWishlist: ({ path: { login } }: GetGamesWishlist['request']) =>
-		http.get<GetGamesWishlist>(`/games/${login}/wishlist`),
+		http
+			.get<GetGamesWishlist>(`/games/${login}/wishlist`)
+			.then(({ body }) => body),
 
 	getCurrent: ({ path: { login } }: GetGamesCurrent['request']) =>
-		http.get(`/games/${login}/current`),
+		http
+			.get<GetGamesCurrent>(`/games/${login}/current`)
+			.then(({ body }) => convertGameDto(body)),
 
 	getAllCurrent: () =>
 		http.get<GetGamesAllCurrent>(`/games/all/current`).then(({ body }) =>

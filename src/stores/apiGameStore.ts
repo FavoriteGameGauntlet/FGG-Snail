@@ -6,55 +6,56 @@ import { StoreName } from '../enums/storeName'
 import { useLoading, LoadingState } from '../composables/useLoading'
 import { type HttpErrorResponse } from '../api-facade/http'
 
-export const useGameStore = defineStore(StoreName.Game, () => {
-	const unplayed = ref<WishlistedGame[]>([])
+export const useGameStore = defineStore(StoreName.ApiGame, () => {
+	const wishlist = ref<Record<string, WishlistedGame[]>>({})
+	// const unplayed = ref<WishlistedGame[]>([])
 	const unplayedLoading = useLoading()
 
-	const current = ref<CurrentGame | null>(null)
+	const current = ref<Record<string, CurrentGame | null>>({})
 	const currentLoading = useLoading()
 
-	const enoughGamesInWishlist = computed(() => unplayed.value.length >= 6)
-	const currentGameIsFinished = computed(() => current.value === null)
+	// const enoughGamesInWishlist = computed(() => wishlist.value.length >= 6)
+	// const currentGameIsFinished = computed(() => current.value === null)
 
-	const canRoll = computed(
-		() =>
-			currentGameIsFinished.value &&
-			currentLoading.state.value === LoadingState.LOADED &&
-			enoughGamesInWishlist.value &&
-			unplayedLoading.state.value === LoadingState.LOADED,
-	)
+	// const canRoll = computed(
+	// 	() =>
+	// 		currentGameIsFinished.value &&
+	// 		currentLoading.state.value === LoadingState.LOADED &&
+	// 		enoughGamesInWishlist.value &&
+	// 		unplayedLoading.state.value === LoadingState.LOADED,
+	// )
 
-	const addUnplayed = async (games: WishlistedGame[]) => {
-		return api.games.postAddUnplayed({ body: games }).then(() => {
-			unplayed.value = [...unplayed.value, ...games]
+	const addUnplayed = async (login: string, games: WishlistedGame[]) => {
+		return api.games.postWishlist({ path: { login }, body: games }).then(() => {
+			wishlist.value[login] = games
 		})
 	}
 
-	const getUnplayed = async () => {
+	const getUnplayed = async (login: string) => {
 		unplayedLoading.state.value = LoadingState.LOADING
 
 		return api.games
-			.getUnplayed()
+			.getWishlist({ path: { login } })
 			.then((games) => {
-				unplayed.value = games
+				wishlist.value[login] = games
 				unplayedLoading.state.value = LoadingState.LOADED
 
-				return unplayed.value
+				return games
 			})
-			.catch(() => {
+			.catch((e) => {
 				unplayedLoading.state.value = LoadingState.ERROR
 
-				return unplayed.value
+				throw e
 			})
 	}
 
-	const getCurrent = async () => {
+	const getCurrent = async (login: string) => {
 		currentLoading.state.value = LoadingState.LOADING
 
 		return api.games
-			.getCurrent()
+			.getCurrent({ path: { login } })
 			.then((game) => {
-				current.value = game
+				current.value[login] = game
 				currentLoading.state.value = LoadingState.LOADED
 
 				return current.value
@@ -62,7 +63,7 @@ export const useGameStore = defineStore(StoreName.Game, () => {
 			.catch((error: HttpErrorResponse) => {
 				// @todo check if backend returns status === 404
 				if (error.body?.code === 'CURRENT_GAME_NOT_FOUND') {
-					current.value = null
+					current.value[login] = null
 					currentLoading.state.value = LoadingState.LOADED
 
 					return current.value

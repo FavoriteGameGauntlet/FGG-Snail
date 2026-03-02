@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, useTemplateRef, watchEffect } from 'vue'
-import { useGameStore } from '../../stores/gameStore'
+import { useGameStore } from '../../stores/apiGameStore'
 import { LoadingState } from '../../composables/useLoading'
 
 const gameStore = useGameStore()
