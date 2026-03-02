@@ -1,4 +1,4 @@
-import { DtoStringToDate } from '../dto'
+import { type DtoStringToDate } from '../dto'
 
 export type Points = number
 

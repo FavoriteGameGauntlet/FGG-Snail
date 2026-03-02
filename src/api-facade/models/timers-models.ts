@@ -1,4 +1,4 @@
-import { DtoStringToDate, DtoStringToDuration } from '../dto'
+import { type DtoStringToDate, type DtoStringToDuration } from '../dto'
 
 export enum TimerState {
 	Created = 'created',

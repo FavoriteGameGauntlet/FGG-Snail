@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { api } from '../api-facade/api'
-import { useLoading } from '../composables/useLoading'
 import { usePersistentRef } from '../composables/usePersistentRef'
 import { StoreName } from '../enums/storeName'
 import { router } from '../router/router'
@@ -10,7 +9,6 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 	const { state: userName, isReady: isUserNameReady } = usePersistentRef(
 		StoreKey.UserName,
 	)
-	const {} = useLoading()
 
 	const getIsLoggedIn = async () => {
 		const userName = await persistentStorage.get(StoreKey.UserName)

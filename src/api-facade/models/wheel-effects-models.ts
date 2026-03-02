@@ -1,4 +1,4 @@
-import { DtoStringToDate } from '../dto'
+import { type DtoStringToDate } from '../dto'
 
 export type WheelEffect = {
 	name: string
