@@ -28,7 +28,7 @@ export const apiGames = {
 		http.get<GetGamesAllCurrent>(`/games/all/current`).then(({ body }) =>
 			body.map((entry) => ({
 				...entry,
-				currentGame: convertGameDto(entry.currentGame),
+				currentGame: entry.currentGame && convertGameDto(entry.currentGame),
 			})),
 		),
 
