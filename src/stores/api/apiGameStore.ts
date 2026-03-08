@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
-import { api } from '../api-facade/api'
-import { type CurrentGame, type WishlistedGame } from '../api-facade/models'
-import { StoreName } from '../enums/storeName'
-import { useLoading, LoadingState } from '../composables/useLoading'
-import { type HttpErrorResponse } from '../api-facade/http'
+import { ref } from 'vue'
+import { api } from '../../api-facade/api'
+import { type HttpErrorResponse } from '../../api-facade/http'
+import { type CurrentGame, type WishlistedGame } from '../../api-facade/models'
+import { LoadingState, useLoading } from '../../composables/useLoading'
+import { StoreName } from '../../enums/storeName'
 
-export const useGameStore = defineStore(StoreName.ApiGame, () => {
+export const useApiGameStore = defineStore(StoreName.ApiGame, () => {
 	const wishlist = ref<Record<string, WishlistedGame[]>>({})
 	// const unplayed = ref<WishlistedGame[]>([])
 	const unplayedLoading = useLoading()
@@ -25,9 +25,9 @@ export const useGameStore = defineStore(StoreName.ApiGame, () => {
 	// 		unplayedLoading.state.value === LoadingState.LOADED,
 	// )
 
-	const addUnplayed = async (login: string, games: WishlistedGame[]) => {
-		return api.games.postWishlist({ path: { login }, body: games }).then(() => {
-			wishlist.value[login] = games
+	const addUnplayed = async (login: string, game: WishlistedGame) => {
+		return api.games.postWishlist({ path: { login }, body: game }).then(() => {
+			wishlist.value[login] = [...wishlist.value[login], game]
 		})
 	}
 
@@ -76,51 +76,51 @@ export const useGameStore = defineStore(StoreName.ApiGame, () => {
 			})
 	}
 
-	const roll = async () => {
-		if (!canRoll.value) return Promise.reject('Bitch you cannot roll games')
+	// const roll = async () => {
+	// 	if (!canRoll.value) return Promise.reject('Bitch you cannot roll games')
 
-		return api.games.postRoll().then((newGame) => {
-			current.value = newGame
-			unplayed.value = unplayed.value.filter((g) => g.name !== newGame.name)
+	// 	return api.games.postRoll().then((newGame) => {
+	// 		current.value = newGame
+	// 		unplayed.value = unplayed.value.filter((g) => g.name !== newGame.name)
 
-			return current.value
-		})
-	}
+	// 		return current.value
+	// 	})
+	// }
 
-	const cancel = async () => {
-		return api.games.postCancelCurrent().then(() => {
-			current.value = null
-		})
-	}
+	// const cancel = async () => {
+	// 	return api.games.postCancelCurrent().then(() => {
+	// 		current.value = null
+	// 	})
+	// }
 
-	const finish = async () => {
-		return api.games.postFinishCurrent().then(() => {
-			current.value = null
-		})
-	}
+	// const finish = async () => {
+	// 	return api.games.postFinishCurrent().then(() => {
+	// 		current.value = null
+	// 	})
+	// }
 
-	const init = async () => {
-		await Promise.all([getCurrent()])
-	}
+	// const init = async () => {
+	// 	await Promise.all([getCurrent()])
+	// }
 
 	return {
 		current,
 		currentLoading,
 
-		unplayed,
+		// unplayed,
 		unplayedLoading,
 
-		enoughGamesInWishlist,
-		currentGameIsFinished,
-		canRoll,
+		// enoughGamesInWishlist,
+		// currentGameIsFinished,
+		// canRoll,
 
-		init,
+		// init,
 
 		getCurrent,
 		addUnplayed,
 		getUnplayed,
-		roll,
-		cancel,
-		finish,
+		// roll,
+		// cancel,
+		// finish,
 	}
 })
