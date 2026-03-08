@@ -5,7 +5,7 @@ export type PostGamesWishlist = {
 		path: {
 			login: string
 		}
-		body: WishlistedGame[]
+		body: WishlistedGame
 	}
 }
 
@@ -30,7 +30,7 @@ export type GetGamesCurrent = {
 export type GetGamesAllCurrent = {
 	response: {
 		login: string
-		currentGame: CurrentGameDto
+		currentGame?: CurrentGameDto
 	}[]
 }
 

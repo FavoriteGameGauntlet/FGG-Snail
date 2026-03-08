@@ -40,8 +40,8 @@ export const apiGames = {
 	postFinishCurrent: () => http.post('/games/current/finish'),
 	postCancelCurrent: () => http.post('/games/current/cancel'),
 
-	getHistory: () =>
+	getHistory: ({ path: { login } }: GetGamesHistory['request']) =>
 		http
-			.get<GetGamesHistory>('/games/history')
+			.get<GetGamesHistory>(`/games/${login}/history`)
 			.then(({ body: games }) => games.map(convertGameDto)),
 }

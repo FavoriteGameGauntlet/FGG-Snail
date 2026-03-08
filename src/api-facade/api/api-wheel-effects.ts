@@ -10,6 +10,7 @@ import type {
 	PostApplyWheelEffectRoll,
 	PostRollWheelEffect,
 } from '../requests'
+import { GetLastRolledWheelEffects } from '../requests/wheel-effects-requests'
 
 export const apiWheelEffects = {
 	getHistory: ({ path: { login } }: GetWheelEffectsHistory['request']) =>
@@ -19,18 +20,23 @@ export const apiWheelEffects = {
 
 	getAvailableWheelEffects: () =>
 		http
-			.get<GetWheelEffectsAvailable>('/wheel-effects/available')
+			.get<GetWheelEffectsAvailable>('/wheel-effects/available/roll/count')
 			.then(({ body }) => body),
 
 	postRoll: () =>
 		http
 			.post<PostRollWheelEffect>('/wheel-effects/available/roll')
-			.then(({ body: effect }) => convertRolledWheelEffectDto(effect)),
+			.then(({ body: effect }) => effect.map(convertRolledWheelEffectDto)),
 
 	getAvailableCount: () =>
 		http
 			.get<GetAvailableWheelEffectCount>('/wheel-effects/available/count')
 			.then(({ body }) => body),
+
+	getLastRolled: () =>
+		http
+			.get<GetLastRolledWheelEffects>('/wheel-effects/available/roll/last')
+			.then(({ body }) => convertRolledWheelEffectDto(body)),
 
 	postApplyRoll: ({ body }: PostApplyWheelEffectRoll['request']) =>
 		http

@@ -1,6 +1,6 @@
 /**
- * @version 0.10.0
- * Last updated: 2026.02.25
+ * @version 0.11.0
+ * Last updated: 2026.03.08
  * State: only Points group is incomplete. Probably requires a rewrite.
  */
 import { apiAuth } from './api/api-auth'

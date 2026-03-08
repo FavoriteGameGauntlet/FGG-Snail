@@ -7,7 +7,7 @@ export type WishlistedGame = {
 export enum GameState {
 	Started = 'started',
 	Finished = 'finished',
-	Canceled = 'canceled',
+	Cancelled = 'cancelled',
 }
 
 export type CurrentGameDto = {
