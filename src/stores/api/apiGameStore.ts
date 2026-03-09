@@ -8,22 +8,10 @@ import { StoreName } from '../../enums/storeName'
 
 export const useApiGameStore = defineStore(StoreName.ApiGame, () => {
 	const wishlist = ref<Record<string, WishlistedGame[]>>({})
-	// const unplayed = ref<WishlistedGame[]>([])
 	const unplayedLoading = useLoading()
 
 	const current = ref<Record<string, CurrentGame | null>>({})
 	const currentLoading = useLoading()
-
-	// const enoughGamesInWishlist = computed(() => wishlist.value.length >= 6)
-	// const currentGameIsFinished = computed(() => current.value === null)
-
-	// const canRoll = computed(
-	// 	() =>
-	// 		currentGameIsFinished.value &&
-	// 		currentLoading.state.value === LoadingState.LOADED &&
-	// 		enoughGamesInWishlist.value &&
-	// 		unplayedLoading.state.value === LoadingState.LOADED,
-	// )
 
 	const addUnplayed = async (login: string, game: WishlistedGame) => {
 		return api.games.postWishlist({ path: { login }, body: game }).then(() => {
@@ -76,16 +64,16 @@ export const useApiGameStore = defineStore(StoreName.ApiGame, () => {
 			})
 	}
 
-	// const roll = async () => {
-	// 	if (!canRoll.value) return Promise.reject('Bitch you cannot roll games')
+	const roll = async (login: string) => {
+		return api.games.postRoll().then((newGame) => {
+			current.value[login] = newGame
+			wishlist.value[login] = wishlist.value[login].filter(
+				(game) => game.name !== newGame.name,
+			)
 
-	// 	return api.games.postRoll().then((newGame) => {
-	// 		current.value = newGame
-	// 		unplayed.value = unplayed.value.filter((g) => g.name !== newGame.name)
-
-	// 		return current.value
-	// 	})
-	// }
+			return current.value
+		})
+	}
 
 	// const cancel = async () => {
 	// 	return api.games.postCancelCurrent().then(() => {
@@ -119,7 +107,7 @@ export const useApiGameStore = defineStore(StoreName.ApiGame, () => {
 		getCurrent,
 		addUnplayed,
 		getUnplayed,
-		// roll,
+		roll,
 		// cancel,
 		// finish,
 	}

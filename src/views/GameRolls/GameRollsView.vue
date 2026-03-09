@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useGameStore } from '../../stores/apiGameStore'
+import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
 import { storeToRefs } from 'pinia'
 import { LoadingState } from '../../composables/useLoading'
 
-const gameStore = useGameStore()
+const gameStore = useFeatureGameStore()
 
 const { enoughGamesInWishlist, current, canRoll } = storeToRefs(gameStore)
 
 const rollText = ref('Загрузка...')
 
-const showUnplayedCountHint = computed(
+const showWishlistCountHint = computed(
 	() =>
 		!enoughGamesInWishlist &&
 		gameStore.currentLoading.state === LoadingState.LOADED &&
-		gameStore.unplayedLoading.state === LoadingState.LOADED,
+		gameStore.wishlistLoading.state === LoadingState.LOADED,
 )
 
 const onRollButtonClick = () => {
@@ -43,10 +43,10 @@ gameStore.currentLoading.on([LoadingState.LOADED]).then(() => {
 onMounted(() => {
 	if (
 		[LoadingState.ERROR, LoadingState.INIT].includes(
-			gameStore.unplayedLoading.state,
+			gameStore.wishlistLoading.state,
 		)
 	) {
-		gameStore.getUnplayed()
+		gameStore.getWishlist()
 	}
 })
 </script>
@@ -87,7 +87,7 @@ onMounted(() => {
 				</button>
 			</p>
 
-			<p v-else-if="showUnplayedCountHint" class="info-item">
+			<p v-else-if="showWishlistCountHint" class="info-item">
 				Нужно хотя бы 6 игр в вишлисте, чтобы ролять новую.
 
 				<RouterLink

@@ -6,12 +6,12 @@ import { router } from '../router/router'
 import { persistentStorage, StoreKey } from '../services/persistentStorage'
 
 export const useAuthStore = defineStore(StoreName.Auth, () => {
-	const { state: userName, isReady: isUserNameReady } = usePersistentRef(
-		StoreKey.UserName,
+	const { state: login, isReady: isUserNameReady } = usePersistentRef(
+		StoreKey.Login,
 	)
 
 	const getIsLoggedIn = async () => {
-		const userName = await persistentStorage.get(StoreKey.UserName)
+		const userName = await persistentStorage.get(StoreKey.Login)
 		return userName !== undefined
 	}
 
@@ -28,7 +28,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 			throw new Error('Persistent storage is not yet initialized')
 
 		return api.auth.signUp({ body: { login, password, email } }).then(() => {
-			userName.value = login
+			login.value = login
 
 			return api.auth.logIn({ body: { login, password } })
 		})
@@ -45,7 +45,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 			throw new Error('Persistent storage is not yet initialized')
 
 		return api.auth.logIn({ body: { login, password } }).then(() => {
-			userName.value = login
+			login.value = login
 		})
 	}
 
@@ -54,10 +54,16 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 			throw new Error('Persistent storage is not yet initialized')
 
 		api.auth.logOut().finally(() => {
-			userName.value = undefined
+			login.value = undefined
 			router.push('/login')
 		})
 	}
 
-	return { userName, getIsLoggedIn, signUp, logIn, logOut }
+	return {
+		login: login,
+		getIsLoggedIn,
+		signUp,
+		logIn,
+		logOut,
+	}
 })

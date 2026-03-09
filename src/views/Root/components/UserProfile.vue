@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '../../../stores/authStore'
 
 const authStore = useAuthStore()
-const { userName } = storeToRefs(authStore)
+const { login } = storeToRefs(authStore)
 
 const onLogOutButtonClick = () => {
 	authStore.logOut()
@@ -11,8 +11,8 @@ const onLogOutButtonClick = () => {
 </script>
 
 <template>
-	<div class="flex flex-col gap-2 text-sm leading-[110%]" v-show="userName">
-		<span>{{ userName }}</span>
+	<div class="flex flex-col gap-2 text-sm leading-[110%]" v-show="login">
+		<span>{{ login }}</span>
 		<button
 			class="hover:cursor-pointer hover:underline"
 			@click="onLogOutButtonClick"

@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { Temporal } from '@js-temporal/polyfill'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { TimerState } from '../../api-facade/models'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'
-import { useGameStore } from '../../stores/apiGameStore'
-import { useTimerStore } from '../../stores/timerStore'
+import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
+// import { useTimerStore } from '../../stores/timerStore'
 
-const timerStore = useTimerStore()
-const gameStore = useGameStore()
+// const timerStore = useTimerStore()
+const gameStore = useFeatureGameStore()
 
-const { durationTotal, state } = storeToRefs(timerStore)
+// const { durationTotal, state } = storeToRefs(timerStore)
+const durationTotal = Temporal.Duration.from({ hours: 2 })
 const { current: currentGame } = storeToRefs(gameStore)
+// const currentTimer = Temporal.Now.instant()
+const state = ref(TimerState.Created)
 
 const timerButtonSvg = computed(() =>
 	state.value === TimerState.Running
@@ -19,20 +22,22 @@ const timerButtonSvg = computed(() =>
 		: '<path d="M8 5v14l11-7z"/>',
 )
 
-const timeLeft = computed(
-	() => timerStore.durationLeft ?? Temporal.Duration.from({ hours: 2 }),
-)
+// const timeLeft = computed(
+// 	() => timerStore.durationLeft ?? Temporal.Duration.from({ hours: 2 }),
+// )
+
+const timeLeft = Temporal.Duration.from({ hours: 2 })
 
 const onStartButtonClick = () => {
-	timerStore.toggle()
+	// timerStore.toggle()
 }
 
 const onFinishButtonClick = () => {
-	gameStore.finish()
+	// gameStore.finish()
 }
 
 const onCancelButtonClick = () => {
-	gameStore.cancel()
+	// gameStore.cancel()
 }
 </script>
 

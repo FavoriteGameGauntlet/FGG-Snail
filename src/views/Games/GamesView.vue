@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, useTemplateRef, watchEffect } from 'vue'
-import { useGameStore } from '../../stores/apiGameStore'
+import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
 import { LoadingState } from '../../composables/useLoading'
 
-const gameStore = useGameStore()
+const gameStore = useFeatureGameStore()
 
-const { unplayed } = storeToRefs(gameStore)
+const { wishlist } = storeToRefs(gameStore)
 const showCountHint = ref(false)
 
 const addGameInput = useTemplateRef('add-game-input')
 
-gameStore.unplayedLoading.on([LoadingState.LOADED]).then(() => {
+gameStore.wishlistLoading.on([LoadingState.LOADED]).then(() => {
 	showCountHint.value = !gameStore.enoughGamesInWishlist
 	addGameInput.value?.focus()
 })
@@ -19,14 +19,14 @@ gameStore.unplayedLoading.on([LoadingState.LOADED]).then(() => {
 const gameName = ref('')
 
 const isLoading = computed(
-	() => gameStore.unplayedLoading.state === LoadingState.LOADING,
+	() => gameStore.wishlistLoading.state === LoadingState.LOADING,
 )
 
 /** @todo extract validation */
 const validator = computed(() => {
 	const result: { ok: boolean; message?: string } = { ok: true }
 
-	if (unplayed.value.find((u) => u.name === gameName.value)) {
+	if (wishlist.value.find((u) => u.name === gameName.value)) {
 		result.ok = false
 		result.message = 'Такая игра уже есть'
 	}
@@ -54,7 +54,7 @@ const onAddGameFormSubmit = () => {
 onMounted(() => {
 	if (
 		[LoadingState.ERROR, LoadingState.INIT].includes(
-			gameStore.unplayedLoading.state,
+			gameStore.wishlistLoading.state,
 		)
 	) {
 		gameStore.getUnplayed()
@@ -86,11 +86,11 @@ onMounted(() => {
 
 			<p class="w-fit rounded-md bg-slate-100 px-5 py-2" v-if="showCountHint">
 				Чтобы крутить следующую игру, надо 6 игр, нужно ещё
-				{{ 6 - unplayed.length }}.
+				{{ 6 - wishlist.length }}.
 			</p>
 
-			<ol class="flex flex-col ps-10" v-if="unplayed.length">
-				<li class="list-decimal" :key="game.name" v-for="game in unplayed">
+			<ol class="flex flex-col ps-10" v-if="wishlist.length">
+				<li class="list-decimal" :key="game.name" v-for="game in wishlist">
 					{{ game.name }}
 				</li>
 			</ol>

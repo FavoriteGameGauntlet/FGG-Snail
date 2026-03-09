@@ -1,51 +1,53 @@
-import { defineStore } from 'pinia'
-import { StoreName } from '../enums/storeName'
-import type { RolledEffect, Effect } from '../api-facade/models'
-import { ref } from 'vue'
-import { api } from '../api-facade/api'
+// import { defineStore } from 'pinia'
+// import { StoreName } from '../enums/storeName'
+// import type { RolledWheelEffect, WheelEffect } from '../api-facade/models'
+// import { ref } from 'vue'
+// import { api } from '../api-facade/api'
 
-export const useEffectStore = defineStore(StoreName.Effect, () => {
-	const available = ref<Effect[]>()
-	const history = ref<RolledEffect[]>()
-	const availableCount = ref(0)
+// export const useEffectStore = defineStore(StoreName.Effect, () => {
+// 	const available = ref<WheelEffect[]>()
+// 	const history = ref<RolledWheelEffect[]>()
+// 	const availableCount = ref(0)
 
-	const getAvailable = async () => {
-		return api.wheelEffects.getAvailable().then((effects) => {
-			available.value = effects
-		})
-	}
+// 	const getAvailable = async () => {
+// 		return api.wheelEffects.getAvailable().then((effects) => {
+// 			available.value = effects
+// 		})
+// 	}
 
-	const getAvailableCount = async () => {
-		return api.wheelEffects.getAvailableCount().then((count) => {
-			availableCount.value = count
-		})
-	}
+// 	const getAvailableCount = async () => {
+// 		return api.wheelEffects.getAvailableCount().then((count) => {
+// 			availableCount.value = count
+// 		})
+// 	}
 
-	const getHistory = async () => {
-		return api.wheelEffects.getHistory().then((effects) => {
-			history.value = effects
-		})
-	}
+// 	const getHistory = async () => {
+// 		return api.wheelEffects.getHistory().then((effects) => {
+// 			history.value = effects
+// 		})
+// 	}
 
-	const roll = async () => {
-		return api.wheelEffects.postRoll().then((effect) => {
-			history.value = history.value ? [...history.value, effect] : [effect]
-		})
-	}
+// 	const roll = async () => {
+// 		return api.wheelEffects.postRoll().then((effect) => {
+// 			history.value = history.value ? [...history.value, effect] : [effect]
+// 		})
+// 	}
 
-	const init = async () => {
-		await getAvailableCount()
-	}
+// 	const init = async () => {
+// 		await getAvailableCount()
+// 	}
 
-	return {
-		history,
-		available,
-		availableCount,
+// 	init()
 
-		init,
-		getAvailable,
-		getAvailableCount,
-		getHistory,
-		roll,
-	}
-})
+// 	return {
+// 		history,
+// 		available,
+// 		availableCount,
+
+// 		init,
+// 		getAvailable,
+// 		getAvailableCount,
+// 		getHistory,
+// 		roll,
+// 	}
+// })

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useEffectStore } from '../../../stores/effectStore'
+// import { useEffectStore } from '../../../stores/effectStore'
 import UserProfile from './UserProfile.vue'
 import { RouteName } from '../../../router/routeNames'
 
-const effectStore = useEffectStore()
+// const effectStore = useEffectStore()
 
-const { availableCount } = storeToRefs(effectStore)
+// const { availableCount } = storeToRefs(effectStore)
+const availableCount = 1
 </script>
 
 <template>

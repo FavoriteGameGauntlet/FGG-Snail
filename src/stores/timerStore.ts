@@ -171,6 +171,8 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 		await getCurrent()
 	}
 
+	init()
+
 	return {
 		state,
 		endDate,

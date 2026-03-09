@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import { useEffectStore } from '../../stores/effectStore'
-import { useGameStore } from '../../stores/apiGameStore'
-import { useTimerStore } from '../../stores/timerStore'
 import AppNavbar from './components/AppNavbar.vue'
-
-useTimerStore().init()
-useGameStore().init()
-useEffectStore().init()
 </script>
 
 <template>

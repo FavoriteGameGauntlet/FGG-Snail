@@ -3,7 +3,7 @@ import { onMounted, ref, useTemplateRef, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { type HttpErrorResponse } from '../../api-facade/http'
 import { usePersistentRef } from '../../composables/usePersistentRef'
-import { StoreKey } from '../../services/persistentStorage.web'
+import { StoreKey } from '../../services/persistentStorage'
 import { useAuthStore } from '../../stores/authStore'
 
 const router = useRouter()

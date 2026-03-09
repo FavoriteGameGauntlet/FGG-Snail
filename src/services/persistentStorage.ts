@@ -2,17 +2,21 @@ import { load, type Store } from '@tauri-apps/plugin-store'
 
 export enum StoreKey {
 	InitialRoute = 'initialRoute',
-	UserName = 'userName',
+	Login = 'login',
+	DisplayName = 'displayName',
+	T = 'userName',
 }
 
 export type StoredData = Partial<{
 	[StoreKey.InitialRoute]: string
-	[StoreKey.UserName]: string
+	[StoreKey.Login]: string
+	[StoreKey.DisplayName]: string
 }>
 
 const defaults: StoredData = {
 	[StoreKey.InitialRoute]: undefined,
-	[StoreKey.UserName]: undefined,
+	[StoreKey.Login]: undefined,
+	[StoreKey.DisplayName]: undefined,
 } as const
 
 let store: Store | null = null

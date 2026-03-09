@@ -11,8 +11,9 @@ const onRollButtonClick = () => {}
 		<RouterLink
 			class="place-self-center text-blue-500 hover:underline"
 			to="/rolls/games"
-			>Игры</RouterLink
 		>
+			Игры
+		</RouterLink>
 
 		<h1 class="text-center text-4xl font-semibold">Роллы</h1>
 
