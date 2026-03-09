@@ -1,15 +1,15 @@
-import EffectRollsView from '../views/EffectRolls/EffectRollsView.vue'
-import EffectsView from '../views/Effects/EffectsView.vue'
+import type { RouteRecordRaw } from 'vue-router'
+import DevView from '../views/Dev/DevView.vue'
 import GameRollsView from '../views/GameRolls/GameRollsView.vue'
 import GamesView from '../views/Games/GamesView.vue'
 import LoginView from '../views/Login/LoginView.vue'
+import PlayersView from '../views/Players/PlayersView.vue'
 import RootView from '../views/Root/RootView.vue'
 import SignUpView from '../views/SignUp/SignUpView.vue'
 import TimerView from '../views/Timer/TimerView.vue'
-import DevView from '../views/Dev/DevView.vue'
-import type { RouteRecordRaw } from 'vue-router'
+import WheelEffectsView from '../views/WheelEffects/WheelEffectsView.vue'
+import WheelRollsView from '../views/WheelRolls/WheelRollsView.vue'
 import { RouteName } from './routeNames'
-import PlayersView from '../views/Players/PlayersView.vue'
 
 export const routes: RouteRecordRaw[] = [
 	{
@@ -39,26 +39,26 @@ export const routes: RouteRecordRaw[] = [
 
 			{
 				path: 'rolls',
-				redirect: 'rolls/effects',
+				redirect: 'rolls/wheel',
 				children: [
 					{
-						path: 'effects',
-						component: EffectRollsView,
-						name: RouteName.RollEffects,
+						path: 'wheel',
+						component: WheelRollsView,
+						name: RouteName.WheelRolls,
 					},
 
 					{
 						path: 'games',
 						component: GameRollsView,
-						name: RouteName.RollGames,
+						name: RouteName.GameRolls,
 					},
 				],
 			},
 
 			{
-				path: 'effects',
-				component: EffectsView,
-				name: RouteName.Effects,
+				path: 'wheel-effects',
+				component: WheelEffectsView,
+				name: RouteName.WheelEffects,
 			},
 
 			{

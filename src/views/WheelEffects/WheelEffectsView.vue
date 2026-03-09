@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-	<div class="">effects view</div>
+	<div class="">wheel effects view</div>
 </template>
 
 <style scoped>

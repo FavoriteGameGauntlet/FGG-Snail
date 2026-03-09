@@ -31,7 +31,7 @@ const availableCount = 1
 
 			<RouterLink
 				class="text-blue-500 hover:underline"
-				:to="{ name: RouteName.RollEffects }"
+				:to="{ name: RouteName.WheelRolls }"
 			>
 				Роллы {{ availableCount >= 1 ? '🔵' : '' }}
 			</RouterLink>
