@@ -7,11 +7,11 @@ import { useAuthStore } from '../../stores/authStore'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const userName = ref('')
+const login = ref('')
 const password = ref('')
 const email = ref('')
 
-const isUserNameDirty = ref(false)
+const isLoginDirty = ref(false)
 const isPasswordDirty = ref(false)
 const isEmailDirty = ref(false)
 
@@ -22,7 +22,7 @@ const serverError = ref<string>()
 // yes, i know this is not optimal and ugly as hell. I don't care. It works.
 
 watch(
-	userName,
+	login,
 	(name) => {
 		console.log(name, /^[a-zA-Z0-9_]+$/.test(name))
 
@@ -110,7 +110,7 @@ watch(
 )
 
 const onFormSubmit = () => {
-	isUserNameDirty.value = true
+	isLoginDirty.value = true
 	isEmailDirty.value = true
 	isPasswordDirty.value = true
 
@@ -120,7 +120,7 @@ const onFormSubmit = () => {
 
 	authStore
 		.signUp({
-			login: userName.value,
+			login: login.value,
 			password: password.value,
 			email: email.value,
 		})
@@ -139,11 +139,11 @@ const onFormSubmit = () => {
 			<input
 				class="field"
 				placeholder="Логин"
-				v-model.trim="userName"
-				@blur="isUserNameDirty = true"
+				v-model.trim="login"
+				@blur="isLoginDirty = true"
 			/>
 
-			<div class="error" v-if="errors.name && isUserNameDirty">
+			<div class="error" v-if="errors.name && isLoginDirty">
 				{{ errors.name }}
 			</div>
 

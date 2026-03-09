@@ -1,4 +1,4 @@
-export type UserName = {
+export type Login = {
 	login: string
 	displayName: string
 }

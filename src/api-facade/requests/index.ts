@@ -16,7 +16,7 @@ export type {
 } from './games-requests'
 
 export type {
-	GetAllUserNames,
+	GetAllLogins,
 	GetDisplayName,
 	PostDisplayName,
 } from './users-requests'

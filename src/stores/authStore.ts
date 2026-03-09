@@ -4,23 +4,26 @@ import { usePersistentRef } from '../composables/usePersistentRef'
 import { StoreName } from '../enums/storeName'
 import { router } from '../router/router'
 import { persistentStorage, StoreKey } from '../services/persistentStorage'
+import { computed } from 'vue'
 
 export const useAuthStore = defineStore(StoreName.Auth, () => {
-	const { state: login, isReady: isUserNameReady } = usePersistentRef(
+	const { state: login, isReady: isLoginReady } = usePersistentRef(
 		StoreKey.Login,
 	)
 
 	const getIsLoggedIn = async () => {
-		const userName = await persistentStorage.get(StoreKey.Login)
-		return userName !== undefined
+		const login = await persistentStorage.get(StoreKey.Login)
+		return login !== undefined
 	}
+
+	const isLoggedIn = computed(() => login.value !== null)
 
 	const signUp = async (data: {
 		login: string
 		password: string
 		email: string
 	}) => {
-		if (!isUserNameReady)
+		if (!isLoginReady)
 			throw new Error('Persistent storage is not yet initialized')
 
 		return api.auth.signUp({ body: data }).then(() => {
@@ -33,7 +36,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 	}
 
 	const logIn = async (data: { login: string; password: string }) => {
-		if (!isUserNameReady)
+		if (!isLoginReady)
 			throw new Error('Persistent storage is not yet initialized')
 
 		return api.auth.logIn({ body: data }).then(() => {
@@ -42,7 +45,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 	}
 
 	const logOut = () => {
-		if (!isUserNameReady)
+		if (!isLoginReady)
 			throw new Error('Persistent storage is not yet initialized')
 
 		api.auth.logOut().finally(() => {
@@ -52,8 +55,10 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 	}
 
 	return {
-		login: login,
+		login,
 		getIsLoggedIn,
+		isLoggedIn,
+
 		signUp,
 		logIn,
 		logOut,

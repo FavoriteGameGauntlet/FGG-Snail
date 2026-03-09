@@ -23,7 +23,7 @@ export {
 
 export { type Timer, type TimerDto, TimerState } from './timers-models'
 
-export { type UserName } from './users-models'
+export { type Login } from './users-models'
 
 export type {
 	WheelEffect,

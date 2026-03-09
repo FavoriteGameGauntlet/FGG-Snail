@@ -9,10 +9,10 @@ import { useAuthStore } from '../../stores/authStore'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const userName = ref('')
+const login = ref('')
 const password = ref('')
 
-const isUserNameDirty = ref(false)
+const isLoginDirty = ref(false)
 const isPasswordDirty = ref(false)
 
 const errors = ref<Partial<Record<'name' | 'password', string>>>({})
@@ -27,7 +27,7 @@ const passwordInput = useTemplateRef('passwordInput')
 // yes, i know this is not optimal and ugly as hell. I don't care. It works.
 
 watch(
-	userName,
+	login,
 	(name) => {
 		if (!name) {
 			errors.value.name = 'Обязательное поле'
@@ -85,13 +85,13 @@ watch(
 )
 
 const onFormSubmit = () => {
-	isUserNameDirty.value = true
+	isLoginDirty.value = true
 	isPasswordDirty.value = true
 
 	if (Object.values(errors.value).filter(Boolean).length) return
 
 	authStore
-		.logIn({ login: userName.value, password: password.value })
+		.logIn({ login: login.value, password: password.value })
 		.then(() => router.push('/'))
 		.catch((e: HttpErrorResponse) => {
 			if (e.body?.code === 'WRONG_AUTH_DATA') {
@@ -102,10 +102,10 @@ const onFormSubmit = () => {
 
 onMounted(async () => {
 	// todo fix this mess. This should just work, but it don't
-	usePersistentRef(StoreKey.UserName, (storedUserName) => {
-		userName.value = storedUserName ?? ''
+	usePersistentRef(StoreKey.Login, (storedLogin) => {
+		login.value = storedLogin ?? ''
 
-		if (userName.value) {
+		if (login.value) {
 			passwordInput.value?.focus()
 		} else {
 			loginInput.value?.focus()
@@ -123,11 +123,11 @@ onMounted(async () => {
 				class="rounded-md border border-slate-400 px-2 py-0.5"
 				placeholder="Логин"
 				ref="loginInput"
-				v-model.trim="userName"
-				@blur="isUserNameDirty = true"
+				v-model.trim="login"
+				@blur="isLoginDirty = true"
 			/>
 
-			<div class="error" v-if="errors.name && isUserNameDirty">
+			<div class="error" v-if="errors.name && isLoginDirty">
 				{{ errors.name }}
 			</div>
 

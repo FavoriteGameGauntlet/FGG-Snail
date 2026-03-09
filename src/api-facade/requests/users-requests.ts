@@ -1,7 +1,7 @@
-import type { UserName } from '../models'
+import type { Login } from '../models'
 
-export type GetAllUserNames = {
-	response: UserName[]
+export type GetAllLogins = {
+	response: Login[]
 }
 
 export type PostDisplayName = {

@@ -4,7 +4,6 @@ export enum StoreKey {
 	InitialRoute = 'initialRoute',
 	Login = 'login',
 	DisplayName = 'displayName',
-	T = 'userName',
 }
 
 export type StoredData = Partial<{
