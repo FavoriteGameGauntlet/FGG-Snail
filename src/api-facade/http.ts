@@ -56,10 +56,8 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 		)
 
 		if (
-			(response.status === 401 && response.statusText !== 'WRONG_AUTH_DATA') ||
-			(responseBody &&
-				'code' in responseBody &&
-				responseBody.code === 'COOKIE_NOT_FOUND')
+			response.status === 401 &&
+			['COOKIE_NOT_FOUND', 'NO_ACTIVE_SESSION'].includes(response.statusText)
 		) {
 			await router.push('/login')
 		}

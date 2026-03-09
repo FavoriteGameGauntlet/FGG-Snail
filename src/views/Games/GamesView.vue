@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, useTemplateRef, watchEffect } from 'vue'
+import {
+	computed,
+	onMounted,
+	ref,
+	useTemplateRef,
+	watch,
+	watchEffect,
+} from 'vue'
 import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
 import { LoadingState } from '../../composables/useLoading'
+import { useAuthStore } from '../../stores/authStore'
 
 const gameStore = useFeatureGameStore()
+const authStore = useAuthStore()
 
 const { wishlist } = storeToRefs(gameStore)
 const showCountHint = ref(false)
@@ -45,20 +54,31 @@ const onAddGameFormSubmit = () => {
 	if (!validator.value.ok) return
 	if (!gameName.value.length) return
 
-	gameStore.addUnplayed([{ name: gameName.value }]).then(() => {
+	gameStore.addToWishlist({ name: gameName.value }).then(() => {
 		gameName.value = ''
 		showCountHint.value = !gameStore.enoughGamesInWishlist
 	})
 }
 
+const updateGamesOnLoginChange = () => {
+	watch(
+		() => authStore.login,
+		(login) => {
+			if (
+				[LoadingState.ERROR, LoadingState.INIT].includes(
+					gameStore.wishlistLoading.state,
+				) &&
+				login
+			) {
+				gameStore.getWishlist()
+			}
+		},
+		{ immediate: true },
+	)
+}
+
 onMounted(() => {
-	if (
-		[LoadingState.ERROR, LoadingState.INIT].includes(
-			gameStore.wishlistLoading.state,
-		)
-	) {
-		gameStore.getUnplayed()
-	}
+	updateGamesOnLoginChange()
 })
 </script>
 

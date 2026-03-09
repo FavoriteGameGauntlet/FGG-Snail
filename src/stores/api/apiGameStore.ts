@@ -8,32 +8,33 @@ import { StoreName } from '../../enums/storeName'
 
 export const useApiGameStore = defineStore(StoreName.ApiGame, () => {
 	const wishlist = ref<Record<string, WishlistedGame[]>>({})
-	const unplayedLoading = useLoading()
+	const wishlistLoading = useLoading()
 
 	const current = ref<Record<string, CurrentGame | null>>({})
 	const currentLoading = useLoading()
 
-	const addUnplayed = async (login: string, game: WishlistedGame) => {
+	const addToWishlist = async (login: string, game: WishlistedGame) => {
 		return api.games.postWishlist({ path: { login }, body: game }).then(() => {
 			wishlist.value[login] = [...wishlist.value[login], game]
 		})
 	}
 
-	const getUnplayed = async (login: string) => {
-		unplayedLoading.state.value = LoadingState.LOADING
+	const getWishlist = async (login: string) => {
+		wishlistLoading.state.value = LoadingState.LOADING
 
 		return api.games
 			.getWishlist({ path: { login } })
 			.then((games) => {
 				wishlist.value[login] = games
-				unplayedLoading.state.value = LoadingState.LOADED
+				wishlistLoading.state.value = LoadingState.LOADED
 
 				return games
 			})
-			.catch((e) => {
-				unplayedLoading.state.value = LoadingState.ERROR
+			.catch(() => {
+				wishlistLoading.state.value = LoadingState.ERROR
+				wishlist.value[login] ??= []
 
-				throw e
+				return wishlist.value[login]
 			})
 	}
 
@@ -49,15 +50,12 @@ export const useApiGameStore = defineStore(StoreName.ApiGame, () => {
 				return current.value
 			})
 			.catch((error: HttpErrorResponse) => {
-				// @todo check if backend returns status === 404
-				if (error.body?.code === 'CURRENT_GAME_NOT_FOUND') {
-					current.value[login] = null
+				if (error.status === 404) {
+					current.value[login] ??= null
 					currentLoading.state.value = LoadingState.LOADED
 
-					return current.value
+					return current.value[login]
 				}
-
-				console.log(error)
 
 				currentLoading.state.value = LoadingState.ERROR
 				return error
@@ -75,40 +73,30 @@ export const useApiGameStore = defineStore(StoreName.ApiGame, () => {
 		})
 	}
 
-	// const cancel = async () => {
-	// 	return api.games.postCancelCurrent().then(() => {
-	// 		current.value = null
-	// 	})
-	// }
+	const cancel = async (login: string) => {
+		return api.games.postCancelCurrent().then(() => {
+			current.value[login] = null
+		})
+	}
 
-	// const finish = async () => {
-	// 	return api.games.postFinishCurrent().then(() => {
-	// 		current.value = null
-	// 	})
-	// }
-
-	// const init = async () => {
-	// 	await Promise.all([getCurrent()])
-	// }
+	const finish = async (login: string) => {
+		return api.games.postFinishCurrent().then(() => {
+			current.value[login] = null
+		})
+	}
 
 	return {
 		current,
 		currentLoading,
 
-		// unplayed,
-		unplayedLoading,
-
-		// enoughGamesInWishlist,
-		// currentGameIsFinished,
-		// canRoll,
-
-		// init,
+		wishlist,
+		wishlistLoading,
 
 		getCurrent,
-		addUnplayed,
-		getUnplayed,
+		addToWishlist,
+		getWishlist,
 		roll,
-		// cancel,
-		// finish,
+		cancel,
+		finish,
 	}
 })
