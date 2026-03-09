@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { Temporal } from '@js-temporal/polyfill'
 import { computed, ref, watch, watchEffect } from 'vue'
-import { api } from '../api-facade/api'
-import { TimerState } from '../api-facade/models'
-import { useTimeSync } from '../composables/useTimeSync'
-import { StoreName } from '../enums/storeName'
+import { api } from '../../api-facade/api'
+import { TimerState } from '../../api-facade/models'
+import { useTimeSync } from '../../composables/useTimeSync'
+import { StoreName } from '../../enums/storeName'
 
 const defaultDuration = Temporal.Duration.from({
 	hours: 2,
@@ -12,7 +12,7 @@ const defaultDuration = Temporal.Duration.from({
 	seconds: 0,
 })
 
-export const useTimerStore = defineStore(StoreName.Timer, () => {
+export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 	const state = ref(TimerState.Created)
 	const durationTotal = ref(Temporal.Duration.from(defaultDuration))
 
@@ -43,26 +43,6 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 	const updateEndDate = () => {
 		endDate.value = calcEndDate()
 	}
-
-	watch(durationLeft, () => {
-		dynamicDurationLeft.value = durationLeft.value
-	})
-
-	watchEffect(() => {
-		console.log({ durationLeft: durationLeft.value.toString() })
-	})
-
-	watchEffect(() => {
-		console.log({ dynamicDuration: dynamicDurationLeft.value.toString() })
-	})
-
-	watchEffect(() => {
-		console.log({ endDate: endDate.value.toString() })
-	})
-
-	watchEffect(() => {
-		console.log({ durationTotal: durationTotal.value.toString() })
-	})
 
 	const updateDurationLeft = (now: Temporal.Instant) => {
 		const newDuration =
@@ -183,8 +163,6 @@ export const useTimerStore = defineStore(StoreName.Timer, () => {
 
 		canStart,
 		canPause,
-
-		init,
 
 		getCurrent,
 		start,

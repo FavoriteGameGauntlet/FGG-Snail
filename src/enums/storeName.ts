@@ -5,5 +5,6 @@ export const enum StoreName {
 	ApiGame = 'api-game',
 	FeatureGame = 'feature-game',
 	Settings = 'settings',
-	Timer = 'timer',
+	ApiTimer = 'api-timer',
+	FeatureTimer = 'feature-timer',
 }

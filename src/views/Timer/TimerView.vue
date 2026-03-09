@@ -45,7 +45,7 @@ const onCancelButtonClick = () => {
 	<div class="flex size-full flex-col items-center justify-center">
 		<div class="mb-17 flex w-min flex-col gap-4 gap-x-4">
 			<div
-				class="w-fit max-w-fit overflow-auto text-3xl leading-[110%] font-bold"
+				class="w-fit max-w-fit overflow-auto text-3xl leading-[150%] font-bold"
 			>
 				<!-- @todo fix text on load -->
 				{{ currentGame?.name ?? 'Игра не выбрана' }}
