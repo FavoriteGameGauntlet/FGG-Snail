@@ -7,13 +7,13 @@ import { LoadingState } from '../../composables/useLoading'
 
 const gameStore = useFeatureGameStore()
 
-const { enoughGamesInWishlist, current, canRoll } = storeToRefs(gameStore)
+const { current, canRoll } = storeToRefs(gameStore)
 
 const rollText = ref('Загрузка...')
 
 const showWishlistCountHint = computed(
 	() =>
-		!enoughGamesInWishlist &&
+		!gameStore.enoughGamesInWishlist &&
 		gameStore.currentLoading.state === LoadingState.LOADED &&
 		gameStore.wishlistLoading.state === LoadingState.LOADED,
 )
