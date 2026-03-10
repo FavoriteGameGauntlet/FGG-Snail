@@ -1,20 +1,26 @@
 import { defineStore } from 'pinia'
 import { computed, watch } from 'vue'
 import { CurrentGame, WishlistedGame } from '../../api-facade/models'
-import { LoadingState, useLoading } from '../../composables/useLoading'
+import { LoadingState } from '../../composables/useLoading'
 import { StoreName } from '../../enums/storeName'
 import { useApiGameStore } from '../api/apiGameStore'
 import { useAuthStore } from '../authStore'
+import { useApiTimerStore } from '../api/apiTimerStore'
+import { Temporal } from '@js-temporal/polyfill'
 
 export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 	const authStore = useAuthStore()
-	const apiGameStore = useApiGameStore()
+	const gameStore = useApiGameStore()
+	const timerStore = useApiTimerStore()
 
-	const current = computed<CurrentGame | null>(() =>
-		authStore.login ? (apiGameStore.current[authStore.login] ?? null) : null,
-	)
+	const current = computed<CurrentGame | null>({
+		get: () =>
+			authStore.login ? (gameStore.current[authStore.login] ?? null) : null,
+		set: (game: CurrentGame | null) =>
+			authStore.login ? (gameStore.current[authStore.login] = game) : null,
+	})
 	const wishlist = computed<WishlistedGame[]>(() =>
-		authStore.login ? (apiGameStore.wishlist[authStore.login] ?? []) : [],
+		authStore.login ? (gameStore.wishlist[authStore.login] ?? []) : [],
 	)
 
 	const enoughGamesInWishlist = computed(() => wishlist.value.length >= 6)
@@ -23,40 +29,40 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 	const canRoll = computed(
 		() =>
 			currentGameIsFinished.value &&
-			apiGameStore.currentLoading.state === LoadingState.LOADED &&
+			gameStore.currentLoading.state === LoadingState.LOADED &&
 			enoughGamesInWishlist.value &&
-			apiGameStore.wishlistLoading.state === LoadingState.LOADED,
+			gameStore.wishlistLoading.state === LoadingState.LOADED,
 	)
 
 	const getWishlist = () => {
 		if (!authStore.login) return Promise.reject('No current user login')
 
-		return apiGameStore.getWishlist(authStore.login)
+		return gameStore.getWishlist(authStore.login)
 	}
 
 	const addToWishlist = async (game: WishlistedGame) => {
 		if (!authStore.login) return Promise.reject('No current user login')
 
-		return apiGameStore.addToWishlist(authStore.login, game)
+		return gameStore.addToWishlist(authStore.login, game)
 	}
 
 	const roll = async (login: string | undefined = authStore.login) => {
 		if (!login) return Promise.reject('No current user login')
 		if (!canRoll.value) return Promise.reject('Can not roll')
 
-		return apiGameStore.roll(login)
+		return gameStore.roll(login)
 	}
 
 	const cancel = (login: string | undefined = authStore.login) => {
 		if (!login) return Promise.reject('No current user login')
 
-		return apiGameStore.cancel(login)
+		return gameStore.cancel(login)
 	}
 
 	const finish = (login: string | undefined = authStore.login) => {
 		if (!login) return Promise.reject('No current user login')
 
-		return apiGameStore.finish(login)
+		return gameStore.finish(login)
 	}
 
 	;(() => {
@@ -65,9 +71,25 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 			() => authStore.login,
 			(login) => {
 				// console.log({ login, getCurrentGame: apiGameStore.getCurrent })
-				login && apiGameStore.getCurrent(login)
+				login && gameStore.getCurrent(login)
 			},
 			{ immediate: true },
+		)
+
+		// update timer on timer change
+		watch(
+			() => timerStore.durationLeft,
+			(newDuration, oldDuration) => {
+				const delta = oldDuration.subtract(newDuration)
+
+				current.value =
+					current.value !== null
+						? ({
+								...current.value,
+								timeSpent: current.value.timeSpent.add(delta),
+							} satisfies CurrentGame)
+						: null
+			},
 		)
 	})()
 
@@ -75,8 +97,8 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 		current,
 		wishlist,
 
-		currentLoading: computed(() => apiGameStore.currentLoading),
-		wishlistLoading: computed(() => apiGameStore.wishlistLoading),
+		currentLoading: computed(() => gameStore.currentLoading),
+		wishlistLoading: computed(() => gameStore.wishlistLoading),
 
 		enoughGamesInWishlist,
 		currentGameIsFinished,

@@ -11,7 +11,12 @@ import { useFeatureTimerStore } from '../../stores/feature/featureTimerStore'
 const timerStore = useFeatureTimerStore()
 const gameStore = useFeatureGameStore()
 
-const { durationTotal, durationLeft, state } = storeToRefs(timerStore)
+const {
+	durationTotal,
+	durationLeft,
+	state,
+	loading: isTimerLoading,
+} = storeToRefs(timerStore)
 const { current: currentGame } = storeToRefs(gameStore)
 
 const gameNameText = computed(() =>
@@ -27,15 +32,15 @@ const timerButtonSvg = computed(() =>
 )
 
 const onStartButtonClick = () => {
-	// timerStore.toggle()
+	timerStore.toggle()
 }
 
 const onFinishButtonClick = () => {
-	// gameStore.finish()
+	gameStore.finish()
 }
 
 const onCancelButtonClick = () => {
-	// gameStore.cancel()
+	gameStore.cancel()
 }
 </script>
 
@@ -55,7 +60,8 @@ const onCancelButtonClick = () => {
 
 			<div class="grid grid-cols-2 grid-rows-2">
 				<button
-					class="row-span-2 w-fit cursor-pointer border-2 border-black px-5 py-3 text-2xl"
+					class="row-span-2 w-fit border-2 border-black px-5 py-3 text-2xl not-disabled:cursor-pointer disabled:opacity-50"
+					:disabled="isTimerLoading"
 					@click="onStartButtonClick"
 				>
 					<svg
