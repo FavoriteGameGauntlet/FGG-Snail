@@ -1,12 +1,11 @@
-import { defineStore } from 'pinia'
 import { Temporal } from '@js-temporal/polyfill'
-import { computed, ref, watch, watchEffect } from 'vue'
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
 import { api } from '../../api-facade/api'
 import { TimerState } from '../../api-facade/models'
-import { useTimeSync } from '../../composables/useTimeSync'
 import { StoreName } from '../../enums/storeName'
 
-const defaultDuration = Temporal.Duration.from({
+const DEFAULT_DURATION = Temporal.Duration.from({
 	hours: 2,
 	minutes: 0,
 	seconds: 0,
@@ -14,13 +13,10 @@ const defaultDuration = Temporal.Duration.from({
 
 export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 	const state = ref(TimerState.Created)
-	const durationTotal = ref(Temporal.Duration.from(defaultDuration))
+	const durationTotal = ref(Temporal.Duration.from(DEFAULT_DURATION))
 
 	const lastActionDate = ref(Temporal.Now.instant())
-	const durationLeft = ref(Temporal.Duration.from(defaultDuration))
-	const dynamicDurationLeft = ref(durationLeft.value)
-
-	let stopTimeSync: (() => void) | undefined = undefined
+	const durationLeft = ref(Temporal.Duration.from(DEFAULT_DURATION))
 
 	const canStart = computed(
 		() =>
@@ -32,52 +28,12 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 		() => state.value && state.value === TimerState.Running,
 	)
 
-	const calcEndDate = () => {
-		if (state.value === TimerState.Finished) return lastActionDate.value
-
-		return lastActionDate.value?.add(durationLeft.value)
-	}
-
-	const endDate = ref(calcEndDate())
-
-	const updateEndDate = () => {
-		endDate.value = calcEndDate()
-	}
-
-	const updateDurationLeft = (now: Temporal.Instant) => {
-		const newDuration =
-			endDate.value?.since(now) ?? Temporal.Duration.from(defaultDuration)
-
-		dynamicDurationLeft.value =
-			newDuration.sign === 1
-				? newDuration
-				: Temporal.Duration.from({ seconds: 0 })
-	}
-
-	const stopUpdater = () => {
-		updateDurationLeft(Temporal.Now.instant())
-		stopTimeSync?.()
-	}
-
-	const startUpdater = () => {
-		stopTimeSync = useTimeSync((now) => {
-			updateDurationLeft(now)
-
-			if (durationLeft.value.sign !== 1) stopUpdater?.()
-		})
-	}
-
 	const getCurrent = async () => {
 		return api.timers.getCurrent().then((v) => {
 			durationTotal.value = v.duration
 			durationLeft.value = v.remainingTime
 			state.value = v.state
 			lastActionDate.value = v.lastActionDate ?? Temporal.Now.instant()
-			updateEndDate()
-
-			if (state.value === TimerState.Running) {
-				startUpdater()
-			}
 		})
 	}
 
@@ -90,22 +46,15 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 		state.value = TimerState.Running
 		lastActionDate.value = Temporal.Now.instant()
 
-		updateEndDate()
-		startUpdater()
-
 		await api.timers
 			.postStart()
 			.then((timerAction) => {
 				durationLeft.value = Temporal.Duration.from(timerAction.remainingTime)
 				lastActionDate.value = Temporal.Now.instant()
-
-				updateEndDate()
 			})
 			.catch(() => {
 				state.value = prevState
 				lastActionDate.value = prevLastActionDate
-				updateEndDate()
-				stopUpdater()
 			})
 	}
 
@@ -118,22 +67,14 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 		lastActionDate.value = Temporal.Now.instant()
 		state.value = TimerState.Paused
 
-		stopUpdater()
-		updateEndDate()
-
 		api.timers
 			.postPause()
 			.then(() => {
-				updateEndDate()
-				stopUpdater()
 				lastActionDate.value = Temporal.Now.instant()
 			})
 			.catch(() => {
 				state.value = prevState
 				lastActionDate.value = prevLastActionDate
-
-				updateEndDate()
-				if (prevState === TimerState.Running) startUpdater()
 			})
 	}
 
@@ -147,18 +88,11 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 		}
 	}
 
-	// ;(() => {
-	// watch?
-	// 	getCurrent()
-	// })()
-
 	return {
 		state,
-		endDate,
 		durationTotal,
-		durationLeft: dynamicDurationLeft,
+		durationLeft,
 
-		/** Time zone is required for calculations */
 		lastActionDate,
 
 		canStart,

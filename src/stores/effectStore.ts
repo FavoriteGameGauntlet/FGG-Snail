@@ -4,7 +4,7 @@
 // import { ref } from 'vue'
 // import { api } from '../api-facade/api'
 
-// export const useEffectStore = defineStore(StoreName.Effect, () => {
+// export const useEffectStore = defineStore(StoreName.ApiWheelEffect, () => {
 // 	const available = ref<WheelEffect[]>()
 // 	const history = ref<RolledWheelEffect[]>()
 // 	const availableCount = ref(0)

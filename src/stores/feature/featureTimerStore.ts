@@ -1,19 +1,34 @@
 import { defineStore } from 'pinia'
+import { computed, watch } from 'vue'
 import { StoreName } from '../../enums/storeName'
 import { useApiTimerStore } from '../api/apiTimerStore'
-import { watch } from 'vue'
 import { useAuthStore } from '../authStore'
 
-export const useFeatureTimerStore = defineStore(StoreName.ApiTimer, () => {
+export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 	const timerStore = useApiTimerStore()
 	const authStore = useAuthStore()
 
+	const state = computed(() => timerStore.state)
+
+	const durationLeft = computed(() => timerStore.durationLeft)
+	const durationTotal = computed(() => timerStore.durationTotal)
+
 	;(() => {
+		// Get current timer on login
 		watch(
 			() => authStore.isLoggedIn,
-			(isLoggedIn) => isLoggedIn && timerStore.getCurrent(),
+			(isLoggedIn) => {
+				console.log({ isLoggedIn, getCurrent: timerStore.getCurrent })
+				isLoggedIn && timerStore.getCurrent()
+			},
+			{ immediate: true },
 		)
 	})()
 
-	return {}
+	return {
+		state,
+
+		durationLeft,
+		durationTotal,
+	}
 })

@@ -60,14 +60,15 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 	}
 
 	;(() => {
-		const getCurrentGameOnLogin = () => {
-			watch(
-				() => authStore.login,
-				(login) => login && apiGameStore.getCurrent(login),
-				{ immediate: true },
-			)
-		}
-		getCurrentGameOnLogin()
+		// get current game on login
+		watch(
+			() => authStore.login,
+			(login) => {
+				// console.log({ login, getCurrentGame: apiGameStore.getCurrent })
+				login && apiGameStore.getCurrent(login)
+			},
+			{ immediate: true },
+		)
 	})()
 
 	return {

@@ -1,32 +1,30 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import { Temporal } from '@js-temporal/polyfill'
-import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 import { TimerState } from '../../api-facade/models'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'
+import { LoadingState } from '../../composables/useLoading'
 import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
-// import { useTimerStore } from '../../stores/timerStore'
+import { useFeatureTimerStore } from '../../stores/feature/featureTimerStore'
 
-// const timerStore = useTimerStore()
+const timerStore = useFeatureTimerStore()
 const gameStore = useFeatureGameStore()
 
-// const { durationTotal, state } = storeToRefs(timerStore)
-const durationTotal = Temporal.Duration.from({ hours: 2 })
+const { durationTotal, durationLeft, state } = storeToRefs(timerStore)
 const { current: currentGame } = storeToRefs(gameStore)
-// const currentTimer = Temporal.Now.instant()
-const state = ref(TimerState.Created)
+
+const gameNameText = computed(() =>
+	gameStore.currentLoading.state === LoadingState.LOADED
+		? (currentGame.value?.name ?? '')
+		: 'Загрузка...',
+)
 
 const timerButtonSvg = computed(() =>
 	state.value === TimerState.Running
 		? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>'
 		: '<path d="M8 5v14l11-7z"/>',
 )
-
-// const timeLeft = computed(
-// 	() => timerStore.durationLeft ?? Temporal.Duration.from({ hours: 2 }),
-// )
-
-const timeLeft = Temporal.Duration.from({ hours: 2 })
 
 const onStartButtonClick = () => {
 	// timerStore.toggle()
@@ -47,13 +45,12 @@ const onCancelButtonClick = () => {
 			<div
 				class="w-fit max-w-fit overflow-auto text-3xl leading-[150%] font-bold"
 			>
-				<!-- @todo fix text on load -->
-				{{ currentGame?.name ?? 'Игра не выбрана' }}
+				{{ gameNameText }}
 			</div>
 
 			<UiTimestamp
 				class="text-massive w-fit min-w-fit shrink-0 font-bold"
-				:time="timeLeft"
+				:time="durationLeft"
 			/>
 
 			<div class="grid grid-cols-2 grid-rows-2">
@@ -82,7 +79,7 @@ const onCancelButtonClick = () => {
 						class="inline"
 						:time="
 							gameStore.current?.timeSpent ??
-							Temporal.PlainDateTime.from({ year: 0, month: 1, day: 1 })
+							Temporal.Duration.from({ hours: 0, minutes: 0, seconds: 0 })
 						"
 					/>
 				</div>

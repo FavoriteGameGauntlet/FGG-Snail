@@ -1,6 +1,10 @@
 // not provided by the library for some reason
 
-/** Roughjs fill styles. */
+/**
+ * Roughjs fill styles.
+ *
+ * @todo move to ui
+ */
 export enum FillStyle {
 	Hachure = 'hachure',
 	Solid = 'solid',
