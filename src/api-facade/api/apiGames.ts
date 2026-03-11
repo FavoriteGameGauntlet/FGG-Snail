@@ -10,7 +10,6 @@ import type {
 } from '../requests'
 
 export const apiGames = {
-	/** Add new entries to wishlist */
 	postWishlist: ({ body, path: { login } }: PostGamesWishlist['request']) =>
 		http.post<PostGamesWishlist>(`/games/${login}/wishlist`, { body }),
 

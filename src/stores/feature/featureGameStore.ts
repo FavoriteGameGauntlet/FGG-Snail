@@ -4,9 +4,8 @@ import { CurrentGame, WishlistedGame } from '../../api-facade/models'
 import { LoadingState } from '../../composables/useLoading'
 import { StoreName } from '../../enums/storeName'
 import { useApiGameStore } from '../api/apiGameStore'
-import { useAuthStore } from '../authStore'
 import { useApiTimerStore } from '../api/apiTimerStore'
-import { Temporal } from '@js-temporal/polyfill'
+import { useAuthStore } from '../authStore'
 
 export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 	const authStore = useAuthStore()
@@ -65,14 +64,11 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 		return gameStore.finish(login)
 	}
 
-	;(() => {
+	const init = () => {
 		// get current game on login
 		watch(
 			() => authStore.login,
-			(login) => {
-				// console.log({ login, getCurrentGame: apiGameStore.getCurrent })
-				login && gameStore.getCurrent(login)
-			},
+			(login) => login && gameStore.getCurrent(login),
 			{ immediate: true },
 		)
 
@@ -91,7 +87,7 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 						: null
 			},
 		)
-	})()
+	}
 
 	return {
 		current,
@@ -110,5 +106,7 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 		roll,
 		cancel,
 		finish,
+
+		init,
 	}
 })

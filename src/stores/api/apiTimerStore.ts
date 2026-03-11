@@ -2,10 +2,10 @@ import { Temporal } from '@js-temporal/polyfill'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { api } from '../../api-facade/api'
-import { TimerState } from '../../api-facade/models'
-import { StoreName } from '../../enums/storeName'
-import { LoadingState, useLoading } from '../../composables/useLoading'
 import { HttpErrorResponse } from '../../api-facade/http'
+import { TimerState } from '../../api-facade/models'
+import { LoadingState, useLoading } from '../../composables/useLoading'
+import { StoreName } from '../../enums/storeName'
 
 const DEFAULT_DURATION = Temporal.Duration.from({
 	hours: 2,
@@ -14,24 +14,22 @@ const DEFAULT_DURATION = Temporal.Duration.from({
 })
 
 export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
-	const state = ref(TimerState.Created)
+	const state = ref<TimerState | null>(null)
 	const durationTotal = ref(Temporal.Duration.from(DEFAULT_DURATION))
 
 	const currentLoading = useLoading()
 	const actionLoading = useLoading()
 
 	const lastActionDate = ref<Temporal.Instant | null>(null)
-	const durationLeft = ref(Temporal.Duration.from(DEFAULT_DURATION))
+	const durationLeft = ref(Temporal.Duration.from({ hours: 0 }))
 
-	const canStart = computed(
-		() =>
-			state.value &&
-			(state.value === TimerState.Created || state.value === TimerState.Paused),
+	const canStart = computed(() =>
+		[null, TimerState.Created, TimerState.Paused].includes(state.value),
 	)
 
-	const canPause = computed(
-		() => state.value && state.value === TimerState.Running,
-	)
+	const canPause = computed(() => state.value === TimerState.Running)
+
+	const canToggle = computed(() => canPause.value || canStart.value)
 
 	const getCurrent = async () => {
 		if (currentLoading.state.value === LoadingState.LOADING) return
@@ -48,10 +46,19 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 
 				currentLoading.state.value = LoadingState.LOADED
 			})
-			.catch((e) => {
+			.catch((error: HttpErrorResponse) => {
+				if (error.body?.code === 'AVAILABLE_ROLLS_EXIST') {
+					durationLeft.value = Temporal.Duration.from({ hours: 0 })
+					actionLoading.state.value = LoadingState.LOADED
+					state.value = null
+					lastActionDate.value = null
+
+					return
+				}
+
 				currentLoading.state.value = LoadingState.ERROR
 
-				throw e
+				throw error
 			})
 	}
 
@@ -76,11 +83,18 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 				durationTotal.value = timer.duration
 				lastActionDate.value = timer.lastActionDate ?? null
 			})
-			.catch(() => {
-				actionLoading.state.value = LoadingState.ERROR
+			.catch((error: HttpErrorResponse) => {
+				if (error.body?.code === 'CURRENT_TIMER_NOT_FOUND') {
+					actionLoading.state.value = LoadingState.LOADED
+					state.value = null
+					lastActionDate.value = null
+				}
 
+				actionLoading.state.value = LoadingState.ERROR
 				state.value = prevState
 				lastActionDate.value = prevLastActionDate
+
+				throw error
 			})
 	}
 
@@ -106,9 +120,19 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 				durationTotal.value = timer.duration
 			})
 			.catch((error: HttpErrorResponse) => {
-				if (error.status) actionLoading.state.value = LoadingState.ERROR
+				if (error.body?.code === 'CURRENT_TIMER_NOT_FOUND') {
+					actionLoading.state.value = LoadingState.LOADED
+					state.value = null
+					lastActionDate.value = null
+
+					return
+				}
+
+				actionLoading.state.value = LoadingState.ERROR
 				state.value = prevState
 				lastActionDate.value = prevLastActionDate
+
+				throw error
 			})
 	}
 
@@ -116,6 +140,8 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 		switch (state.value) {
 			case TimerState.Created:
 			case TimerState.Paused:
+			case TimerState.Finished:
+			case null:
 				return start()
 			case TimerState.Running:
 				return pause()
@@ -134,6 +160,7 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 
 		canStart,
 		canPause,
+		canToggle,
 
 		getCurrent,
 		start,

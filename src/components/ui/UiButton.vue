@@ -3,9 +3,9 @@ import { storeToRefs } from 'pinia'
 import rough from 'roughjs'
 import { type RoughSVG } from 'roughjs/bin/svg'
 import { ref, useTemplateRef, watch, watchEffect } from 'vue'
+import { useResizeObserver } from '../../composables/useResizeObserver'
 import type { FillStyle } from '../../enums/fillStyle'
 import { useSettingsStore } from '../../stores/settingsStore'
-import { useResizeObserver } from '../../composables/useResizeObserver'
 
 type Props = {
 	fillStyle?: FillStyle
@@ -79,6 +79,8 @@ watch([svg, roughSvg, roughnessModifier], () => {
 	position: relative;
 	cursor: pointer;
 	overflow: visible;
+	height: 100%;
+	width: 100%;
 }
 
 .svg {

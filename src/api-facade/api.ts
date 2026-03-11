@@ -3,12 +3,12 @@
  * Last updated: 2026.03.08
  * State: only Points group is incomplete. Probably requires a rewrite.
  */
-import { apiAuth } from './api/api-auth'
-import { apiGames } from './api/api-games'
-// import { apiPoints } from './api/api-points'
-import { apiTimers } from './api/api-timers'
-// import { apiUsers } from './api/api-users'
-// import { apiWheelEffects } from './api/api-wheel-effects'
+import { apiAuth } from './api/apiAuth'
+import { apiGames } from './api/apiGames'
+// import { apiPoints } from './api/apiPoints'
+import { apiTimers } from './api/apiTimers'
+// import { apiUsers } from './api/apiUsers'
+import { apiWheelEffects } from './api/apiWheelEffects'
 
 export const api = {
 	auth: apiAuth,
@@ -16,5 +16,5 @@ export const api = {
 	// points: apiPoints,
 	timers: apiTimers,
 	// users: apiUsers,
-	// wheelEffects: apiWheelEffects,
+	wheelEffects: apiWheelEffects,
 }

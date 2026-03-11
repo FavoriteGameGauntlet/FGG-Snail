@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-// import { useEffectStore } from '../../../stores/effectStore'
-import UserProfile from './UserProfile.vue'
 import { RouteName } from '../../../router/routeNames'
+import { useApiWheelStore } from '../../../stores/api/apiWheelStore'
+import UserProfile from './UserProfile.vue'
 
-// const effectStore = useEffectStore()
-
-// const { availableCount } = storeToRefs(effectStore)
-const availableCount = 1
+const wheelStore = useApiWheelStore()
 </script>
 
 <template>
@@ -33,7 +29,7 @@ const availableCount = 1
 				class="text-blue-500 hover:underline"
 				:to="{ name: RouteName.WheelRolls }"
 			>
-				Роллы {{ availableCount >= 1 ? '🔵' : '' }}
+				Роллы {{ wheelStore.pendingRoll ? '🔵' : '' }}
 			</RouterLink>
 
 			<RouterLink

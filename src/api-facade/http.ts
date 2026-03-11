@@ -1,7 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { type ClientOptions, fetch } from '@tauri-apps/plugin-http'
 import { API_URL } from '../constants/apiUrl'
-import { router } from '../router/router'
+import { unauthorizedInterceptor } from './interceptors/unauthorizedInterceptor'
 
 export type HttpErrorResponse = {
 	status: number
@@ -14,11 +14,22 @@ export type HttpErrorResponse = {
 	method: string
 }
 
-type HttpResponse<T> = Omit<Response, 'body'> & {
+export type HttpResponse<T = object | string> = Omit<Response, 'body'> & {
 	body: T
 }
 
-const makeRequest = async <T extends object | undefined = object | undefined>(
+const parseBody = async (response: Response) => {
+	const body = await response.text()
+
+	try {
+		return body.length ? JSON.parse(body) : body
+	} catch {
+		// not JSON
+		return body
+	}
+}
+
+const makeRequest = async <T extends object | string = object | string>(
 	url: string,
 	opts?: RequestInit & ClientOptions,
 ): Promise<HttpResponse<T>> => {
@@ -41,9 +52,7 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 				...opts?.headers,
 			},
 		})
-		const responseBody: T = await response
-			.text()
-			.then((body) => (body.length ? JSON.parse(body) : undefined))
+		const responseBody: T = await parseBody(response)
 
 		const time = Temporal.Now.zonedDateTimeISO()
 		const timestamp = `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}:${time.second.toString().padStart(2, '0')}`
@@ -55,21 +64,14 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 			},
 		)
 
-		if (
-			response.status === 401 &&
-			['COOKIE_NOT_FOUND', 'NO_ACTIVE_SESSION'].includes(response.statusText)
-		) {
-			await router.push('/login')
-		}
-
 		if (!response.ok) {
-			const e: HttpErrorResponse = {
+			const e = {
 				status: response.status,
 				statusText: response.statusText,
 				body: responseBody as HttpErrorResponse['body'],
 				url: fullUrl,
 				method,
-			}
+			} satisfies HttpErrorResponse
 
 			throw e
 		}
@@ -79,6 +81,8 @@ const makeRequest = async <T extends object | undefined = object | undefined>(
 			body: responseBody,
 		}
 	} catch (error) {
+		unauthorizedInterceptor(error as HttpErrorResponse)
+
 		console.error(`[HTTP] ${method} ${fullUrl} - ERROR`, error)
 		throw error
 	}

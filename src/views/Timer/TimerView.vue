@@ -2,14 +2,19 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import { TimerState } from '../../api-facade/models'
+import UiButton from '../../components/ui/UiButton.vue'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'
 import { LoadingState } from '../../composables/useLoading'
+import { RouteName } from '../../router/routeNames'
+import { useApiWheelStore } from '../../stores/api/apiWheelStore'
 import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
 import { useFeatureTimerStore } from '../../stores/feature/featureTimerStore'
 
 const timerStore = useFeatureTimerStore()
 const gameStore = useFeatureGameStore()
+const wheelStore = useApiWheelStore()
 
 const {
 	durationTotal,
@@ -21,7 +26,7 @@ const { current: currentGame } = storeToRefs(gameStore)
 
 const gameNameText = computed(() =>
 	gameStore.currentLoading.state === LoadingState.LOADED
-		? (currentGame.value?.name ?? '')
+		? (currentGame.value?.name ?? 'Крути новую игру')
 		: 'Загрузка...',
 )
 
@@ -47,11 +52,12 @@ const onCancelButtonClick = () => {
 <template>
 	<div class="flex size-full flex-col items-center justify-center">
 		<div class="mb-17 flex w-min flex-col gap-4 gap-x-4">
-			<div
+			<RouterLink
 				class="w-fit max-w-fit overflow-auto text-3xl leading-[150%] font-bold"
+				:to="{ name: RouteName.GameRolls }"
 			>
 				{{ gameNameText }}
-			</div>
+			</RouterLink>
 
 			<UiTimestamp
 				class="text-massive w-fit min-w-fit shrink-0 font-bold"
@@ -61,7 +67,7 @@ const onCancelButtonClick = () => {
 			<div class="grid grid-cols-2 grid-rows-2">
 				<button
 					class="row-span-2 w-fit border-2 border-black px-5 py-3 text-2xl not-disabled:cursor-pointer disabled:opacity-50"
-					:disabled="isTimerLoading"
+					:disabled="isTimerLoading || timerStore.canToggle"
 					@click="onStartButtonClick"
 				>
 					<svg
@@ -91,20 +97,18 @@ const onCancelButtonClick = () => {
 				</div>
 			</div>
 
-			<div class="flex w-full justify-between">
-				<button
-					class="w-fit cursor-pointer border-2 border-green-700 px-8 py-1.5 text-xl text-green-700"
-					@click="onFinishButtonClick"
+			<div
+				class="wheel-action"
+				:class="{ 'wheel-action_disabled': !wheelStore.pendingRoll }"
+			>
+				<RouterLink
+					class="wheel-action-link"
+					:to="{ name: RouteName.WheelRolls }"
 				>
-					Завершить
-				</button>
-
-				<button
-					class="w-fit cursor-pointer justify-self-end border-2 border-red-700 px-8 py-1.5 text-xl text-red-700"
-					@click="onCancelButtonClick"
-				>
-					Забросить
-				</button>
+					<UiButton>{{
+						wheelStore.pendingRoll ? 'Крути колесо!' : 'Ждём таймер...'
+					}}</UiButton>
+				</RouterLink>
 			</div>
 		</div>
 	</div>
@@ -113,5 +117,21 @@ const onCancelButtonClick = () => {
 <style scoped>
 .text-massive {
 	font-size: 6rem;
+}
+
+.wheel-action {
+	height: 80px;
+	font-size: 1.5rem;
+}
+
+.wheel-action_disabled {
+	pointer-events: none;
+	user-select: none;
+	cursor: default;
+	opacity: 40%;
+}
+
+.wheel-action-link {
+	width: 100%;
 }
 </style>

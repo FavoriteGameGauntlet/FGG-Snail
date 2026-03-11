@@ -30,7 +30,7 @@ export const apiWheelEffects = {
 
 	getAvailableCount: () =>
 		http
-			.get<GetAvailableWheelEffectCount>('/wheel-effects/available/count')
+			.get<GetAvailableWheelEffectCount>('/wheel-effects/available/roll/count')
 			.then(({ body }) => body),
 
 	getLastRolled: () =>

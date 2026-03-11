@@ -4,12 +4,14 @@ import { LoadingState } from '../../composables/useLoading'
 import { StoreName } from '../../enums/storeName'
 import { useApiGameStore } from '../api/apiGameStore'
 import { useApiTimerStore } from '../api/apiTimerStore'
+import { useApiWheelStore } from '../api/apiWheelStore'
 import { useAuthStore } from '../authStore'
 
 export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 	const timerStore = useApiTimerStore()
 	const authStore = useAuthStore()
 	const gameStore = useApiGameStore()
+	const wheelStore = useApiWheelStore()
 
 	const state = computed(() => timerStore.state)
 
@@ -32,7 +34,7 @@ export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 	// 	apiStore.pause()
 	// }
 
-	;(() => {
+	const init = () => {
 		// Get current timer on login
 		watch(
 			() => authStore.isLoggedIn,
@@ -56,7 +58,7 @@ export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 		// 	},
 		// 	{ immediate: true },
 		// )
-	})()
+	}
 
 	return {
 		state,
@@ -67,5 +69,8 @@ export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 		loading,
 
 		toggle,
+		canToggle: computed(() => timerStore.canToggle),
+
+		init,
 	}
 })
