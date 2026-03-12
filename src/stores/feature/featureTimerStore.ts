@@ -26,14 +26,6 @@ export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 
 	const toggle = () => timerStore.toggle()
 
-	// const start = () => {
-	// 	apiStore.start()
-	// }
-
-	// const pause = () => {
-	// 	apiStore.pause()
-	// }
-
 	const init = () => {
 		// Get current timer on login
 		watch(
@@ -72,6 +64,7 @@ export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 		loading,
 
 		toggle,
+		/** @todo add wheelStore.pendingRoll to condition */
 		canToggle: computed(() => timerStore.canToggle),
 
 		init,
