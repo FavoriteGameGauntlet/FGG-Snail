@@ -39,8 +39,11 @@ export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 		watch(
 			() => authStore.isLoggedIn,
 			(isLoggedIn) => {
-				console.log({ isLoggedIn, getCurrent: timerStore.getCurrent })
-				isLoggedIn && timerStore.getCurrent()
+				if (isLoggedIn) {
+					timerStore.getCurrent()
+				} else {
+					timerStore.state = null
+				}
 			},
 			{ immediate: true },
 		)

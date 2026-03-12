@@ -27,4 +27,5 @@ export type {
 	GetWheelEffectsHistory,
 	PostApplyWheelEffectRoll,
 	PostRollWheelEffect,
+	GetLastRolledWheelEffects,
 } from './wheel-effects-requests'

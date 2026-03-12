@@ -78,6 +78,8 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 			(newDuration, oldDuration) => {
 				const delta = oldDuration.subtract(newDuration)
 
+				if (delta.sign === -1) return
+
 				current.value =
 					current.value !== null
 						? ({

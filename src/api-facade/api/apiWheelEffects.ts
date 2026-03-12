@@ -1,3 +1,4 @@
+import { WheelResult } from '../../types/wheelResult'
 import {
 	convertFreePointChangeResult,
 	convertRolledWheelEffectDto,
@@ -5,12 +6,12 @@ import {
 import { http } from '../http'
 import type {
 	GetAvailableWheelEffectCount,
+	GetLastRolledWheelEffects,
 	GetWheelEffectsAvailable,
 	GetWheelEffectsHistory,
 	PostApplyWheelEffectRoll,
 	PostRollWheelEffect,
 } from '../requests'
-import { GetLastRolledWheelEffects } from '../requests/wheel-effects-requests'
 
 export const apiWheelEffects = {
 	getHistory: ({ path: { login } }: GetWheelEffectsHistory['request']) =>
@@ -18,25 +19,31 @@ export const apiWheelEffects = {
 			.get<GetWheelEffectsHistory>(`/wheel-effects/${login}/history`)
 			.then(({ body: effects }) => effects.map(convertRolledWheelEffectDto)),
 
-	getAvailableWheelEffects: () =>
+	getAvailable: () =>
 		http
-			.get<GetWheelEffectsAvailable>('/wheel-effects/available/roll/count')
+			.get<GetWheelEffectsAvailable>('/wheel-effects/available')
 			.then(({ body }) => body),
 
-	postRoll: () =>
+	postRoll: (): Promise<WheelResult> =>
 		http
 			.post<PostRollWheelEffect>('/wheel-effects/available/roll')
-			.then(({ body: effect }) => effect.map(convertRolledWheelEffectDto)),
+			.then(
+				({ body: effect }) =>
+					effect.map(convertRolledWheelEffectDto) as WheelResult,
+			),
 
 	getAvailableCount: () =>
 		http
 			.get<GetAvailableWheelEffectCount>('/wheel-effects/available/roll/count')
 			.then(({ body }) => body),
 
-	getLastRolled: () =>
+	getLastRolled: (): Promise<WheelResult> =>
 		http
 			.get<GetLastRolledWheelEffects>('/wheel-effects/available/roll/last')
-			.then(({ body }) => convertRolledWheelEffectDto(body)),
+			.then(
+				({ body: effects }) =>
+					effects.map(convertRolledWheelEffectDto) as WheelResult,
+			),
 
 	postApplyRoll: ({ body }: PostApplyWheelEffectRoll['request']) =>
 		http

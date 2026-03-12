@@ -1,9 +1,51 @@
 <script setup lang="ts">
+import UiButton from '../../components/ui/UiButton.vue'
 import { RouterLink } from 'vue-router'
+import { useFeatureWheelStore } from '../../stores/feature/featureWheelStore'
+import { computed, onMounted } from 'vue'
+import { funnyEffects } from './constants/funnyEffects'
 
-const visibleItems = 5
+const visibleCount = 5
 
-const onRollButtonClick = () => {}
+const wheelStore = useFeatureWheelStore()
+
+const getRandomNumber = (min: number, max: number) => {
+	return Math.floor(Math.random() * (max - min) + min)
+}
+
+const getRandomItems = <T,>(collection: T[], count: number = 1): T[] => {
+	const randomizedCollection: T[] = []
+
+	for (let i = 0; i < count; i++) {
+		if (collection.length <= count) break
+
+		getRandomNumber(0, collection.length)
+		randomizedCollection.push(collection.at(i)!)
+	}
+
+	return randomizedCollection
+}
+
+const visibleEffects = computed(() => {
+	if (wheelStore.currentEffects) {
+		return wheelStore.currentEffects
+	}
+
+	if (wheelStore.availableEffects) {
+		return getRandomItems(wheelStore.availableEffects, 5)
+	}
+
+	return getRandomItems(funnyEffects, 5)
+})
+
+const onRollButtonClick = () => {
+	wheelStore.roll()
+}
+
+onMounted(() => {
+	wheelStore.getLastRoll()
+	wheelStore.getAvailableEffects()
+})
 </script>
 
 <template>
@@ -21,19 +63,23 @@ const onRollButtonClick = () => {}
 			<div
 				class="h-40 w-30 border border-slate-500"
 				:key="i"
-				v-for="i in visibleItems"
+				v-for="i in visibleCount"
 			>
-				{{ i }}
+				{{ visibleEffects.at(i)?.name ?? 'кто прочитал тот фурри' }}
 			</div>
 		</div>
 
-		<button
-			class="w-fit cursor-pointer justify-self-center bg-slate-200 px-8 py-2 hover:bg-slate-300"
-			@click="onRollButtonClick"
-		>
+		<UiButton class="roll-button" @click="onRollButtonClick">
+			<!-- :disabled="wheelStore.pendingRoll" -->
 			Прокрутить
-		</button>
+		</UiButton>
 	</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.roll-button {
+	height: 56px;
+	width: 224px;
+	justify-self: center;
+}
+</style>

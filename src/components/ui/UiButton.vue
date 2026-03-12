@@ -10,6 +10,7 @@ import { useSettingsStore } from '../../stores/settingsStore'
 type Props = {
 	fillStyle?: FillStyle
 	fillColor?: string
+	disabled?: boolean
 }
 
 const { fillStyle = 'solid' } = defineProps<Props>()
@@ -81,6 +82,11 @@ watch([svg, roughSvg, roughnessModifier], () => {
 	overflow: visible;
 	height: 100%;
 	width: 100%;
+}
+
+.button[disabled] {
+	opacity: 40%;
+	pointer-events: none;
 }
 
 .svg {

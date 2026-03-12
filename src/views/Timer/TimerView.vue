@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Temporal } from '@js-temporal/polyfill'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { TimerState } from '../../api-facade/models'
 import UiButton from '../../components/ui/UiButton.vue'
@@ -40,13 +40,16 @@ const onStartButtonClick = () => {
 	timerStore.toggle()
 }
 
-const onFinishButtonClick = () => {
-	gameStore.finish()
-}
-
-const onCancelButtonClick = () => {
-	gameStore.cancel()
-}
+watch(
+	() => isTimerLoading.value,
+	(timerLoading) => console.log({ timerLoading }),
+	{ immediate: true },
+)
+watch(
+	() => timerStore.canToggle,
+	(canToggle) => console.log({ canToggle }),
+	{ immediate: true },
+)
 </script>
 
 <template>
@@ -67,7 +70,7 @@ const onCancelButtonClick = () => {
 			<div class="grid grid-cols-2 grid-rows-2">
 				<button
 					class="row-span-2 w-fit border-2 border-black px-5 py-3 text-2xl not-disabled:cursor-pointer disabled:opacity-50"
-					:disabled="isTimerLoading || timerStore.canToggle"
+					:disabled="isTimerLoading || !timerStore.canToggle"
 					@click="onStartButtonClick"
 				>
 					<svg

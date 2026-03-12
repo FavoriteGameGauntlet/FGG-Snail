@@ -4,7 +4,7 @@ import { usePersistentRef } from '../composables/usePersistentRef'
 import { StoreName } from '../enums/storeName'
 import { router } from '../router/router'
 import { persistentStorage, StoreKey } from '../services/persistentStorage'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
 export const useAuthStore = defineStore(StoreName.Auth, () => {
 	const { state: login, isReady: isLoginReady } = usePersistentRef(
@@ -16,7 +16,7 @@ export const useAuthStore = defineStore(StoreName.Auth, () => {
 		return login !== undefined
 	}
 
-	const isLoggedIn = computed(() => login.value !== null)
+	const isLoggedIn = computed(() => login.value !== undefined)
 
 	const signUp = async (data: {
 		login: string

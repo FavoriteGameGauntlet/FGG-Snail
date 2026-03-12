@@ -24,7 +24,9 @@ export const useApiTimerStore = defineStore(StoreName.ApiTimer, () => {
 	const durationLeft = ref(Temporal.Duration.from({ hours: 0 }))
 
 	const canStart = computed(() =>
-		[null, TimerState.Created, TimerState.Paused].includes(state.value),
+		[null, TimerState.Created, TimerState.Paused, TimerState.Finished].includes(
+			state.value,
+		),
 	)
 
 	const canPause = computed(() => state.value === TimerState.Running)
