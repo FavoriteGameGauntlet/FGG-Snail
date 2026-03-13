@@ -39,17 +39,6 @@ const timerButtonSvg = computed(() =>
 const onStartButtonClick = () => {
 	timerStore.toggle()
 }
-
-watch(
-	() => isTimerLoading.value,
-	(timerLoading) => console.log({ timerLoading }),
-	{ immediate: true },
-)
-watch(
-	() => timerStore.canToggle,
-	(canToggle) => console.log({ canToggle }),
-	{ immediate: true },
-)
 </script>
 
 <template>

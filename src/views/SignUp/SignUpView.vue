@@ -24,8 +24,6 @@ const serverError = ref<string>()
 watch(
 	login,
 	(name) => {
-		console.log(name, /^[a-zA-Z0-9_]+$/.test(name))
-
 		if (!name) {
 			errors.value.name = 'Обязательное поле'
 			return
