@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import UiButton from '../../components/ui/UiButton.vue'
-import { ref, useTemplateRef, watch, watchEffect } from 'vue'
-import { useSettingsStore } from '../../stores/settingsStore'
-import UiTimestamp from '../../components/ui/UiTimestamp.vue'
-import { useTimeSync } from '../../composables/useTimeSync'
 import { Temporal } from '@js-temporal/polyfill'
+import { storeToRefs } from 'pinia'
+import { computed, ref, useTemplateRef, watch, watchEffect } from 'vue'
+import UiButton from '../../components/ui/UiButton.vue'
+import UiTimestamp from '../../components/ui/UiTimestamp.vue'
+import { useTimer } from '../../composables/useTimer'
+import { useSettingsStore } from '../../stores/settingsStore'
 
 const button = useTemplateRef('button')
 
@@ -28,26 +28,21 @@ watch([roughnessValue], () => {
 		: +roughnessValue.value
 })
 
-const elapsed = ref(Temporal.Duration.from({ seconds: 0 }))
-let baseElapsed = Temporal.Duration.from({ seconds: 0 })
-let startedAt: Temporal.Instant | null = null
-let stopTimeSync: (() => void) | null = null
+const { elapsed, start, stop, isRunning } = useTimer('add')
 
-const start = () => {
-	if (stopTimeSync) return
-	;({ stop: stopTimeSync, startedAt } = useTimeSync(({ now }) => {
-		elapsed.value = baseElapsed.add(now.since(startedAt!))
-	}))
+const onToggleButton = () => {
+	if (isRunning.value) {
+		stop()
+	} else {
+		start()
+	}
 }
 
-const stop = () => {
-	if (!stopTimeSync) return
-
-	stopTimeSync()
-	stopTimeSync = null
-	baseElapsed = elapsed.value
-	startedAt = null
+const onAddTimeButton = () => {
+	elapsed.value = elapsed.value.with({ seconds: elapsed.value.seconds + 10 })
 }
+
+const toggleButtonText = computed(() => (isRunning.value ? 'Стоп' : 'Старт'))
 </script>
 
 <template>
@@ -55,8 +50,19 @@ const stop = () => {
 		<div class="big">
 			<UiTimestamp :time="elapsed" />
 
-			<UiButton class="time-button" @click="start">Start</UiButton>
-			<UiButton class="time-button" @click="stop">Stop</UiButton>
+			<UiButton class="time-button" @click="onToggleButton">{{
+				toggleButtonText
+			}}</UiButton>
+
+			<UiButton class="time-button" @click="onAddTimeButton">+ 10 sec</UiButton>
+		</div>
+
+		<div class="many">
+			<UiTimestamp
+				v-for="i in 100"
+				:key="i"
+				:time="elapsed.add({ seconds: 10 * i })"
+			/>
 		</div>
 
 		<div class="flex w-240 flex-col">
@@ -64,7 +70,7 @@ const stop = () => {
 				ref="button"
 				class="flex w-full flex-row flex-wrap overflow-visible border-4 border-dashed border-black/20"
 			>
-				<UiButton class="button" :key="i" v-for="i in 100"> Test </UiButton>
+				<UiButton class="button" :key="i" v-for="i in 10"> Test </UiButton>
 			</div>
 
 			<code>roughness</code>
