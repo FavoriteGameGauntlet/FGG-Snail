@@ -11,17 +11,28 @@ const onLogOutButtonClick = () => {
 </script>
 
 <template>
-	<div class="flex flex-col gap-2 text-sm leading-[110%]" v-show="login">
+	<div class="user-profile" v-show="login">
 		<span>{{ login }}</span>
-		<button
-			class="hover:cursor-pointer hover:underline"
-			@click="onLogOutButtonClick"
-		>
-			Выход
-		</button>
+		<button class="logout-button" @click="onLogOutButtonClick">Выход</button>
 	</div>
 </template>
 
 <style scoped>
 @reference '@/style.css';
+
+.user-profile {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	font-size: 14px;
+	line-height: 110%;
+}
+
+.logout-button {
+	cursor: pointer;
+}
+
+.logout-button:hover {
+	text-decoration: underline;
+}
 </style>

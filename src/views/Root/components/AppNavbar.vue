@@ -2,53 +2,42 @@
 import { RouteName } from '../../../router/routeNames'
 import { useApiWheelStore } from '../../../stores/api/apiWheelStore'
 import UserProfile from './UserProfile.vue'
+import NavbarLink from './NavbarLink.vue'
 
 const wheelStore = useApiWheelStore()
 </script>
 
 <template>
-	<div class="flex items-center justify-between px-7">
+	<div class="navbar">
 		<UserProfile />
 
-		<div class="col-3 flex gap-5">
-			<RouterLink
-				class="text-blue-500 hover:underline"
-				:to="{ name: RouteName.Timer }"
-			>
-				Таймер
-			</RouterLink>
+		<div class="navbar__links">
+			<NavbarLink :to="RouteName.Timer"> Таймер </NavbarLink>
 
-			<RouterLink
-				class="text-blue-500 hover:underline"
-				:to="{ name: RouteName.Players }"
-			>
-				Игроки
-			</RouterLink>
+			<NavbarLink :to="RouteName.Players"> Игроки </NavbarLink>
 
-			<RouterLink
-				class="text-blue-500 hover:underline"
-				:to="{ name: RouteName.WheelRolls }"
-			>
+			<NavbarLink :to="RouteName.WheelRolls">
 				Роллы {{ wheelStore.pendingRoll ? '🔵' : '' }}
-			</RouterLink>
+			</NavbarLink>
 
-			<RouterLink
-				class="text-blue-500 hover:underline"
-				:to="{ name: RouteName.Games }"
-			>
-				Игры
-			</RouterLink>
+			<NavbarLink :to="RouteName.Games"> Игры </NavbarLink>
 
-			<RouterLink
-				class="text-blue-500 hover:underline"
-				:to="{ name: RouteName.Dev }"
-			>
-				Dev
-			</RouterLink>
+			<NavbarLink :to="RouteName.Dev"> Dev </NavbarLink>
 		</div>
 	</div>
 </template>
 
 <style scoped>
-@reference '@/style.css';
+.navbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-left: 1.75rem;
+	padding-right: 1.75rem;
+}
+
+.navbar__links {
+	display: flex;
+	gap: 1.25rem;
+}
 </style>
