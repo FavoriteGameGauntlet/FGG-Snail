@@ -2,18 +2,19 @@ import { Temporal } from '@js-temporal/polyfill'
 import { computed, ref } from 'vue'
 import { useTimeSync } from './useTimeSync'
 
-export const useTimer = (mode: 'add' | 'subtract' = 'add') => {
+type Options = {
+	mode?: 'add' | 'subtract'
+	initialElapsed?: Temporal.Duration
+}
+
+export const useTimer = ({
+	mode = 'add',
+	initialElapsed = Temporal.Duration.from({ seconds: 0 }),
+}: Options = {}) => {
 	const elapsed = ref(Temporal.Duration.from({ seconds: 0 }))
-	let baseElapsed = Temporal.Duration.from({ seconds: 0 })
+	let baseElapsed = initialElapsed
 	let startedAt: Temporal.Instant | null = null
 	const stopTimeSync = ref<(() => void) | null>(null)
-
-	const updateElapsed = (time: Temporal.Instant = Temporal.Now.instant()) => {
-		elapsed.value = baseElapsed[mode](time.since(startedAt!)).round({
-			largestUnit: 'hour',
-			roundingMode: 'trunc',
-		})
-	}
 
 	const stop = () => {
 		if (!stopTimeSync.value) return
@@ -24,22 +25,38 @@ export const useTimer = (mode: 'add' | 'subtract' = 'add') => {
 		startedAt = null
 	}
 
+	const updateElapsed = (time: Temporal.Instant = Temporal.Now.instant()) => {
+		elapsed.value = baseElapsed[mode](time.since(startedAt!)).round({
+			largestUnit: 'hour',
+			roundingMode: 'trunc',
+		})
+	}
+
 	const start = () => {
 		if (stopTimeSync.value) return
-		;({ stop: stopTimeSync.value, startedAt } = useTimeSync(({ now }) =>
-			updateElapsed(now),
+
+		let newStartedAt
+		;({ stop: stopTimeSync.value, startedAt: newStartedAt } = useTimeSync(
+			({ now }) => updateElapsed(now),
 		))
+
+		startedAt =
+			mode === 'add' ? newStartedAt : newStartedAt?.add({ seconds: 1 })
 
 		updateElapsed()
 	}
 
 	const set = (newElapsed: Temporal.Duration) => {
-		const now = Temporal.Now.instant()
+		if (startedAt) {
+			const diff = newElapsed.subtract(elapsed.value)
+			startedAt = startedAt[mode === 'add' ? 'subtract' : 'add'](diff) ?? null
+			startedAt = mode === 'add' ? startedAt : startedAt?.add({ seconds: 1 })
 
-		baseElapsed = Temporal.Duration.from(newElapsed)
-		startedAt = now
-
-		updateElapsed(now)
+			updateElapsed()
+		} else {
+			baseElapsed = newElapsed
+			elapsed.value = newElapsed
+		}
 	}
 
 	return {

@@ -9,6 +9,7 @@ export const useTimeSync = (
 	}) => void,
 ) => {
 	const startedAt = Temporal.Now.instant()
+	console.log('time sync started at', startedAt.toString())
 	const startedAtMillis = startedAt.epochMilliseconds % 1000
 	let stopped = false
 

@@ -28,7 +28,7 @@ watch([roughnessValue], () => {
 		: +roughnessValue.value
 })
 
-const { elapsed, start, stop, isRunning } = useTimer('add')
+const { elapsed, start, stop, isRunning } = useTimer({ mode: 'add' })
 
 const onToggleButton = () => {
 	if (isRunning.value) {
@@ -39,7 +39,11 @@ const onToggleButton = () => {
 }
 
 const onAddTimeButton = () => {
-	elapsed.value = elapsed.value.with({ seconds: elapsed.value.seconds + 10 })
+	elapsed.value = elapsed.value.add({ seconds: 10 })
+}
+
+const onSubTimeButton = () => {
+	elapsed.value = elapsed.value.subtract({ seconds: 10 })
 }
 
 const toggleButtonText = computed(() => (isRunning.value ? 'Стоп' : 'Старт'))
@@ -55,6 +59,7 @@ const toggleButtonText = computed(() => (isRunning.value ? 'Стоп' : 'Ста�
 			}}</UiButton>
 
 			<UiButton class="time-button" @click="onAddTimeButton">+ 10 sec</UiButton>
+			<UiButton class="time-button" @click="onSubTimeButton">- 10 sec</UiButton>
 		</div>
 
 		<div class="many">

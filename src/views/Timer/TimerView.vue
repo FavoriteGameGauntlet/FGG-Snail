@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Temporal } from '@js-temporal/polyfill'
 import { storeToRefs } from 'pinia'
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { TimerState } from '../../api-facade/models'
 import UiButton from '../../components/ui/UiButton.vue'
@@ -11,14 +10,17 @@ import { RouteName } from '../../router/routeNames'
 import { useApiWheelStore } from '../../stores/api/apiWheelStore'
 import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
 import { useFeatureTimerStore } from '../../stores/feature/featureTimerStore'
+import GameTimer from './components/GameTimer.vue'
+import WheelTimer from './components/WheelTimer.vue'
+import { useAuthStore } from '../../stores/authStore'
 
 const timerStore = useFeatureTimerStore()
 const gameStore = useFeatureGameStore()
 const wheelStore = useApiWheelStore()
+const authStore = useAuthStore()
 
 const {
 	durationTotal,
-	durationLeft,
 	state,
 	loading: isTimerLoading,
 } = storeToRefs(timerStore)
@@ -51,10 +53,7 @@ const onStartButtonClick = () => {
 				{{ gameNameText }}
 			</RouterLink>
 
-			<UiTimestamp
-				class="text-massive w-fit min-w-fit shrink-0 font-bold"
-				:time="durationLeft"
-			/>
+			<WheelTimer class="text-massive w-fit min-w-fit shrink-0 font-bold" />
 
 			<div class="grid grid-cols-2 grid-rows-2">
 				<button
@@ -79,12 +78,10 @@ const onStartButtonClick = () => {
 
 				<div class="w-fit place-self-end text-xl">
 					В игре:
-					<UiTimestamp
+					<GameTimer
 						class="inline"
-						:time="
-							gameStore.current?.timeSpent ??
-							Temporal.Duration.from({ hours: 0, minutes: 0, seconds: 0 })
-						"
+						v-if="authStore.login"
+						:login="authStore.login"
 					/>
 				</div>
 			</div>
