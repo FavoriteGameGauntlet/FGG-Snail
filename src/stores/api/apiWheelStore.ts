@@ -22,6 +22,8 @@ export const useApiWheelStore = defineStore(StoreName.ApiWheel, () => {
 	}
 
 	const getAvailableEffects = async () => {
+		if (availableEffects.value) return
+
 		await api.wheelEffects.getAvailable().then((effects) => {
 			availableEffects.value = effects
 		})
