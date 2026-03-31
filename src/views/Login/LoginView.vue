@@ -5,6 +5,7 @@ import { type HttpErrorResponse } from '../../api-facade/http'
 import { usePersistentRef } from '../../composables/usePersistentRef'
 import { StoreKey } from '../../services/persistentStorage'
 import { useAuthStore } from '../../stores/authStore'
+import { RouteName } from '../../router/routeNames'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -84,20 +85,33 @@ watch(
 	{ immediate: true },
 )
 
+const tryLogIn = async () =>
+	authStore
+		.logIn({ login: login.value, password: password.value })
+		.then(() => router.push({ name: RouteName.Timer }))
+		.catch((e) => {
+			if (e.body?.code === 'WRONG_AUTH_DATA') {
+				isAuthError.value = true
+
+				return
+			}
+
+			throw e
+		})
+
 const onFormSubmit = () => {
 	isLoginDirty.value = true
 	isPasswordDirty.value = true
 
 	if (Object.values(errors.value).filter(Boolean).length) return
 
-	authStore
-		.logIn({ login: login.value, password: password.value })
-		.then(() => router.push('/'))
-		.catch((e: HttpErrorResponse) => {
-			if (e.body?.code === 'WRONG_AUTH_DATA') {
-				isAuthError.value = true
-			}
-		})
+	tryLogIn().catch((e: HttpErrorResponse) => {
+		if (e.status === 409) {
+			authStore.logOut()
+
+			router.push({ name: RouteName.Timer })
+		}
+	})
 }
 
 onMounted(async () => {
