@@ -1,4 +1,4 @@
-import { WheelEffect } from '../../../api-facade/models'
+import type { WheelEffect } from '../../../api-facade/models/wheel-effects-models'
 
 /** just mock effects as a stub before normal ones load */
 export const funnyEffects: WheelEffect[] = [

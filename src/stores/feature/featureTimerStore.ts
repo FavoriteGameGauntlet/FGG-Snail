@@ -2,16 +2,14 @@ import { defineStore } from 'pinia'
 import { computed, watch } from 'vue'
 import { LoadingState } from '../../composables/useLoading'
 import { StoreName } from '../../enums/storeName'
-import { useApiGameStore } from '../api/apiGameStore'
 import { useApiTimerStore } from '../api/apiTimerStore'
-import { useApiWheelStore } from '../api/apiWheelStore'
 import { useAuthStore } from '../authStore'
 
 export const useFeatureTimerStore = defineStore(StoreName.FeatureTimer, () => {
 	const timerStore = useApiTimerStore()
 	const authStore = useAuthStore()
-	const gameStore = useApiGameStore()
-	const wheelStore = useApiWheelStore()
+	// const gameStore = useApiGameStore()
+	// const wheelStore = useApiWheelStore()
 
 	const state = computed(() => timerStore.state)
 

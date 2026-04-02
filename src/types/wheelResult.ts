@@ -1,4 +1,7 @@
-import { RolledWheelEffect, RolledWheelEffectDto } from '../api-facade/models'
+import {
+	RolledWheelEffect,
+	RolledWheelEffectDto,
+} from '../api-facade/models/wheel-effects-models'
 
 type Tuple<
 	Item,

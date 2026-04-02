@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, watch } from 'vue'
-import { TimerState } from '../../api-facade/models'
+import { TimerState } from '../../api-facade/models/timers-models'
 import { StoreName } from '../../enums/storeName'
 import { useApiTimerStore } from '../api/apiTimerStore'
 import { useApiWheelStore } from '../api/apiWheelStore'

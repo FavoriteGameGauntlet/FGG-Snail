@@ -7,6 +7,9 @@ export const enum StoreName {
 	ApiTimer = 'api-timer',
 	FeatureTimer = 'feature-timer',
 
+	ApiUser = 'api-user',
+	FeatureUser = 'feature-user',
+
 	ApiWheel = 'api-wheel',
 	FeatureWheel = 'feature-wheel',
 

@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
 import { computed, watch } from 'vue'
-import { CurrentGame, WishlistedGame } from '../../api-facade/models'
+import type {
+	CurrentGame,
+	WishlistedGame,
+} from '../../api-facade/models/games-models'
 import { LoadingState } from '../../composables/useLoading'
 import { StoreName } from '../../enums/storeName'
 import { useApiGameStore } from '../api/apiGameStore'

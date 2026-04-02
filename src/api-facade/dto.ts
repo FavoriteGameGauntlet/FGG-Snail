@@ -1,18 +1,18 @@
 import { Temporal } from '@js-temporal/polyfill'
+import type { CurrentGame, CurrentGameDto } from './models/games-models'
+import type { Timer, TimerDto } from './models/timers-models'
 import type {
-	CurrentGame,
-	CurrentGameDto,
+	RolledWheelEffect,
+	RolledWheelEffectDto,
+} from './models/wheel-effects-models'
+import type {
 	FreePointChangeResult,
 	FreePointChangeResultDto,
 	PointChangeResult,
 	PointChangeResultDto,
-	RolledWheelEffect,
-	RolledWheelEffectDto,
 	TerritoryPointChangeResult,
 	TerritoryPointChangeResultDto,
-	Timer,
-	TimerDto,
-} from './models'
+} from './models/points-models'
 
 export type DtoStringToDate<
 	Dto extends object,

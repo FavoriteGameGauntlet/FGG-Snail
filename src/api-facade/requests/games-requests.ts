@@ -1,4 +1,4 @@
-import type { CurrentGameDto, WishlistedGame } from '../models'
+import type { CurrentGameDto, WishlistedGame } from '../models/games-models'
 
 export type PostGamesWishlist = {
 	request: {

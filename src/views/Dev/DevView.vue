@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Temporal } from '@js-temporal/polyfill'
 import { storeToRefs } from 'pinia'
 import { computed, ref, useTemplateRef, watch, watchEffect } from 'vue'
 import UiButton from '../../components/ui/UiButton.vue'

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { api } from '../../api-facade/api'
 import { HttpErrorResponse } from '../../api-facade/http'
-import { TimerState } from '../../api-facade/models'
+import { TimerState } from '../../api-facade/models/timers-models'
 import { LoadingState, useLoading } from '../../composables/useLoading'
 import { StoreName } from '../../enums/storeName'
 

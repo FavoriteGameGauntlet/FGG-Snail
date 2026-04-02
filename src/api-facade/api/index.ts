@@ -1,6 +1,0 @@
-export { apiAuth } from './apiAuth'
-export { apiGames } from './apiGames'
-export { apiPoints } from './apiPoints'
-export { apiTimers } from './apiTimers'
-export { apiUsers } from './apiUsers'
-export { apiWheelEffects } from './apiWheelEffects'

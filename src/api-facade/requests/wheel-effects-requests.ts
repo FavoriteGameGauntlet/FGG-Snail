@@ -1,11 +1,9 @@
 import { WheelResultDto } from '../../types/wheelResult'
+import { FreePointChangeResultDto, PointChange } from '../models/points-models'
 import type {
-	FreePointChangeResultDto,
-	PointChange,
-	RolledWheelEffect,
 	RolledWheelEffectDto,
 	WheelEffect,
-} from '../models'
+} from '../models/wheel-effects-models'
 
 export type GetWheelEffectsHistory = {
 	request: {

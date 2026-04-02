@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { api } from '../../api-facade/api'
-import { RolledWheelEffect, WheelEffect } from '../../api-facade/models'
+import {
+	RolledWheelEffect,
+	WheelEffect,
+} from '../../api-facade/models/wheel-effects-models'
 import { StoreName } from '../../enums/storeName'
 import { WheelResult } from '../../types/wheelResult'
 

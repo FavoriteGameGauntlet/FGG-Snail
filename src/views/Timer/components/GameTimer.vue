@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Temporal } from '@js-temporal/polyfill'
 import { watch } from 'vue'
-import { TimerState } from '../../../api-facade/models'
+import { TimerState } from '../../../api-facade/models/timers-models'
 import UiTimestamp from '../../../components/ui/UiTimestamp.vue'
 import { useTimer } from '../../../composables/useTimer'
 import { useApiGameStore } from '../../../stores/api/apiGameStore'

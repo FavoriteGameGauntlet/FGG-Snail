@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { TimerState } from '../../api-facade/models'
+import { TimerState } from '../../api-facade/models/timers-models'
 import UiButton from '../../components/ui/UiButton.vue'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'
 import { LoadingState } from '../../composables/useLoading'

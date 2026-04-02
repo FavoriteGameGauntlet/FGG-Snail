@@ -1,11 +1,11 @@
 import { convertTimerDto } from '../dto'
 import { http } from '../http'
-import type { Timer } from '../models'
+import type { Timer } from '../models/timers-models'
 import type {
 	GetCurrentTimer,
 	PostPauseTimer,
 	PostStartTimer,
-} from '../requests'
+} from '../requests/timers-requests'
 
 export const apiTimers = {
 	getCurrent: (): Promise<Timer> =>

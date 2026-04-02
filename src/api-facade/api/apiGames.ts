@@ -7,7 +7,7 @@ import type {
 	GetGamesWishlist,
 	PostGamesRoll,
 	PostGamesWishlist,
-} from '../requests'
+} from '../requests/games-requests'
 
 export const apiGames = {
 	postWishlist: ({ body, path: { login } }: PostGamesWishlist['request']) =>

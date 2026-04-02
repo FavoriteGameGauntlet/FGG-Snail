@@ -1,4 +1,4 @@
-import type { Login } from '../models'
+import type { Login } from '../models/users-models'
 
 export type GetAllLogins = {
 	response: Login[]

@@ -11,7 +11,7 @@ import type {
 	GetWheelEffectsHistory,
 	PostApplyWheelEffectRoll,
 	PostRollWheelEffect,
-} from '../requests'
+} from '../requests/wheel-effects-requests'
 
 export const apiWheelEffects = {
 	getHistory: ({ path: { login } }: GetWheelEffectsHistory['request']) =>

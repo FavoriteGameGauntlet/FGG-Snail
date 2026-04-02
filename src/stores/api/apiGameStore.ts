@@ -2,7 +2,10 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { api } from '../../api-facade/api'
 import { type HttpErrorResponse } from '../../api-facade/http'
-import { type CurrentGame, type WishlistedGame } from '../../api-facade/models'
+import {
+	type CurrentGame,
+	type WishlistedGame,
+} from '../../api-facade/models/games-models'
 import { LoadingState, useLoading } from '../../composables/useLoading'
 import { StoreName } from '../../enums/storeName'
 

@@ -4,7 +4,7 @@ import type {
 	PointChangeResultDto,
 	PointInfo,
 	TerritoryPointChangeResultDto,
-} from '../models'
+} from '../models/points-models'
 
 export type GetPointsInfo = {
 	request: {

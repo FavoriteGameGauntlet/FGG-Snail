@@ -1,5 +1,5 @@
 import { http } from '../http'
-import type { PostLogIn, PostSignUp } from '../requests'
+import type { PostLogIn, PostSignUp } from '../requests/auth-requests'
 
 export const apiAuth = {
 	logIn: (request: PostLogIn['request']) =>
