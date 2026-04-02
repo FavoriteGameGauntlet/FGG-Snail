@@ -109,7 +109,7 @@ const onFormSubmit = () => {
 		if (e.status === 409) {
 			authStore.logOut()
 
-			router.push({ name: RouteName.Timer })
+			tryLogIn().then(() => router.push({ name: RouteName.Timer }))
 		}
 	})
 }
