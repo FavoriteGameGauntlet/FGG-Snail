@@ -44,20 +44,17 @@ const onStartButtonClick = () => {
 </script>
 
 <template>
-	<div class="flex size-full flex-col items-center justify-center">
-		<div class="mb-17 flex w-min flex-col gap-4 gap-x-4">
-			<RouterLink
-				class="w-fit max-w-fit overflow-auto text-3xl leading-[150%] font-bold"
-				:to="{ name: RouteName.GameRolls }"
-			>
+	<div class="timer-view">
+		<div class="container">
+			<RouterLink class="game-link" :to="{ name: RouteName.GameRolls }">
 				{{ gameNameText }}
 			</RouterLink>
 
-			<WheelTimer class="text-massive w-fit min-w-fit shrink-0 font-bold" />
+			<WheelTimer class="wheel-timer" />
 
-			<div class="grid grid-cols-2 grid-rows-2">
+			<div class="controls-grid">
 				<button
-					class="row-span-2 w-fit border-2 border-black px-5 py-3 text-2xl not-disabled:cursor-pointer disabled:opacity-50"
+					class="play-button"
 					:disabled="isTimerLoading || !timerStore.canToggle"
 					@click="onStartButtonClick"
 				>
@@ -70,13 +67,11 @@ const onStartButtonClick = () => {
 					></svg>
 				</button>
 
-				<div
-					class="w-fit place-self-end self-start justify-self-end font-mono text-xl"
-				>
+				<div class="total-time">
 					/ <UiTimestamp class="inline" :time="durationTotal" />
 				</div>
 
-				<div class="w-fit place-self-end text-xl">
+				<div class="game-time">
 					В игре:
 					<GameTimer
 						class="inline"
@@ -94,7 +89,7 @@ const onStartButtonClick = () => {
 					class="wheel-action-link"
 					:to="{ name: RouteName.WheelRolls }"
 				>
-					<UiButton>{{
+					<UiButton class="wheel-action-button">{{
 						wheelStore.pendingRoll ? 'Крути колесо!' : 'Ждём таймер...'
 					}}</UiButton>
 				</RouterLink>
@@ -104,8 +99,74 @@ const onStartButtonClick = () => {
 </template>
 
 <style scoped>
-.text-massive {
+.timer-view {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.container {
+	display: flex;
+	width: min-content;
+	flex-direction: column;
+	gap: 16px;
+	margin-bottom: 68px;
+}
+
+.game-link {
+	width: fit-content;
+	max-width: fit-content;
+	overflow: auto;
+	font-size: 1.875rem;
+	font-weight: 700;
+	line-height: 1.5;
+}
+
+.wheel-timer {
+	width: fit-content;
+	min-width: fit-content;
+	flex-shrink: 0;
 	font-size: 6rem;
+	font-weight: 700;
+}
+
+.controls-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: repeat(2, 1fr);
+}
+
+.play-button {
+	grid-row: span 2;
+	width: fit-content;
+	border: 2px solid black;
+	padding: 12px 20px;
+	font-size: 0.1rem;
+}
+
+.play-button:not(:disabled) {
+	cursor: pointer;
+}
+
+.play-button:disabled {
+	opacity: 0.5;
+}
+
+.total-time {
+	width: fit-content;
+	place-self: end start;
+	justify-self: end;
+	font-size: 1.25rem;
+	font-family: monospace;
+}
+
+.game-time {
+	width: fit-content;
+	place-self: end;
+	font-size: 1.25rem;
 }
 
 .wheel-action {
@@ -117,10 +178,15 @@ const onStartButtonClick = () => {
 	pointer-events: none;
 	user-select: none;
 	cursor: default;
-	opacity: 40%;
+	opacity: 0.4;
 }
 
 .wheel-action-link {
+	display: block;
 	width: 100%;
+}
+
+.wheel-action-button {
+	height: 72px;
 }
 </style>

@@ -49,34 +49,58 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="grid h-full place-content-center gap-12">
-		<RouterLink
-			class="place-self-center text-blue-500 hover:underline"
-			to="/rolls/games"
-		>
-			Игры
-		</RouterLink>
+	<div class="wheel-rolls-view">
+		<RouterLink class="nav-link" to="/rolls/games"> Игры </RouterLink>
 
-		<h1 class="text-center text-4xl font-semibold">Роллы</h1>
+		<h1 class="title">Роллы</h1>
 
-		<div class="flex gap-4 border border-slate-200">
-			<div
-				class="h-40 w-30 border border-slate-500"
-				:key="i"
-				v-for="i in visibleCount"
-			>
+		<div class="effects-grid">
+			<div class="effect-card" :key="i" v-for="i in visibleCount">
 				{{ visibleEffects.at(i)?.name ?? 'кто прочитал тот фурри' }}
 			</div>
 		</div>
 
 		<UiButton class="roll-button" @click="onRollButtonClick">
-			<!-- :disabled="wheelStore.pendingRoll" -->
 			Прокрутить
 		</UiButton>
 	</div>
 </template>
 
 <style scoped>
+.wheel-rolls-view {
+	display: grid;
+	height: 100%;
+	place-content: center;
+	gap: 48px;
+}
+
+.nav-link {
+	place-self: center;
+	color: #3b82f6;
+}
+
+.nav-link:hover {
+	text-decoration: underline;
+}
+
+.title {
+	text-align: center;
+	font-size: 2.25rem;
+	font-weight: 600;
+}
+
+.effects-grid {
+	display: flex;
+	gap: 16px;
+	border: 1px solid #e2e8f0;
+}
+
+.effect-card {
+	height: 160px;
+	width: 120px;
+	border: 1px solid #64748b;
+}
+
 .roll-button {
 	height: 56px;
 	width: 224px;

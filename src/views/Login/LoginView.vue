@@ -6,6 +6,7 @@ import { usePersistentRef } from '../../composables/usePersistentRef'
 import { StoreKey } from '../../services/persistentStorage'
 import { useAuthStore } from '../../stores/authStore'
 import { RouteName } from '../../router/routeNames'
+import UiButton from '../../components/ui/UiButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -129,12 +130,12 @@ onMounted(async () => {
 </script>
 
 <template>
-	<div class="grid h-full w-full place-content-center gap-4">
-		<h1 class="w-60 text-3xl font-bold">Вход</h1>
+	<div class="login-view">
+		<h1 class="title">Вход</h1>
 
-		<form class="flex w-80 flex-col gap-2" @submit.prevent="onFormSubmit">
+		<form class="form" @submit.prevent="onFormSubmit">
 			<input
-				class="rounded-md border border-slate-400 px-2 py-0.5"
+				class="field"
 				placeholder="Логин"
 				ref="loginInput"
 				v-model.trim="login"
@@ -146,7 +147,7 @@ onMounted(async () => {
 			</div>
 
 			<input
-				class="rounded-md border border-slate-400 px-2 py-0.5"
+				class="field"
 				type="password"
 				placeholder="Пароль"
 				ref="passwordInput"
@@ -164,27 +165,68 @@ onMounted(async () => {
 
 			<div class="error" v-if="isAuthError">Неправильный логин или пароль.</div>
 
-			<button class="rounded-md bg-emerald-200 py-0.5">Войти</button>
+			<UiButton class="submit-button">Войти</UiButton>
 
-			<div class="place-self-center text-center text-sm">
+			<div class="signup-link">
 				Ещё не участвуешь в ивенте?
 
-				<RouterLink to="signup" class="text-cyan-700">
-					Зарегистрироваться
-				</RouterLink>
+				<RouterLink to="signup" class="link"> Зарегистрироваться </RouterLink>
 			</div>
 		</form>
 	</div>
 </template>
 
 <style scoped>
-@reference "@/style.css";
+.login-view {
+	display: grid;
+	place-content: center;
+	gap: 16px;
+	width: 100%;
+	height: 100%;
+}
+
+.title {
+	width: 240px;
+	font-size: 1.875rem;
+	font-weight: 700;
+}
+
+.form {
+	display: flex;
+	width: 320px;
+	flex-direction: column;
+	gap: 8px;
+}
 
 .field {
-	@apply rounded-md border border-slate-400 px-2 py-0.5;
+	border-radius: 6px;
+	border: 1px solid #94a3b8;
+	padding: 2px 8px;
 }
 
 .error {
-	@apply flex flex-col gap-1 rounded-md bg-red-50 px-2 py-1 text-sm leading-5 text-red-950;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	border-radius: 6px;
+	background-color: #fef2f2;
+	padding: 4px 8px;
+	font-size: 14px;
+	line-height: 1.25;
+	color: #291e1c;
+}
+
+.submit-button {
+	height: 48px;
+}
+
+.signup-link {
+	place-self: center;
+	text-align: center;
+	font-size: 14px;
+}
+
+.link {
+	color: #0e7490;
 }
 </style>

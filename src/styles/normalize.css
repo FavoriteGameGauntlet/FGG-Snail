@@ -203,10 +203,6 @@ Custom changes
 ==============
 */
 
-/*
-Fuck marigns
-*/
-
 h1,
 h2,
 h3,
@@ -215,4 +211,16 @@ h5,
 h6,
 p {
 	margin: 0;
+}
+
+button,
+input {
+	border: unset;
+	padding: unset;
+	background: unset;
+}
+
+a {
+	color: inherit;
+	text-decoration: unset;
 }
