@@ -1,40 +1,36 @@
+import css from '@eslint/css'
 import js from '@eslint/js'
+import pluginVue from 'eslint-plugin-vue'
+import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
-import pluginVue from 'eslint-plugin-vue'
-// import css from '@eslint/css'
-import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
+	globalIgnores(['src/assets/', 'src/vite-env.d.ts']),
 	{
 		files: ['**/*.{js,mjs,cjs,ts,mts,cts,vue}'],
 		plugins: { js },
 		extends: ['js/recommended'],
 		languageOptions: { globals: globals.browser },
+		rules: {
+			'@typescript-eslint/consistent-type-imports': 'error',
+		},
 	},
 	tseslint.configs.recommended,
-	pluginVue.configs['flat/essential'],
+	...pluginVue.configs['flat/essential'].map((config) => ({
+		...config,
+		files: ['**/*.vue'],
+	})),
 	{
 		files: ['**/*.vue'],
 		languageOptions: { parserOptions: { parser: tseslint.parser } },
 	},
-	// TS error?????
-	// {
-	// 	files: ['**/*.css'],
-	// 	plugins: { css: css },
-	// 	language: 'css/css',
-	// 	extends: ['css/recommended'],
-	// },
 	{
-		files: ['**/*.{ts,mts,cts,vue}'],
+		files: ['**/*.css'],
+		plugins: { css },
+		language: 'css/css',
 		rules: {
-			'@typescript-eslint/consistent-type-imports': [
-				'error',
-				{
-					prefer: 'type-imports',
-					fixStyle: 'inline-type-imports',
-				},
-			],
+			'css/no-duplicate-imports': 'error',
 		},
 	},
 ])

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
-import { Login } from '../../api-facade/models/users-models'
+import type { Login } from '../../api-facade/models/users-models'
 import { StoreName } from '../../enums/storeName'
 import { useApiUserStore } from '../api/apiUserStore'
 import { useAuthStore } from '../authStore'

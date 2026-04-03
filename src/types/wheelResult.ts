@@ -1,4 +1,4 @@
-import {
+import type {
 	RolledWheelEffect,
 	RolledWheelEffectDto,
 } from '../api-facade/models/wheel-effects-models'
