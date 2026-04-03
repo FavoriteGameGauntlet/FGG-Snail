@@ -13,8 +13,8 @@
 		"preview": "vite preview",
 		"tauri": "tauri",
 		"format": "prettier src/**/*{.vue,.ts} -w",
-		"lint": "eslint src/*",
-		"lint:fix": "eslint src/* --fix"
+		"lint": "eslint ./src",
+		"lint:fix": "eslint ./src --fix"
 	},
 	"dependencies": {
 		"@js-temporal/polyfill": "^0.5.1",
