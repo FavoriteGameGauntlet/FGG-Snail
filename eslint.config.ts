@@ -12,6 +12,9 @@ export default defineConfig([
 		plugins: { js },
 		extends: ['js/recommended'],
 		languageOptions: { globals: globals.browser },
+		rules: {
+			'@typescript-eslint/consistent-type-imports': 'error',
+		},
 	},
 	tseslint.configs.recommended,
 	...pluginVue.configs['flat/essential'].map((config) => ({
