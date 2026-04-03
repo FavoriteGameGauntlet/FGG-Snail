@@ -83,59 +83,104 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="flex w-full flex-col items-center px-12 py-8">
-		<div class="flex w-180 flex-col gap-8">
-			<h1 class="text-4xl">Игры</h1>
+	<div class="games-view">
+		<div class="container">
+			<h1 class="title">Игры</h1>
 
-			<form class="flex gap-4" @submit.prevent="onAddGameFormSubmit">
+			<form class="add-form" @submit.prevent="onAddGameFormSubmit">
 				<input
-					class="w-80 rounded-md border border-slate-300 bg-slate-100 px-3 py-1"
+					class="game-input"
 					ref="add-game-input"
 					placeholder="Название игры..."
 					:disabled="isLoading"
 					v-model.trim="gameName"
 				/>
 
-				<button
-					class="cursor-pointer bg-slate-100 px-4 py-1 hover:bg-slate-200 disabled:text-slate-500"
-					:disabled="isLoading"
-				>
-					Добавить
-				</button>
+				<button class="submit-button" :disabled="isLoading">Добавить</button>
 			</form>
 
-			<p class="w-fit rounded-md bg-slate-100 px-5 py-2" v-if="showCountHint">
+			<p class="hint" v-if="showCountHint">
 				Чтобы крутить следующую игру, надо 6 игр, нужно ещё
 				{{ 6 - wishlist.length }}.
 			</p>
 
-			<ol class="flex flex-col ps-10" v-if="wishlist.length">
-				<li class="list-decimal" :key="game.name" v-for="game in wishlist">
+			<ol class="game-list" v-if="wishlist.length">
+				<li :key="game.name" v-for="game in wishlist">
 					{{ game.name }}
 				</li>
 			</ol>
 
-			<p class="w-full" v-else-if="isLoading && !gameName.length">
+			<p class="message" v-else-if="isLoading && !gameName.length">
 				Загружаем игры...
 			</p>
 
-			<p class="w-full" v-else>У тебя ещё нет игр!</p>
+			<p class="message" v-else>У тебя ещё нет игр!</p>
 		</div>
 	</div>
 </template>
 
 <style scoped>
-@reference '@/style.css';
-
-.title-button {
-	@apply cursor-pointer px-4 py-2;
+.games-view {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	align-items: center;
+	padding: 32px 48px;
 }
 
-.game-row :where(.edit-icon, .trash-button) {
-	@apply hidden;
+.container {
+	display: flex;
+	width: 720px;
+	flex-direction: column;
+	gap: 32px;
 }
 
-.game-row:hover :where(.edit-icon, .trash-button) {
-	@apply block;
+.title {
+	font-size: 2.25rem;
+}
+
+.add-form {
+	display: flex;
+	gap: 16px;
+}
+
+.game-input {
+	width: 320px;
+	border-radius: 6px;
+	border: 1px solid #cbd5e1;
+	background-color: #f1f5f9;
+	padding: 4px 12px;
+}
+
+.submit-button {
+	cursor: pointer;
+	background-color: #f1f5f9;
+	padding: 4px 16px;
+}
+
+.submit-button:hover {
+	background-color: #e2e8f0;
+}
+
+.submit-button:disabled {
+	color: #64748b;
+}
+
+.hint {
+	width: fit-content;
+	border-radius: 6px;
+	background-color: #f1f5f9;
+	padding: 8px 20px;
+}
+
+.game-list {
+	display: flex;
+	flex-direction: column;
+	padding-left: 40px;
+	list-style: decimal;
+}
+
+.message {
+	width: 100%;
 }
 </style>

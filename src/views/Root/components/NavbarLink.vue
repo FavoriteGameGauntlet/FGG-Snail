@@ -36,7 +36,7 @@ function drawShapes() {
 
 	const bg = rc.rectangle(-4, -2, w + 8, h + 4, {
 		...opts,
-		fill: 'var(--color-blue-200)',
+		fill: '#bedbff',
 		fillStyle: 'solid',
 		stroke: 'transparent',
 		strokeWidth: 1.5,

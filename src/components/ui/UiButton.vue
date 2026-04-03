@@ -45,7 +45,7 @@ const makeRectangle = (
 	const { clientHeight, clientWidth } = svgElement
 
 	return roughSvg.rectangle(5, 5, clientWidth - 10, clientHeight - 10, {
-		fill: `var(--color-blue-300)`,
+		fill: `#8ec5ff`,
 		fillStyle,
 		roughness: roughnessModifier.value,
 		strokeWidth: 2.5,
@@ -67,16 +67,14 @@ watch([svg, roughSvg, roughnessModifier], () => {
 </script>
 
 <template>
-	<button class="button">
+	<button class="ui-button">
 		<svg class="svg" ref="svg"></svg>
 		<div class="slot"><slot /></div>
 	</button>
 </template>
 
 <style scoped>
-@reference '@/style.css';
-
-.button {
+.ui-button {
 	position: relative;
 	cursor: pointer;
 	overflow: visible;
@@ -84,7 +82,7 @@ watch([svg, roughSvg, roughnessModifier], () => {
 	width: 100%;
 }
 
-.button[disabled] {
+.ui-button[disabled] {
 	opacity: 40%;
 	pointer-events: none;
 }

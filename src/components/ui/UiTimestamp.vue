@@ -26,9 +26,14 @@ const formattedTime = computed(() => {
 </script>
 
 <template>
-	<div class="font-mono leading-[80%] tracking-normal">
+	<time class="ui-timestamp" :datetime="time.toString()">
 		{{ formattedTime }}
-	</div>
+	</time>
 </template>
 
-<style scoped></style>
+<style scoped>
+.ui-timestamp {
+	font-family: var(--font-mono);
+	line-height: 80%;
+}
+</style>

@@ -49,7 +49,7 @@ const toggleButtonText = computed(() => (isRunning.value ? 'Стоп' : 'Ста�
 </script>
 
 <template>
-	<div class="flex w-full flex-col">
+	<div class="dev-view">
 		<div class="big">
 			<UiTimestamp :time="elapsed" />
 
@@ -69,11 +69,8 @@ const toggleButtonText = computed(() => (isRunning.value ? 'Стоп' : 'Ста�
 			/>
 		</div>
 
-		<div class="flex w-240 flex-col">
-			<div
-				ref="button"
-				class="flex w-full flex-row flex-wrap overflow-visible border-4 border-dashed border-black/20"
-			>
+		<div class="controls">
+			<div ref="button" class="button-row">
 				<UiButton class="button" :key="i" v-for="i in 10"> Test </UiButton>
 			</div>
 
@@ -87,22 +84,49 @@ const toggleButtonText = computed(() => (isRunning.value ? 'Стоп' : 'Ста�
 </template>
 
 <style scoped>
-.button {
-	flex-basis: var(--basis);
-	height: 48px;
+.dev-view {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
 }
 
 .big {
-	height: 800px;
-	width: 100%;
 	display: flex;
-	font-size: 3rem;
+	width: 100%;
+	height: 600px;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	font-size: 3rem;
 }
 
 .time-button {
-	height: 80px;
+	width: 400px;
+	height: 96px;
+}
+
+.many {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.button-row {
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+	flex-wrap: wrap;
+	overflow: visible;
+	border: 4px dashed rgba(0, 0, 0, 0.2);
+}
+
+.button {
+	flex-basis: var(--basis);
+	height: 60px;
+}
+
+.controls {
+	display: flex;
+	width: 960px;
+	flex-direction: column;
 }
 </style>

@@ -1,0 +1,8 @@
+:root {
+	--font-sans:
+		'Excalifont', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+		'Apple Color Emoji', 'Segoe UI Emoji';
+	--font-mono:
+		'Comic Shanns', ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono',
+		Menlo, monospace;
+}

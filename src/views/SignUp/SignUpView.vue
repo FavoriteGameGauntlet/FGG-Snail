@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { type HttpErrorResponse } from '../../api-facade/http'
+import UiButton from '../../components/ui/UiButton.vue'
 import { useAuthStore } from '../../stores/authStore'
 
 const router = useRouter()
@@ -130,10 +131,10 @@ const onFormSubmit = () => {
 </script>
 
 <template>
-	<div class="grid h-full w-full place-content-center gap-4">
-		<h1 class="text-3xl font-bold">Регистрация</h1>
+	<div class="signup-view">
+		<h1 class="title">Регистрация</h1>
 
-		<form class="flex w-80 flex-col gap-2" @submit.prevent="onFormSubmit">
+		<form class="form" @submit.prevent="onFormSubmit">
 			<input
 				class="field"
 				placeholder="Логин"
@@ -173,27 +174,67 @@ const onFormSubmit = () => {
 				{{ serverError }}
 			</div>
 
-			<button class="cursor-pointer rounded-md bg-emerald-200 py-0.5">
-				Зарегистрироваться
-			</button>
+			<UiButton class="submit-button">Зарегистрироваться</UiButton>
 
-			<div class="place-self-center text-center text-sm">
+			<div class="login-link">
 				Уже есть аккаунт?
 
-				<RouterLink to="login" class="text-cyan-700"> Вход </RouterLink>
+				<RouterLink to="login" class="link"> Вход </RouterLink>
 			</div>
 		</form>
 	</div>
 </template>
 
 <style scoped>
-@reference "@/style.css";
+.signup-view {
+	display: grid;
+	place-content: center;
+	gap: 16px;
+	width: 100%;
+	height: 100%;
+}
+
+.title {
+	font-size: 1.875rem;
+	font-weight: 700;
+}
+
+.form {
+	display: flex;
+	width: 320px;
+	flex-direction: column;
+	gap: 8px;
+}
 
 .field {
-	@apply rounded-md border border-slate-400 px-2 py-0.5;
+	border-radius: 6px;
+	border: 1px solid #94a3b8;
+	padding: 2px 8px;
 }
 
 .error {
-	@apply flex flex-col gap-1 rounded-md bg-red-50 px-2 py-1 text-sm leading-5 text-red-950;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	border-radius: 6px;
+	background-color: #fef2f2;
+	padding: 4px 8px;
+	font-size: 14px;
+	line-height: 1.25;
+	color: #291e1c;
+}
+
+.submit-button {
+	height: 48px;
+}
+
+.login-link {
+	place-self: center;
+	text-align: center;
+	font-size: 14px;
+}
+
+.link {
+	color: #0e7490;
 }
 </style>

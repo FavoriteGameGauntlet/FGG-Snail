@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
-import { storeToRefs } from 'pinia'
+import UiButton from '../../components/ui/UiButton.vue'
 import { LoadingState } from '../../composables/useLoading'
+import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
 
 const gameStore = useFeatureGameStore()
 
@@ -52,67 +53,138 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="grid h-full place-content-center gap-12 pb-20">
-		<RouterLink
-			class="place-self-center text-blue-500 hover:underline"
-			to="/rolls/effects"
-		>
-			Эффекты
-		</RouterLink>
+	<div class="game-rolls-view">
+		<RouterLink class="effects-link" to="/rolls/effects"> Эффекты </RouterLink>
 
-		<h1 class="text-center text-4xl font-semibold">Роллы</h1>
+		<h1 class="title">Роллы</h1>
 
-		<div
-			class="flex h-40 w-full items-center justify-center gap-4 border border-slate-200"
-		>
+		<div class="roll-display">
 			<div>{{ rollText }}</div>
 		</div>
 
-		<div class="rounded-md bg-slate-200 px-8 py-4 empty:hidden">
-			<p v-if="current">
+		<div class="status-container">
+			<p v-if="current" class="current-game">
 				Ты сейчас играешь в {{ current?.name }}.
 
-				<button
-					class="cursor-pointer border-2 border-green-500 px-4 py-2 text-green-500"
-					@click="onFinishGameButtonClick"
-				>
+				<UiButton class="status-button" @click="onFinishGameButtonClick">
 					Закончить
-				</button>
+				</UiButton>
 
-				<button
-					class="cursor-pointer border-2 border-red-500 px-4 py-2 text-red-500"
-					@click="onCancelGameButtonClick"
-				>
+				<UiButton class="status-button" @click="onCancelGameButtonClick">
 					Бросить
-				</button>
+				</UiButton>
 			</p>
 
 			<p v-else-if="showWishlistCountHint" class="info-item">
 				Нужно хотя бы 6 игр в вишлисте, чтобы ролять новую.
 
-				<RouterLink
-					class="box-border border-2 border-blue-500 px-4 py-2 text-blue-500 hover:underline"
-					to="/games"
-				>
+				<RouterLink class="add-games-link" to="/games">
 					Добавить игры
 				</RouterLink>
 			</p>
 		</div>
 
-		<button
-			class="w-fit cursor-pointer justify-self-center bg-green-100 px-8 py-2 text-green-950 hover:bg-green-200 disabled:bg-slate-100 disabled:text-slate-400 disabled:hover:bg-slate-200"
-			:disabled="!canRoll"
-			@click="onRollButtonClick"
-		>
-			Прокрутить
-		</button>
+		<div class="action-row">
+			<UiButton
+				class="roll-button"
+				:disabled="!canRoll"
+				@click="onRollButtonClick"
+			>
+				Прокрутить
+			</UiButton>
+		</div>
 	</div>
 </template>
 
 <style scoped>
-@reference '@/style.css';
+.game-rolls-view {
+	display: grid;
+	height: 100%;
+	place-content: center;
+	gap: 48px;
+	padding-bottom: 80px;
+}
+
+.effects-link {
+	place-self: center;
+	color: #3b82f6;
+}
+
+.effects-link:hover {
+	text-decoration: underline;
+}
+
+.title {
+	text-align: center;
+	font-size: 2.25rem;
+	font-weight: 600;
+}
+
+.roll-display {
+	display: flex;
+	height: 160px;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	border: 1px solid #e2e8f0;
+}
+
+.status-container {
+	border-radius: 6px;
+	background-color: #e2e8f0;
+	padding: 16px 32px;
+}
+
+.status-container:empty {
+	display: none;
+}
+
+.current-game {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.status-button {
+	height: 72px;
+}
 
 .info-item {
-	@apply flex flex-col items-center gap-3 text-slate-950;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	color: #0f172a;
+}
+
+.add-games-link {
+	box-sizing: border-box;
+	border: 2px solid #3b82f6;
+	padding: 8px 16px;
+	color: #3b82f6;
+}
+
+.add-games-link:hover {
+	text-decoration: underline;
+}
+
+.roll-button {
+	height: 72px;
+	font-size: 1.25rem;
+	width: 240px;
+}
+
+.roll-button:disabled {
+	opacity: 0.5;
+}
+
+.roll-button:disabled:hover {
+	background-color: #e2e8f0;
+}
+
+.action-row {
+	display: flex;
+	justify-content: center;
 }
 </style>
