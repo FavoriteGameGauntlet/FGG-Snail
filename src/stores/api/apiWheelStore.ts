@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { api } from '../../api-facade/api'
-import {
+import type {
 	RolledWheelEffect,
 	WheelEffect,
 } from '../../api-facade/models/wheel-effects-models'
 import { StoreName } from '../../enums/storeName'
-import { WheelResult } from '../../types/wheelResult'
+import type { WheelResult } from '../../types/wheelResult'
 
 export const useApiWheelStore = defineStore(StoreName.ApiWheel, () => {
 	const availableRollCount = ref(0)

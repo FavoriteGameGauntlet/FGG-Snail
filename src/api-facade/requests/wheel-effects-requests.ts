@@ -1,5 +1,5 @@
-import { WheelResultDto } from '../../types/wheelResult'
-import { FreePointChangeResultDto, PointChange } from '../models/points-models'
+import type { WheelResultDto } from '../../types/wheelResult'
+import type { FreePointChangeResultDto, PointChange } from '../models/points-models'
 import type {
 	RolledWheelEffectDto,
 	WheelEffect,

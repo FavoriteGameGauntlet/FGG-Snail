@@ -1,4 +1,4 @@
-import { WheelResult } from '../../types/wheelResult'
+import type { WheelResult } from '../../types/wheelResult'
 import {
 	convertFreePointChangeResult,
 	convertRolledWheelEffectDto,

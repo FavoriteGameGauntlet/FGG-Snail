@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import rough from 'roughjs'
 import { useTemplateRef, watch, ref } from 'vue'
-import { RouteName } from '../../../router/routeNames'
+import type { RouteName } from '../../../router/routeNames'
 import { storeToRefs } from 'pinia'
 import { useSettingsStore } from '../../../stores/settingsStore'
 import { useResizeObserver } from '../../../composables/useResizeObserver'
