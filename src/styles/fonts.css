@@ -1,0 +1,9 @@
+@font-face {
+	font-family: 'Comic Shanns';
+	src: url('../assets/fonts/Comic Shanns.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Excalifont';
+	src: url('../assets/fonts/Excalifont Regular.woff2') format('woff2');
+}

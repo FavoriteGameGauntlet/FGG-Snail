@@ -1,14 +1,6 @@
-@import 'tailwindcss';
-
-@font-face {
-	font-family: 'Comic Shanns';
-	src: url('./assets/fonts/Comic Shanns.ttf') format('truetype');
-}
-
-@font-face {
-	font-family: 'Excalifont';
-	src: url('./assets/fonts/Excalifont Regular.woff2') format('woff2');
-}
+@import './styles/fonts.css';
+@import './styles/variables.css';
+@import './styles/normalize.css';
 
 html,
 body,
@@ -16,7 +8,26 @@ body,
 	block-size: 100%;
 }
 
-@theme {
-	--font-sans: 'Excalifont', ui-sans, system-ui, sans-serif;
-	--font-mono: 'Comic Shanns', ui-monospace, monospace;
+h1 {
+	font-size: 2rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+}
+
+h4 {
+	font-size: 1.125rem;
+}
+
+h5 {
+	font-size: 1.125rem;
+}
+
+h6 {
+	font-size: 1rem;
 }
