@@ -16,6 +16,10 @@ const mirrorText = ref('')
 
 const nameInput = useTemplateRef('nameInput')
 
+const displayName = computed(
+	() => userStore.currentUser.displayName ?? userStore.currentUser.login,
+)
+
 const isLoading = computed(
 	() => userStore.setDisplayLoading.state === LoadingState.LOADING,
 )
@@ -70,7 +74,7 @@ const onEscKeyDown = () => {
 			:disabled="userStore.getDisplayNameLoading.state === LoadingState.LOADING"
 			@click="onEditButtonClick"
 		>
-			{{ login }} <span class="pencil-icon">✏️</span>
+			{{ displayName }} <span class="pencil-icon">✏️</span>
 		</button>
 
 		<form class="name-form" v-else @submit.prevent="onFormSubmit">
