@@ -5,7 +5,11 @@ export type GetAllLogins = {
 }
 
 export type PostDisplayName = {
-	request: { body: string }
+	request: {
+		body: {
+			name: string
+		}
+	}
 }
 
 export type GetDisplayName = {

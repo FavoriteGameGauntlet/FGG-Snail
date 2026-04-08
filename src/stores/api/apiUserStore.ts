@@ -61,7 +61,7 @@ export const useApiUserStore = defineStore(StoreName.ApiUser, () => {
 		setDisplayLoading.state.value = LoadingState.LOADING
 
 		await api.users
-			.postDisplayName({ body: newName })
+			.postDisplayName({ body: { name: newName } })
 			.then(() => {
 				setDisplayLoading.state.value = LoadingState.LOADED
 			})
