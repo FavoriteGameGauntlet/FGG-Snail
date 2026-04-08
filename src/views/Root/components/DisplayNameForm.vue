@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import { LoadingState } from '../../../composables/useLoading'
-import { useAuthStore } from '../../../stores/authStore'
 import { useFeatureUserStore } from '../../../stores/feature/featureUserStore'
 
-const authStore = useAuthStore()
 const userStore = useFeatureUserStore()
-
-const { login } = storeToRefs(authStore)
 
 const showForm = ref(false)
 const newName = ref<string | null>(null)
@@ -43,16 +38,26 @@ const onEditButtonClick = async () => {
 }
 
 const onFormSubmit = () => {
-	if (!newName.value || isLoading.value) {
+	let trimmedName = newName.value?.trim()
+
+	if (!trimmedName || isLoading.value) {
 		return
 	}
 
-	if (newName.value === userStore.currentUser.displayName) {
+	if (trimmedName === userStore.currentUser.displayName) {
 		closeForm()
 		return
 	}
 
-	userStore.setDisplayName(newName.value).then(() => {
+	if (trimmedName.length < 1) {
+		throw new Error('Display name validation error')
+	}
+
+	if (trimmedName.length > 70) {
+		trimmedName = trimmedName.slice(0, 70)
+	}
+
+	userStore.setDisplayName(trimmedName).then(() => {
 		showForm.value = false
 	})
 }
