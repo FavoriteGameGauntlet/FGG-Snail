@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
-import { StoreName } from '../../enums/storeName'
 import { ref } from 'vue'
 import { api } from '../../api-facade/api'
+import type { HttpErrorResponse } from '../../api-facade/http'
 import { type Login } from '../../api-facade/models/users-models'
 import { LoadingState, useLoading } from '../../composables/useLoading'
 import { usePersistentRef } from '../../composables/usePersistentRef'
+import { StoreName } from '../../enums/storeName'
 import { StoreKey } from '../../services/persistentStorage'
 
 export const useApiUserStore = defineStore(StoreName.ApiUser, () => {
@@ -47,6 +48,12 @@ export const useApiUserStore = defineStore(StoreName.ApiUser, () => {
 				getDisplayNameLoading.state.value = LoadingState.LOADED
 			})
 			.catch((error) => {
+				if (error.status === 404) {
+					currentUserDisplayName.value = undefined
+					getDisplayNameLoading.state.value = LoadingState.LOADED
+					return
+				}
+
 				getDisplayNameLoading.state.value = LoadingState.ERROR
 
 				throw error
@@ -65,7 +72,7 @@ export const useApiUserStore = defineStore(StoreName.ApiUser, () => {
 			.then(() => {
 				setDisplayLoading.state.value = LoadingState.LOADED
 			})
-			.catch((error) => {
+			.catch((error: HttpErrorResponse) => {
 				setDisplayLoading.state.value = LoadingState.ERROR
 				currentUserDisplayName.value = oldName
 
