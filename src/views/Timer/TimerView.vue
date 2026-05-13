@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router'
 import { TimerState } from '../../api-facade/models/timers-models'
 import UiButton from '../../components/ui/UiButton.vue'
 import UiTimestamp from '../../components/ui/UiTimestamp.vue'
-import { LoadingState } from '../../composables/useLoading'
+import { LoadingStatus } from '../../utils/loadingState'
 import { RouteName } from '../../router/routeNames'
 import { useApiWheelStore } from '../../stores/api/apiWheelStore'
 import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
@@ -27,7 +27,7 @@ const {
 const { current: currentGame } = storeToRefs(gameStore)
 
 const gameNameText = computed(() =>
-	gameStore.currentLoading.state === LoadingState.LOADED
+	gameStore.currentLoading.state === LoadingStatus.LOADED
 		? (currentGame.value?.name ?? 'Крути новую игру')
 		: 'Загрузка...',
 )

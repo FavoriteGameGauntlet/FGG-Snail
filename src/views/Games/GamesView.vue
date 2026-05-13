@@ -8,9 +8,9 @@ import {
 	watch,
 	watchEffect,
 } from 'vue'
-import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
-import { LoadingState } from '../../composables/useLoading'
 import { useAuthStore } from '../../stores/authStore'
+import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
+import { LoadingStatus } from '../../utils/loadingState'
 
 const gameStore = useFeatureGameStore()
 const authStore = useAuthStore()
@@ -20,7 +20,7 @@ const showCountHint = ref(false)
 
 const addGameInput = useTemplateRef('add-game-input')
 
-gameStore.wishlistLoading.on([LoadingState.LOADED]).then(() => {
+gameStore.wishlistLoading.on([LoadingStatus.LOADED]).then(() => {
 	showCountHint.value = !gameStore.enoughGamesInWishlist
 	addGameInput.value?.focus()
 })
@@ -28,7 +28,7 @@ gameStore.wishlistLoading.on([LoadingState.LOADED]).then(() => {
 const gameName = ref('')
 
 const isLoading = computed(
-	() => gameStore.wishlistLoading.state === LoadingState.LOADING,
+	() => gameStore.wishlistLoading.state === LoadingStatus.LOADING,
 )
 
 /** @todo extract validation */
@@ -65,7 +65,7 @@ const updateGamesOnLoginChange = () => {
 		() => authStore.login,
 		(login) => {
 			if (
-				[LoadingState.ERROR, LoadingState.INIT].includes(
+				[LoadingStatus.ERROR, LoadingStatus.INIT].includes(
 					gameStore.wishlistLoading.state,
 				) &&
 				login

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
-import { LoadingState } from '../../../composables/useLoading'
+import { LoadingStatus } from '../../../utils/loadingState'
 import { useFeatureUserStore } from '../../../stores/feature/featureUserStore'
 
 const userStore = useFeatureUserStore()
@@ -16,7 +16,7 @@ const displayName = computed(
 )
 
 const isLoading = computed(
-	() => userStore.setDisplayLoading.state === LoadingState.LOADING,
+	() => userStore.setDisplayLoading.state === LoadingStatus.LOADING,
 )
 
 watch(newName, (newName) => {
@@ -76,7 +76,9 @@ const onEscKeyDown = () => {
 		<button
 			class="edit-button"
 			v-if="!showForm"
-			:disabled="userStore.getDisplayNameLoading.state === LoadingState.LOADING"
+			:disabled="
+				userStore.getDisplayNameLoading.state === LoadingStatus.LOADING
+			"
 			@click="onEditButtonClick"
 		>
 			{{ displayName }} <span class="pencil-icon">✏️</span>

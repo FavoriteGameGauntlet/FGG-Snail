@@ -3,8 +3,8 @@ import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import UiButton from '../../components/ui/UiButton.vue'
-import { LoadingState } from '../../composables/useLoading'
 import { useFeatureGameStore } from '../../stores/feature/featureGameStore'
+import { LoadingStatus } from '../../utils/loadingState'
 
 const gameStore = useFeatureGameStore()
 
@@ -15,8 +15,8 @@ const rollText = ref('Загрузка...')
 const showWishlistCountHint = computed(
 	() =>
 		!gameStore.enoughGamesInWishlist &&
-		gameStore.currentLoading.state === LoadingState.LOADED &&
-		gameStore.wishlistLoading.state === LoadingState.LOADED,
+		gameStore.currentLoading.state === LoadingStatus.LOADED &&
+		gameStore.wishlistLoading.state === LoadingStatus.LOADED,
 )
 
 const onRollButtonClick = () => {
@@ -31,7 +31,7 @@ const onFinishGameButtonClick = () => {
 	gameStore.finish()
 }
 
-gameStore.currentLoading.on([LoadingState.LOADED]).then(() => {
+gameStore.currentLoading.on([LoadingStatus.LOADED]).then(() => {
 	watch(
 		current,
 		() => {
@@ -43,7 +43,7 @@ gameStore.currentLoading.on([LoadingState.LOADED]).then(() => {
 
 onMounted(() => {
 	if (
-		[LoadingState.ERROR, LoadingState.INIT].includes(
+		[LoadingStatus.ERROR, LoadingStatus.INIT].includes(
 			gameStore.wishlistLoading.state,
 		)
 	) {
@@ -66,13 +66,15 @@ onMounted(() => {
 			<p v-if="current" class="current-game">
 				Ты сейчас играешь в {{ current?.name }}.
 
-				<UiButton class="status-button" @click="onFinishGameButtonClick">
-					Закончить
-				</UiButton>
+				<span class="current-game-actions">
+					<UiButton class="status-button" @click="onFinishGameButtonClick">
+						Закончить
+					</UiButton>
 
-				<UiButton class="status-button" @click="onCancelGameButtonClick">
-					Бросить
-				</UiButton>
+					<UiButton class="status-button" @click="onCancelGameButtonClick">
+						Бросить
+					</UiButton>
+				</span>
 			</p>
 
 			<p v-else-if="showWishlistCountHint" class="info-item">
@@ -131,6 +133,7 @@ onMounted(() => {
 }
 
 .status-container {
+	width: 360px;
 	border-radius: 6px;
 	background-color: #e2e8f0;
 	padding: 16px 32px;
@@ -141,13 +144,24 @@ onMounted(() => {
 }
 
 .current-game {
+	width: 100%;
 	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 16px;
 }
 
+.current-game-actions {
+	display: flex;
+	gap: 16px;
+	justify-content: center;
+	width: 100%;
+}
+
 .status-button {
-	height: 72px;
+	height: 48px;
+	width: 45%;
 }
 
 .info-item {

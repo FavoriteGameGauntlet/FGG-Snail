@@ -7,6 +7,7 @@ import type {
 } from '../../api-facade/models/wheel-effects-models'
 import { StoreName } from '../../enums/storeName'
 import type { WheelResult } from '../../types/wheelResult'
+import { LoadingStatus, withLoading } from '../../utils/loadingState'
 
 export const useApiWheelStore = defineStore(StoreName.ApiWheel, () => {
 	const availableRollCount = ref(0)
@@ -18,47 +19,93 @@ export const useApiWheelStore = defineStore(StoreName.ApiWheel, () => {
 
 	const pendingRoll = computed(() => availableRollCount.value !== 0)
 
-	const getHistory = async (login: string) => {
-		await api.wheelEffects.getHistory({ path: { login } }).then((rolls) => {
-			effectsHistory.value[login] = rolls
-		})
-	}
+	const [getHistory, getHistoryState] = withLoading(
+		async (status, login: string) => {
+			status.value = LoadingStatus.LOADING
 
-	const getAvailableEffects = async () => {
-		if (availableEffects.value) return
+			await api.wheelEffects
+				.getHistory({ path: { login } })
+				.then((rolls) => {
+					effectsHistory.value[login] = rolls
+				})
+				.catch((e) => {
+					status.value = LoadingStatus.ERROR
+					throw e
+				})
+		},
+	)
 
-		await api.wheelEffects.getAvailable().then((effects) => {
-			availableEffects.value = effects
-		})
-	}
+	const [getAvailableEffects, getAvailableEffectsState] = withLoading(
+		async (status) => {
+			if (availableEffects.value) return
 
-	const roll = async () => {
+			status.value = LoadingStatus.LOADING
+
+			await api.wheelEffects
+				.getAvailable()
+				.then((effects) => {
+					availableEffects.value = effects
+					status.value = LoadingStatus.LOADED
+				})
+				.catch((e) => {
+					status.value = LoadingStatus.ERROR
+					throw e
+				})
+		},
+	)
+
+	const [roll, rollState] = withLoading(async (status) => {
 		if (!pendingRoll.value) {
 			return Promise.reject('No pending rolls')
 		}
 
-		await api.wheelEffects.postRoll().then((effects) => {
-			currentEffects.value = effects
-		})
-	}
+		status.value = LoadingStatus.LOADING
 
-	const reroll = async () => {
-		throw new Error('not implemented yet')
-	}
+		await api.wheelEffects
+			.postRoll()
+			.then((effects) => {
+				currentEffects.value = effects
+				status.value = LoadingStatus.LOADED
+			})
+			.catch((e) => {
+				status.value = LoadingStatus.ERROR
+				throw e
+			})
+	})
 
-	const getAvailableCount = async () => {
-		await api.wheelEffects.getAvailableCount().then((count) => {
-			availableRollCount.value = count
-		})
-	}
+	const [getAvailableCount, getAvailableCountState] = withLoading(
+		async (status) => {
+			status.value = LoadingStatus.LOADING
 
-	const getLastRoll = async () => {
+			await api.wheelEffects
+				.getAvailableCount()
+				.then((count) => {
+					availableRollCount.value = count
+					status.value = LoadingStatus.LOADED
+				})
+				.catch((e) => {
+					status.value = LoadingStatus.ERROR
+					throw e
+				})
+		},
+	)
+
+	const [getLastRoll, getLastRollState] = withLoading(async (status) => {
 		if (currentEffects.value) return currentEffects.value
 
-		await api.wheelEffects.getLastRolled().then((effects) => {
-			currentEffects.value = effects
-		})
-	}
+		status.value = LoadingStatus.LOADING
+
+		await api.wheelEffects
+			.getLastRolled()
+			.then((effects) => {
+				currentEffects.value = effects
+				status.value = LoadingStatus.LOADED
+			})
+			.catch((e) => {
+				status.value = LoadingStatus.ERROR
+				throw e
+			})
+	})
 
 	// const applyRoll = async () => {
 	//  @todo remove applied from available
@@ -74,11 +121,21 @@ export const useApiWheelStore = defineStore(StoreName.ApiWheel, () => {
 		pendingRoll,
 
 		getHistory,
+		getHistoryState,
+
 		getAvailableEffects,
+		getAvailableEffectsState,
+
 		roll,
-		reroll,
+		rollState,
+
 		getAvailableCount,
+		getAvailableCountState,
+
 		getLastRoll,
+		getLastRollState,
+
 		// applyRoll,
+		// applyRollState,
 	}
 })

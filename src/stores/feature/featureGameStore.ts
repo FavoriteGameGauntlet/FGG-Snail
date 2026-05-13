@@ -4,7 +4,6 @@ import type {
 	CurrentGame,
 	WishlistedGame,
 } from '../../api-facade/models/games-models'
-import { LoadingState } from '../../composables/useLoading'
 import { StoreName } from '../../enums/storeName'
 import { useApiGameStore } from '../api/apiGameStore'
 import { useApiTimerStore } from '../api/apiTimerStore'
@@ -31,9 +30,9 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 	const canRoll = computed(
 		() =>
 			currentGameIsFinished.value &&
-			gameStore.currentLoading.state === LoadingState.LOADED &&
+			gameStore.getCurrentState.isLoaded &&
 			enoughGamesInWishlist.value &&
-			gameStore.wishlistLoading.state === LoadingState.LOADED,
+			gameStore.getWishlistState.isLoaded,
 	)
 
 	const getWishlist = () => {
@@ -98,8 +97,8 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 		current,
 		wishlist,
 
-		currentLoading: computed(() => gameStore.currentLoading),
-		wishlistLoading: computed(() => gameStore.wishlistLoading),
+		// currentLoading: computed(() => gameStore.currentLoading),
+		// wishlistLoading: computed(() => gameStore.wishlistLoading),
 
 		enoughGamesInWishlist,
 		currentGameIsFinished,
