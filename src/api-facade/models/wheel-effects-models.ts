@@ -7,8 +7,8 @@ export type WheelEffect = {
 
 export type RolledWheelEffectDto = WheelEffect & {
 	rollDate: string
-	position?: number
 	isApplied?: boolean
+	position?: number
 }
 
 export type RolledWheelEffect = DtoStringToDate<
