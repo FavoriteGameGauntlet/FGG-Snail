@@ -9,7 +9,7 @@
 		"store:default",
 		{
 			"identifier": "http:default",
-			"allow": [{ "url": "https://fgg-challenge.com" }]
+			"allow": [{ "url": "https://api.fgg-challenge.com" }]
 		}
 	]
 }
