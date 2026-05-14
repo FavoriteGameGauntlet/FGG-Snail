@@ -27,7 +27,7 @@ const {
 const { current: currentGame } = storeToRefs(gameStore)
 
 const gameNameText = computed(() =>
-	gameStore.currentLoading.state === LoadingStatus.LOADED
+	gameStore..state === LoadingStatus.LOADED
 		? (currentGame.value?.name ?? 'Крути новую игру')
 		: 'Загрузка...',
 )

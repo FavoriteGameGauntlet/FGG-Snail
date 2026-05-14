@@ -20,7 +20,7 @@ const showCountHint = ref(false)
 
 const addGameInput = useTemplateRef('add-game-input')
 
-gameStore.wishlistLoading.on([LoadingStatus.LOADED]).then(() => {
+gameStore.getWishlistState.on([LoadingStatus.LOADED]).then(() => {
 	showCountHint.value = !gameStore.enoughGamesInWishlist
 	addGameInput.value?.focus()
 })
@@ -28,7 +28,7 @@ gameStore.wishlistLoading.on([LoadingStatus.LOADED]).then(() => {
 const gameName = ref('')
 
 const isLoading = computed(
-	() => gameStore.wishlistLoading.state === LoadingStatus.LOADING,
+	() => gameStore.getWishlistState.state === LoadingStatus.LOADING,
 )
 
 /** @todo extract validation */
@@ -66,7 +66,7 @@ const updateGamesOnLoginChange = () => {
 		(login) => {
 			if (
 				[LoadingStatus.ERROR, LoadingStatus.INIT].includes(
-					gameStore.wishlistLoading.state,
+					gameStore.getWishlistState.state,
 				) &&
 				login
 			) {

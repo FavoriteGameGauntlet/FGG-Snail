@@ -97,20 +97,28 @@ export const useFeatureGameStore = defineStore(StoreName.FeatureGame, () => {
 		current,
 		wishlist,
 
-		// currentLoading: computed(() => gameStore.currentLoading),
-		// wishlistLoading: computed(() => gameStore.wishlistLoading),
-
 		enoughGamesInWishlist,
 		currentGameIsFinished,
 
 		canRoll,
 
-		addToWishlist,
-		getWishlist,
-		roll,
-		cancel,
-		finish,
-
 		init,
+
+		getCurrentState: computed(() => gameStore.getCurrentState),
+
+		addToWishlist,
+		addToWishlistState: computed(() => gameStore.addToWishlistState),
+
+		getWishlist,
+		getWishlistState: computed(() => gameStore.getWishlistState),
+
+		roll,
+		rollState: computed(() => gameStore.rollState),
+
+		cancel,
+		cancelState: computed(() => gameStore.cancelState),
+
+		finish,
+		finishState: computed(() => gameStore.finishState),
 	}
 })

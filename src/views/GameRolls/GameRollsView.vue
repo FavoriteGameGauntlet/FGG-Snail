@@ -15,8 +15,8 @@ const rollText = ref('Загрузка...')
 const showWishlistCountHint = computed(
 	() =>
 		!gameStore.enoughGamesInWishlist &&
-		gameStore.currentLoading.state === LoadingStatus.LOADED &&
-		gameStore.wishlistLoading.state === LoadingStatus.LOADED,
+		gameStore.getCurrentState.state === LoadingStatus.LOADED &&
+		gameStore.getWishlistState.state === LoadingStatus.LOADED,
 )
 
 const onRollButtonClick = () => {
@@ -31,7 +31,7 @@ const onFinishGameButtonClick = () => {
 	gameStore.finish()
 }
 
-gameStore.currentLoading.on([LoadingStatus.LOADED]).then(() => {
+gameStore.getCurrentState.on([LoadingStatus.LOADED]).then(() => {
 	watch(
 		current,
 		() => {
@@ -44,7 +44,7 @@ gameStore.currentLoading.on([LoadingStatus.LOADED]).then(() => {
 onMounted(() => {
 	if (
 		[LoadingStatus.ERROR, LoadingStatus.INIT].includes(
-			gameStore.wishlistLoading.state,
+			gameStore.getWishlistState.state,
 		)
 	) {
 		gameStore.getWishlist()

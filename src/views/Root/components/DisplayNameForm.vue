@@ -16,7 +16,7 @@ const displayName = computed(
 )
 
 const isLoading = computed(
-	() => userStore.setDisplayLoading.state === LoadingStatus.LOADING,
+	() => userStore.setDisplayState.state === LoadingStatus.LOADING,
 )
 
 watch(newName, (newName) => {
@@ -76,9 +76,7 @@ const onEscKeyDown = () => {
 		<button
 			class="edit-button"
 			v-if="!showForm"
-			:disabled="
-				userStore.getDisplayNameLoading.state === LoadingStatus.LOADING
-			"
+			:disabled="userStore.getDisplayNameState.state === LoadingStatus.LOADING"
 			@click="onEditButtonClick"
 		>
 			{{ displayName }} <span class="pencil-icon">✏️</span>
